@@ -1,0 +1,64 @@
+<script type="text/javascript">
+(function()
+{
+  if( window.localStorage )
+  {
+    if( !localStorage.getItem( 'firstLoad' ) )
+    {
+      localStorage[ 'firstLoad' ] = true;
+      window.location.reload();
+    }
+    else
+      localStorage.removeItem( 'firstLoad' );
+  }
+})();
+</script>
+
+<div class="container-fluid">
+    <div id="wrapper" class="row-fluid">
+        <h3 class='menu'>Edit Comment</h3>
+        <div class="alert alert-error" ng-show="error">{{errorMessage}}</div>
+<form novalidate class="form-horizontal">
+
+<script type="text/javascript">
+	tinyMCE
+			.init({
+				selector : "#edittext",
+				plugins : [
+						"advlist autolink lists link image charmap print preview anchor",
+						"searchreplace visualblocks code fullscreen",
+						"insertdatetime media table contextmenu paste" ],
+				toolbar : "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image"
+			});
+
+	$(document).ready(function() {
+		$('#edit_text').click(function() {
+			editor_content = $('#texta').val();
+			tinymce.activeEditor.setContent(editor_content);
+		});
+	});
+</script>
+
+
+
+	<div class="control-group">
+			<label class="control-label" for="status"><strong>Status</strong></label>
+			<div class="controls">
+				<input type="radio" ng-model="currentComment.status" name="status" value="1" id="status" checked>&nbsp;Publish &nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" ng-model="currentComment.status" name="status" value="0" id="status">&nbsp;Withdraw
+			</div>
+	</div>
+
+
+    <p class="lead">
+		<span ng-bind-html-unsafe="currentComment.discussCommenContent" id="texta"></span>
+	</p>
+
+	<div class="control-group">
+			<!-- <button id="save" class="btn btn-primary">Edit Article</button> -->
+			<a onclick = "location.href = '#/comment/{{currentComment.discussId}}/{{currentComment.discussId}}';" class="btn btn-primary">Back to parent Discuss</a>
+			<a ng-click="editcomment()" class="btn btn-primary">Edit Comment </a>
+	</div>
+
+
+</form>

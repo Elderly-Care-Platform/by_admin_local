@@ -1,0 +1,54 @@
+<div class="container-fluid">
+    <div id="wrapper" class="row-fluid">
+        <h3 class='menu'>Create User</h3>
+
+
+        <div ng-show="error"><font color="red">{{error}}</font></div>
+		<div ng-show="message"><font color="green">{{message}}</font></div>
+
+
+ <!-- pass in the variable if our form is valid or invalid -->
+    <form name="userForm" ng-submit="register(userForm.$valid)" novalidate>
+
+
+		<!-- EMAIL -->
+		<div class="form-group" ng-class="{ 'has-error' : userForm.email.$invalid && !userForm.email.$pristine && submitted }">
+			<label><strong>Email</strong></label>
+			<input type="email" name="email" class="form-control" ng-model="user.email" ng-required>
+			<span><p ng-show="userForm.email.$invalid && !userForm.email.$pristine" class="help-block">Enter a valid email.</p></span>
+		</div>
+
+
+
+        <!-- USERNAME -->
+        <div class="form-group" ng-class="{ 'has-error' : userForm.userName.$invalid && !userForm.userName.$pristine && submitted }">
+            <label><strong>Screen Name</strong></label>
+            <input type="text" name="userName" class="form-control" ng-model="user.userName" ng-minlength="3" ng-maxlength="18" ng-required>
+            <p ng-show="userForm.userName.$invalid && userForm.userName.$pristine" class="help-block">Screen Name is required.</p>
+            <p ng-show="userForm.userName.$error.minlength" class="help-block">Screen Name is too short.</p>
+            <p ng-show="userForm.userName.$error.maxlength" class="help-block">Screen Name is too long.</p>
+
+        </div>
+
+		<!-- PASSWORD -->
+		<div class="form-group" ng-class="{ 'has-error' : userForm.password.$invalid && !userForm.password.$pristine && submitted }">
+			<label><strong>Password*</strong></label>
+			<input type="password" name="password" class="form-control" ng-model="user.password" ng-required>
+			<p ng-show="userForm.password.$invalid && !userForm.password.$pristine" class="help-block">Password is required.</p>
+		</div>
+
+		<!-- USER ACCOUNT TYPE -->
+		<div class="form-group" data-ng-controller="UserRoleController" ng-class="{ 'has-error' : userForm.userRoleId.$invalid && !userForm.userRoleId.$pristine && submitted }">
+		    <label> <strong>Role</strong></label>
+		        <select data-ng-model="user.userRoleId" name="userRoleId"
+		                data-ng-options="act for act in userRoleIds" ng-required>
+		        </select>
+		        <p ng-show="userForm.userRoleId.$invalid && !userForm.userRoleId.$pristine" class="help-block">User Role is required.</p>
+		</div>
+
+
+        <button type="submit" class="btn btn-primary">Submit</button>
+
+    </form>
+</div>
+</div>

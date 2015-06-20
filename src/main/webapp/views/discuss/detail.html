@@ -1,0 +1,9 @@
+<h1>{{discuss.title}}</h1>
+<h2> by {{discuss.username}} <small class="muted">{{discuss.createdAt | date:'medium'}}</small></h2>
+<hr>
+<div>
+
+<p class="lead">
+	<span ng-bind-html-unsafe="discuss.text"></span>
+</p>
+</div>

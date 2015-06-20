@@ -1,0 +1,127 @@
+<script type="text/javascript">
+        $(document).ready(function () {
+        	var this_url = window.location.href;
+        	var dis_id = this_url.substring(this_url.lastIndexOf('/')+1).trim();
+
+            var url = '/byadmin/api/v1/comment/' + dis_id + '/' + dis_id;
+
+            // prepare the data
+            var source = '';
+
+            source = {
+                datatype: "json",
+                datafields: [
+                	{ name: 'discussCommenContent', type: 'string' },
+					{ name: 'userName', type: 'string' },
+                    { name: 'createdAt', type: 'date' },
+                    { name: 'status', type: 'string' },
+                    { name: 'id1', type: 'string' },
+					{ name: 'id', type: 'string' }
+                    ],
+                url: url,
+                root: 'data',
+				pager: function (pagenum, pagesize, oldpagenum) {
+                    // callback called when a page or page size is changed.
+                }
+            };
+
+
+
+
+			var titlerenderer = function (row, column, value) {
+				if (value != undefined && value.indexOf('#') != -1) {
+							   title = value.substring(0, value.indexOf('#'));
+							   link = value.substring(value.indexOf('#')+1);
+			   }
+			   return '<div style="text-align: center; margin-top: 5px;">' + title + '</div>'
+		    }
+
+
+		    var blurbrenderer = function (row, column, value) {
+				if (value.indexOf('#') != -1) {
+							   text = value.substring(0, value.indexOf('#')).substring(0,100);
+							   link = value.substring(value.indexOf('#')+1);
+			   }
+			   return '<div style="text-align: center; margin-top: 5px;"><a href="#/comment/'+ link +'">' + text + '</a></div>'
+		    }
+
+
+			var statusrenderer = function (row, column, value) {
+				if(value == '0') return '<div style="text-align: center; margin-top: 5px;" height="26" width="26">Un-Published</div>';
+				else return '<div style="text-align: center; margin-top: 5px;" height="26" width="26">Published</div>';
+			}
+
+
+
+			var editrenderer = function (row, column, value) {
+
+                return '<div style="text-align: center; margin-top: 5px;"><a href="#/comment/'+ value +'"><img src="../../../byadmin/img/edit.png" alt="edit" height="26" width="26"></a></div>'
+			}
+
+			var dataAdapter = new $.jqx.dataAdapter(source, {
+				beforeLoadComplete: function (records) {
+
+                        for (var i = 0; i < records.length; i++) {
+                            records[i].id1= records[i].id;
+                            //records[i].title= records[i].title + "#" + records[i].id;
+                            records[i].discussCommenContent= records[i].discussCommenContent+ "#" + records[i].id;
+                        };
+                        return records;
+                    }
+			});
+
+			$("#jqxgrid").jqxGrid(
+			{
+				width: 1050,
+				source: dataAdapter,
+				sortable: true,
+				filterable: true,
+				showfilterrow: true,
+				pageable: true,
+				autorowheight: true,
+				autoheight: true,
+				altrows: true,
+				columnsresize: true,
+				columns: [
+				  { text: 'Text', datafield: 'discussCommenContent', cellsrenderer:titlerenderer, width: 200, cellsalign:'center', align:'center' },
+				  { text: 'Created/Updated By', datafield: 'userName', width: 150, cellsalign:'center', align:'center' },
+				  { text: 'Date Created', datafield: 'createdAt', cellsformat: 'dd.MM.yyyy  HH:mm:ss', width: 150, cellsalign:'center', align:'center' },
+				  { text: 'Status', datafield: 'status', cellsrenderer:statusrenderer, width: 150, cellsalign:'center', align:'center' },
+				  { text: 'Edit', datafield: 'id', cellsrenderer: editrenderer, minwidth: 100, cellsalign:'center', align:'center' }
+
+				]
+			});
+		 });
+    </script>
+
+
+<h2 id="header">
+<script type="text/javascript">
+
+    var dis_id = window.location.href.substring(window.location.href.lastIndexOf('/')+1).trim();
+    document.getElementById('header').innerHTML = 'Answers/Comments of Discuss : ' + dis_id;
+</script>
+</h2>
+
+<!--
+<table class="table table-striped">
+	<th>Title</th>
+	<th>Date Created</th>
+	<th>Status</th>
+	<th>Edit</th>
+	<th>Delete</th>
+	<tr ng-repeat="discuss in discuss">
+		<td><a href="#/discuss/{{discuss.id}}">{{discuss.title}}</a></td>
+		<td>{{discuss.createdAt  | date:'yyyy-MM-dd HH:mm:ss'}}</td>
+		<td> {{discuss.status == 0 && 'Un-published' || 'Published'}}</td>
+
+		<td><a href="#/discuss/showedit/{{discuss.id}}"><img src="../../../byadmin/img/edit.png" alt="edit" height="26" width="26"></a></td>
+		<td><a href="#/discuss/delete/{{discuss.id}}"><img src="../../../byadmin/img/delete.png" alt="delete" height="26" width="26"></a></td>
+	</tr>
+</table>
+-->
+
+
+<div id='jqxWidget' style="font-size: 13px; font-family: Verdana; float: left;">
+        <div id="jqxgrid"></div>
+</div>

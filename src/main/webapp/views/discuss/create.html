@@ -1,0 +1,97 @@
+<script type="text/javascript">
+(function()
+{
+  if( window.localStorage )
+  {
+    if( !localStorage.getItem( 'firstLoad' ) )
+    {
+      localStorage[ 'firstLoad' ] = true;
+      window.location.reload();
+    }
+    else
+      localStorage.removeItem( 'firstLoad' );
+  }
+})();
+</script>
+
+<div class="container-fluid">
+    <div id="wrapper" class="row-fluid">
+        <h3 class='menu'>Create {{currentDiscuss.discussType == 'A' && 'Article' ||currentDiscuss.discussType == 'Q' && 'Question' || 'Post'}}</h3>
+        <div class="alert alert-error" ng-show="error">{{errorMessage}}</div>
+
+
+<form novalidate name="formName" class="form-horizontal" ng-submit="register()">
+
+	<div class="control-group" ng-show="currentDiscuss.discussType == 'A'">
+		<label class="control-label" for="title"><strong>Title</strong></label>
+		<div class="controls">
+			<input type="text" ng-model="currentDiscuss.title" id="currentDiscuss.title" required/>
+		</div>
+	</div>
+
+
+	<div class="control-group" data-ng-controller="myCtrl">
+		<label class="control-label" for="topic"> <strong>Topic/Sub Topic</strong></label>
+		<div class="controls">
+		<select name="top" data-ng-model="currentDiscuss.topicId" data-ng-options="option for option in options1" data-ng-change="getOptionsforId(currentDiscuss.topicId)" ng-required="true" >
+		<span ng-show="formName.top.$error.required">Required</span>
+    </select>
+		<select name="subtop" data-ng-model="currentDiscuss.subTopicId" data-ng-options="option for option in options2" ng-required="true">
+		<span ng-show="formName.subtop.$error.required">Required</span>
+    </select>
+    </div>
+	</div>
+
+
+
+	<div class="control-group">
+		<label class="control-label" for="tags"><strong>Tags</strong></label>
+		<div class="controls">
+			<input type="text" ng-model="currentDiscuss.tags" id="tags" required/>
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="status"><strong>Status</strong></label>
+		<div class="controls" ng-init="currentDiscuss.status=1">
+			<input type="radio" ng-model="currentDiscuss.status" value="1" id="status">&nbsp;Publish &nbsp;&nbsp;&nbsp;&nbsp;
+			<input type="radio" ng-model="currentDiscuss.status" value="0" id="status">&nbsp;Withdraw
+		</div>
+	</div>
+
+
+	<div class="control-group">
+			<label class="control-label" for="featured"><strong>Featured</strong></label>
+			<div class="controls" ng-init="currentDiscuss.featured=0">
+				<input type="radio" ng-model="currentDiscuss.featured" name="featured" value="1" id="featured">&nbsp;Featured&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" ng-model="currentDiscuss.featured" name="featured" value="0" id="featured">&nbsp;Not Featured
+			</div>
+	</div>
+
+
+
+	<!--
+	<div class="control-group">
+			<label class="control-label" for="featured"><strong>Featured</strong></label>
+			<div class="controls" >
+				    <input type="checkbox" ng-model="currentDiscuss.featured" id="featured" ng-true-value="1" ng-false-value="0">
+			</div>
+	</div>
+	-->
+
+
+	<div class="control-group" ng-controller="LoadTMController">
+		<label class="control-label" for="text"><strong>Text</strong></label>
+		<div class="controls">
+
+		<!--<textarea data-ui-tinymce id="tinymce1" data-ng-model="discuss.from_one"></textarea>-->
+		<textarea ui:tinymce id="text" ng-model="currentDiscuss.text"></textarea>
+
+		</div>
+	</div>
+
+		<!-- <button id="save" class="btn btn-primary">Submit Article</button> -->
+		<button type="submit" class="btn btn-primary">Submit</button>
+
+</form>
+</div>
+</div>

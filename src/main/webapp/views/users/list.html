@@ -1,0 +1,156 @@
+<script type="text/javascript">
+        $(document).ready(function () {
+           //var url = "http://52.74.82.29:80/byadmin/api/v1/users/list/all";
+           var url = "/byadmin/api/v1/users/list/all";
+            // prepare the data
+            var source =
+            {
+                datatype: "json",
+                datafields: [
+                        { name: 'userName', type: 'string' },
+                        { name: 'email', type: 'string' },
+                        { name: 'createdAt', type: 'date' },
+                        { name: 'isActive', type: 'string' },
+                        { name: 'userRoleId', type: 'string' },
+						{ name: 'id1', type: 'string' },
+						{ name: 'id', type: 'string' }
+                    ],
+                url: url,
+                root: 'data',
+				pager: function (pagenum, pagesize, oldpagenum) {
+                    // callback called when a page or page size is changed.
+                }
+            };
+
+			var editrenderer = function (row, column, value) {
+                //return '<a href="#/users/showedit/'+ value +'"><img src="../../../byadmin/img/edit.png" alt="edit" height="26" width="26"></a>';
+				 return '<div style="text-align: center; margin-top: 5px;"><a href="#/users/showedit/'+ value +'"><img src="../../../byadmin/img/edit.png" alt="edit" height="26" width="26"></a></div>'
+				}
+
+			var deleterenderer = function (row, column, value) {
+                //return '<a href="#/users/delete/'+ value +'"><img src="../../../byadmin/img/delete.png" alt="delete" height="26" width="26"></a>';
+				 return '<div style="text-align: center; margin-top: 5px;"><a href="#/users/delete/'+ value +'"><img src="../../../byadmin/img/delete.png" alt="delete" height="26" width="26"></a></div>'
+				}
+
+			var dataAdapter = new $.jqx.dataAdapter(source, {
+				beforeLoadComplete: function (records) {
+                        for (var i = 0; i < records.length; i++) {
+                            records[i].id1= records[i].id;
+                        };
+                        return records;
+                    }
+			});
+            $("#jqxgrid").jqxGrid(
+            {
+                width: 1050,
+                source: dataAdapter,
+                sortable: true,
+				filterable: true,
+				showfilterrow: true,
+                pageable: true,
+                autorowheight: true,
+                autoheight: true,
+                altrows: true,
+                columnsresize: true,
+                columns: [
+                  { text: 'User Name', datafield: 'userName', width: 200, cellsalign:'center', align:'center' },
+                  { text: 'Date Created', datafield: 'createdAt', cellsformat: 'dd.MM.yyyy HH:mm:ss', width: 150, cellsalign:'center', align:'center' },
+                  { text: 'Email', datafield: 'email', width: 250, cellsalign:'center', align:'center' },
+                  { text: 'Status', datafield: 'isActive', width: 100, cellsalign:'center', align:'center' },
+                  { text: 'Role', datafield: 'userRoleId', minwidth: 100, cellsalign:'center', align:'center' },
+				  { text: 'Edit', datafield: 'id', cellsrenderer: editrenderer, minwidth: 100, cellsalign:'center', align:'center' },
+				  { text: 'Delete', datafield: 'id1', cellsrenderer: deleterenderer, minwidth: 100, cellsalign:'center', align:'center' }
+                ]
+            });
+
+        });
+    </script>
+
+<h2>
+	Users <a class="btn btn-primary pull-right" href="#/users/new"><i
+		class="icon-plus-sign icon-white"></i> Create New User</a>
+</h2>
+
+<!--
+<table class="table table-striped">
+	<th>Username</th>
+	<th>Date Created</th>
+	<th>Email</th>
+	<th>Status</th>
+	<th>Type</th>
+	<th>Edit</th>
+	<th>Delete</th>
+	<tr ng-repeat="user in users">
+		<td><a href="#/users/{{user.id}}">{{user.userName}}</a></td>
+		<td>{{user.createdAt  | date:'yyyy-MM-dd HH:mm:ss'}}</td>
+		<td> {{user.email}}</td>
+		<td> {{user.isActive == 0 && 'Inactive' || 'Active'}}</td>
+		<td> {{user.userAccountType}}</td>
+		<td><a href="#/users/showedit/{{user.id}}"><img src="../../../byadmin/img/edit.png" alt="edit" height="26" width="26"></a></td>
+		<td><a href="#/users/delete/{{user.id}}"><img src="../../../byadmin/img/delete.png" alt="delete" height="26" width="26"></a></td>
+	</tr>
+</table>
+<br><br>
+
+-->
+<!--<div class="control-group" ng-controller="gridCtrl">
+	<label for="items">items by page</label>
+	<input class="input-sm form-control" name="items" id="items" type="number" ng-model="itemsByPage" />
+<table st-table="rowCollection" class="table table-striped">
+		<thead>
+		<tr>
+			<th st-sort="firstName">first name</th>
+			<th st-sort="lastName">last name</th>
+			<th st-sort="birthDate">birth date</th>
+			<th st-sort="balance">balance</th>
+			<th>email</th>
+		</tr>
+		<tr>
+			<th>
+				<input st-search="'firstName'" placeholder="search for firstname" class="input-sm form-control" type="search"/>
+			</th>
+			<th colspan="4">
+				<input st-search placeholder="global search" class="input-sm form-control" type="search"/>
+			</th>
+		</tr>
+		</thead>
+		<tbody>
+		<tr ng-repeat="row in rowCollection">
+			<td>{{row.firstName | uppercase}}</td>
+			<td st-sort="lastName">{{row.lastName}}</td>
+			<td>{{row.birthDate | date}}</td>
+			<td>{{row.balance | currency}}</td>
+			<td><a ng-href="mailto:{{row.email}}">email</a></td>
+		</tr>
+		</tbody>
+		<tfoot>
+			<tr>
+				<td colspan="5" class="text-center">
+					<div st-pagination="" st-items-by-page="5" st-displayed-pages="7"></div>
+				</td>
+			</tr>
+		</tfoot>
+	</table>
+</div> -->
+
+<!--<div class="control-group" ng-controller="basicExampleCtrl">
+<table class="table table-striped" at-table at-paginated at-list="list" at-config="config">
+  <thead></thead>
+  <tbody>
+    <tr>
+      <td at-implicit at-sortable at-attribute="firstName"></td>
+      <td at-implicit at-sortable at-attribute="lastName"></td>
+      <td at-implicit at-sortable at-attribute="age"></td>
+	  <td at-implicit at-sortable at-attribute="email"></td>
+	  <td at-implicit at-sortable at-attribute="balance"></td>
+    </tr>
+  </tbody>
+</table>
+
+<at-pagination at-list="list" at-config="config"></at-pagination>
+</div> -->
+
+
+<div id='jqxWidget' style="font-size: 13px; font-family: Verdana; float: left;">
+        <div id="jqxgrid"></div>
+</div>

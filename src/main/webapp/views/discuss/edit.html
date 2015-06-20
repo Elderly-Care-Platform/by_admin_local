@@ -1,0 +1,116 @@
+<script type="text/javascript">
+(function()
+{
+  if( window.localStorage )
+  {
+    if( !localStorage.getItem( 'firstLoad' ) )
+    {
+      localStorage[ 'firstLoad' ] = true;
+      window.location.reload();
+    }
+    else
+      localStorage.removeItem( 'firstLoad' );
+  }
+})();
+</script>
+
+<div class="container-fluid">
+    <div id="wrapper" class="row-fluid">
+        <h3 class='menu'>Edit {{currentDiscuss.discussType == 'A' && 'Article' || currentDiscuss.discussType == 'Q' && 'Question' || 'Post'}}</h3>
+        <div class="alert alert-error" ng-show="error">{{errorMessage}}</div>
+<form novalidate class="form-horizontal">
+
+<script type="text/javascript">
+	tinyMCE
+			.init({
+				selector : "#edittext",
+				plugins : [
+						"advlist autolink lists link image charmap print preview anchor",
+						"searchreplace visualblocks code fullscreen",
+						"insertdatetime media table contextmenu paste" ],
+				toolbar : "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image"
+			});
+
+	$(document).ready(function() {
+		$('#edit_text').click(function() {
+			editor_content = $('#texta').val();
+			tinymce.activeEditor.setContent(editor_content);
+		});
+	});
+</script>
+	<div class="control-group" ng-show="currentDiscuss.discussType == 'A'">
+		<label class="control-label" for="title"><strong>Title</strong></label>
+		<div class="controls">
+			<input type="text" ng-model="currentDiscuss.title" id="title" required/>
+		</div>
+	</div>
+
+
+
+	<div class="control-group">
+			<label class="control-label" for="status"><strong>Status</strong></label>
+			<div class="controls">
+				<input type="radio" ng-model="currentDiscuss.status" name="status" value="1" id="status" checked>&nbsp;Publish &nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="radio" ng-model="currentDiscuss.status" name="status" value="0" id="status">&nbsp;Withdraw
+			</div>
+	</div>
+
+	<div class="control-group">
+		<label class="control-label" for="featured"><strong>Featured</strong></label>
+		<div class="controls">
+			<input type="radio" ng-model="currentDiscuss.featured" name="featured" value="1" id="featured" checked>&nbsp;Featured &nbsp;&nbsp;&nbsp;&nbsp;
+			<input type="radio" ng-model="currentDiscuss.featured" name="featured" value="0" id="stafeaturedtus">&nbsp;Not Featured
+		</div>
+	</div>
+
+    <div class="control-group" ng-hide="1">
+					<label class="control-label" for="text"><strong>Text</strong></label>
+					<div class="controls">
+						<textarea id="texta" name="texta" rows="0" columns="0" ng-model="currentDiscuss.text">{{currentDiscuss.text}}</textarea>
+
+					</div>
+				</div>
+
+				<div class="controls">
+					<a id="edit_text">Edit Text</a>
+				</div>
+
+				<div class="control-group">
+					<label class="control-label" for="text"></label>
+					<div class="controls" id="mce">
+						<textarea data-ui-tinymce id="edittext" name="edittext"
+							ng-model="currentDiscuss.text"></textarea>
+					</div>
+				</div>
+
+
+	<div class="control-group">
+		<label class="control-label" for="tags"><strong>Tags</strong></label>
+		<div class="controls">
+			<input type="text" ng-model="currentDiscuss.tags" id="tags" required/>
+		</div>
+	</div>
+
+
+		<div class="control-group" data-ng-controller="myCtrl">
+			<label class="control-label" for="topic"> <strong>Topic/Sub Topic</strong></label>
+			<div class="controls">
+			<!-- <select data-ng-model="currentDiscuss.topicId" data-ng-options="option for option in options1" data-ng-load="getOptions2()">
+	    </select>
+			<select data-ng-model="currentDiscuss.subTopicId" data-ng-options="option for option in options2">
+	    </select>
+	    	-->
+
+	    	<input type="text" ng-model="currentDiscuss.topicId" id="tags" disabled/>
+
+	    	<input type="text" ng-model="currentDiscuss.subTopicId" id="tags" disabled/>
+
+	    </div>
+		</div>
+
+
+	<div class="control-group">
+		<!-- <button id="save" class="btn btn-primary">Edit Article</button> -->
+		<a ng-click="editdiscuss()" class="btn btn-primary">Edit Article </a>
+	</div>
+</form>
