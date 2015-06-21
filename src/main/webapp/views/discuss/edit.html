@@ -50,16 +50,14 @@
 	<div class="control-group">
 			<label class="control-label" for="status"><strong>Status</strong></label>
 			<div class="controls">
-				<input type="radio" ng-model="currentDiscuss.status" name="status" value="1" id="status" checked>&nbsp;Publish &nbsp;&nbsp;&nbsp;&nbsp;
-				<input type="radio" ng-model="currentDiscuss.status" name="status" value="0" id="status">&nbsp;Withdraw
+				<input type="checkbox" ng-model="currentDiscuss.status" name="status" value="0" id="status">&nbsp;Withdraw
 			</div>
 	</div>
 
 	<div class="control-group">
 		<label class="control-label" for="featured"><strong>Featured</strong></label>
 		<div class="controls">
-			<input type="radio" ng-model="currentDiscuss.featured" name="featured" value="1" id="featured" checked>&nbsp;Featured &nbsp;&nbsp;&nbsp;&nbsp;
-			<input type="radio" ng-model="currentDiscuss.featured" name="featured" value="0" id="stafeaturedtus">&nbsp;Not Featured
+			<input type="checkbox" ng-model="currentDiscuss.featured" name="featured" value="0" id="featured" checked>&nbsp;Featured &nbsp;&nbsp;&nbsp;&nbsp;
 		</div>
 	</div>
 

@@ -27,7 +27,6 @@ public class ApplicationConfig {
         MongoDbFactory mongoDbFactory = new SimpleMongoDbFactory(mongo, databaseName, null);// userCredentials);
         MongoTemplate mongoTemplate = new MongoTemplate(mongoDbFactory);
         mongoTemplate.setWriteConcern(WriteConcern.SAFE);
-        System.out.println(mongoTemplate.collectionExists("discuss"));
         return mongoTemplate;
     }
     

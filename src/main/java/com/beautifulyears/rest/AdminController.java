@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -36,7 +37,7 @@ import com.beautifulyears.repository.custom.UserRepositoryCustom;
 @Controller
 @RequestMapping("/users")
 public class AdminController {
-
+	private static final Logger logger = Logger.getLogger(AdminController.class);
 	private UserRepository userRepository;
 	private MongoTemplate mongoTemplate;
 
@@ -51,11 +52,7 @@ public class AdminController {
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	public @ResponseBody LoginResponse login(
 			@RequestBody LoginRequest loginRequest) {
-		// System.out.println("Inside LoginController login");
-		// System.out.println("loginRequest = " + loginRequest);
-		System.out.println("login request email = " + loginRequest.getEmail());
-		System.out.println("login request password = "
-				+ loginRequest.getPassword());
+		logger.debug("login request email = " + loginRequest.getEmail());
 
 		Query q = new Query();
 		q.addCriteria(Criteria.where("email").is(loginRequest.getEmail())
@@ -75,7 +72,7 @@ public class AdminController {
 		}
 		// normal user login
 		else {
-			System.out.println("Trying to login normal user...");
+			logger.debug("Trying to login normal user...");
 			boolean exists = mongoTemplate.exists(q, User.class);
 			if (!exists) {
 				System.out.println("No such user exist");
@@ -88,7 +85,7 @@ public class AdminController {
 				return response;
 			} else {
 				User user = mongoTemplate.findOne(q, User.class);
-				System.out.println("User exists :: userid = " + user.getId()
+				logger.debug("User exists :: userid = " + user.getId()
 						+ " :: username = " + user.getUserName());
 				LoginResponse response = new LoginResponse();
 				response.setSessionId(UUID.randomUUID().toString());
@@ -105,8 +102,6 @@ public class AdminController {
 	public @ResponseBody LoginResponse logout(
 			@PathVariable("sessionId") String sessionId) {
 		try {
-			System.out.println("Inside LoginController logout, session id = "
-					+ sessionId);
 			LoginResponse response = new LoginResponse();
 			response.setSessionId(null);
 			response.setStatus("");
@@ -131,7 +126,7 @@ public class AdminController {
 	@ResponseBody
 	public ResponseEntity<String> submitUser(@RequestBody User user) throws Exception{
 		if (user == null || user.getId() == null || user.getId().equals("")) {
-			System.out.println("NEW USER");
+			logger.debug("NEW USER");
 			try {
 				Query q = new Query();
 				q.addCriteria(Criteria.where("email").is(user.getEmail()));
@@ -139,26 +134,22 @@ public class AdminController {
 				{
 					ResponseEntity<String> responseEntity = new ResponseEntity<String>(
 							"Email already exists!", HttpStatus.CREATED);
-					System.out.println("responseEntity = " + responseEntity);
 					throw new Exception("Email already exists!");
 				}
 				User userWithExtractedInformation = decorateWithInformation(user);
 				userRepository.save(userWithExtractedInformation);
 				ResponseEntity<String> responseEntity = new ResponseEntity<String>(
 						"User created successully", HttpStatus.CREATED);
-				System.out.println("responseEntity = " + responseEntity);
 				return responseEntity;
 			} catch (Exception e) {
 				e.printStackTrace();
 				ResponseEntity<String> responseEntity = new ResponseEntity<String>(
 						"Error while registering user!", HttpStatus.CREATED);
-				System.out.println("responseEntity = " + responseEntity);
-				//return responseEntity;
 				throw e;
 			}
 
 		} else {
-			System.out.println("EDIT USER");
+			logger.debug("EDIT USER");
 			User newUser = getUser(user.getId());
 			newUser.setPassword(user.getPassword());
 			newUser.setSocialSignOnId(user.getSocialSignOnId());
@@ -170,7 +161,6 @@ public class AdminController {
 			userRepository.save(newUser);
 			ResponseEntity<String> responseEntity = new ResponseEntity<>(
 					HttpStatus.CREATED);
-			System.out.println("responseEntity = " + responseEntity);
 			return responseEntity;
 		}
 
@@ -189,8 +179,6 @@ public class AdminController {
 
 		// Users registered through the BY site will always have ROLE = USER
 		String userRoleId = "USER";
-
-		System.out.println("user role id = " + userRoleId);
 
 		// TODO: Change this logic during user regitration phase 2
 		if (userRoleId != null
@@ -211,11 +199,10 @@ public class AdminController {
 	@RequestMapping(method = RequestMethod.DELETE, value = "/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public ResponseEntity<Void> deleteUser(@PathVariable("userId") String userId) {
-		System.out.println("Inside DELETE user");
+		logger.debug("Inside DELETE user");
 		userRepository.delete(userId);
 		ResponseEntity<Void> responseEntity = new ResponseEntity<>(
 				HttpStatus.CREATED);
-		System.out.println("responseEntity = " + responseEntity);
 		return responseEntity;
 	}
 

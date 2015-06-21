@@ -1,6 +1,8 @@
 package com.beautifulyears.domain;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -13,7 +15,7 @@ public class Discuss {
 	private String id;
 
 	private String title;
-	
+
 	private String articlePhotoFilename;
 
 	public String getUsername() {
@@ -25,7 +27,7 @@ public class Discuss {
 	}
 
 	private String userId;
-	
+
 	private String username;
 
 	private String discussType; // Q, P and A (Question, Post and Article)
@@ -38,30 +40,34 @@ public class Discuss {
 
 	private int aggrReplyCount;
 
-	private int aggrLikeCount;
-
 	private final Date createdAt = new Date();
+
+	private List<String> topicId;
+
+	private List<String> likedBy = new ArrayList<String>();
 	
-	private String topicId;
-	
-	private String subTopicId;
-	
-	private String featured;
+	private boolean isFeatured;
 
 	public Discuss() {
 
 	}
 	
 	
-	
-	
 
-	public String getFeatured() {
-		return featured;
+	public boolean isFeatured() {
+		return isFeatured;
 	}
 
-	public void setFeatured(String featured) {
-		this.featured = featured;
+	public void setFeatured(boolean isFeatured) {
+		this.isFeatured = isFeatured;
+	}
+
+	public List<String> getLikedBy() {
+		return likedBy;
+	}
+
+	public void setLikedBy(List<String> likedBy) {
+		this.likedBy = likedBy;
 	}
 
 	public String getArticlePhotoFilename() {
@@ -72,39 +78,30 @@ public class Discuss {
 		this.articlePhotoFilename = articlePhotoFilename;
 	}
 
-	public String getTopicId() {
+	public List<String> getTopicId() {
 		return topicId;
 	}
 
-	public void setTopicId(String topicId) {
+	public void setTopicId(List<String> topicId) {
 		this.topicId = topicId;
 	}
 
-	public String getSubTopicId() {
-		return subTopicId;
-	}
-
-	public void setSubTopicId(String subTopicId) {
-		this.subTopicId = subTopicId;
-	}
-
-	public Discuss(String userId, String username, String discussType, String topicId, String subTopicId, String title,
-			String text, String status, String tags, int aggrReplyCount,
-			int aggrLikeCount, String articlePhotoFilename, String featured) {
+	public Discuss(String userId, String username, String discussType,
+			List<String> topicId, String title, String text, String status,
+			String tags, int aggrReplyCount,
+			String articlePhotoFilename, Boolean isFeatured) {
 		super();
 		this.userId = userId;
 		this.username = username;
 		this.discussType = discussType;
 		this.title = title;
 		this.topicId = topicId;
-		this.subTopicId = subTopicId;
 		this.text = text;
 		this.status = status;
 		this.tags = tags;
 		this.aggrReplyCount = aggrReplyCount;
-		this.aggrLikeCount = aggrLikeCount;
 		this.articlePhotoFilename = articlePhotoFilename;
-		this.featured = featured;
+		this.isFeatured = isFeatured;
 	}
 
 	public String getTitle() {
@@ -169,14 +166,6 @@ public class Discuss {
 
 	public void setAggrReplyCount(int aggrReplyCount) {
 		this.aggrReplyCount = aggrReplyCount;
-	}
-
-	public int getAggrLikeCount() {
-		return aggrLikeCount;
-	}
-
-	public void setAggrLikeCount(int aggrLikeCount) {
-		this.aggrLikeCount = aggrLikeCount;
 	}
 
 	public Date getCreatedAt() {

@@ -7,8 +7,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -42,8 +41,7 @@ import com.beautifulyears.repository.DiscussRepository;
 @Controller
 @RequestMapping("/comment")
 public class DiscussCommentController {
-	private Logger logger = LoggerFactory
-			.getLogger(DiscussCommentController.class);
+	private Logger logger = Logger.getLogger(DiscussCommentController.class);
 
 	private DiscussCommentRepository discussCommentRepository;
 	private DiscussRepository discussRepository;
@@ -66,8 +64,6 @@ public class DiscussCommentController {
 			throw new DiscussNotFoundException(commentId);
 		}
 
-		System.out.println(">> text = " + comment.getDiscussCommenContent());
-		System.out.println(">> status = " + comment.getStatus());
 
 		return comment;
 	}
@@ -168,11 +164,11 @@ public class DiscussCommentController {
 	@ResponseBody
 	public ResponseEntity<Void> submitComment(@RequestBody DiscussComment comment) {
 
-		System.out.println("EDIT COMMENT");
+		logger.debug("EDIT COMMENT");
 		DiscussComment newComment = getComment(comment.getId());
 		
 		
-		newComment.setStatus(comment.getStatus());
+//		newComment.setStatus(comment.getStatus());
 		newComment.setDiscussCommenContent(comment.getDiscussCommenContent());
 		newComment.setUserId(comment.getUserId());
 		newComment.setAncestorId(comment.getAncestorId());
@@ -187,8 +183,7 @@ public class DiscussCommentController {
 		newComment.setParentId(comment.getParentId());
 		newComment.setSiblingPosition(comment.getSiblingPosition());
 		
-		newComment.setSubTopicId(comment.getSubTopicId());
-		newComment.setTopicId(comment.getTopicId());
+//		newComment.setTopicId(comment.getTopicId());
 		
 		newComment.setUserName(comment.getUserName());
 		

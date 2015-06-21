@@ -16,9 +16,7 @@ public class DiscussRepositoryCustomImpl implements DiscussRepositoryCustom {
    
 	@Override
 	public List<Discuss> findByDiscussType(String discussType) throws Exception{
-		System.out.println("Inside findByDiscussType impl");
 		Criteria criteria = Criteria.where("discussType").is(discussType);//.andOperator(Criteria.where("availability").is(1));
-		System.out.println("mongo template = " + mongoTemplate);
         return mongoTemplate.find(Query.query(criteria), Discuss.class);
 
 	}

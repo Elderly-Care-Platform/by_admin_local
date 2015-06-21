@@ -53,8 +53,7 @@
 	<div class="control-group">
 		<label class="control-label" for="status"><strong>Status</strong></label>
 		<div class="controls" ng-init="currentDiscuss.status=1">
-			<input type="radio" ng-model="currentDiscuss.status" value="1" id="status">&nbsp;Publish &nbsp;&nbsp;&nbsp;&nbsp;
-			<input type="radio" ng-model="currentDiscuss.status" value="0" id="status">&nbsp;Withdraw
+			<input type="checkbox" ng-model="currentDiscuss.status" value="0" id="status">&nbsp;Withdraw
 		</div>
 	</div>
 
@@ -62,8 +61,7 @@
 	<div class="control-group">
 			<label class="control-label" for="featured"><strong>Featured</strong></label>
 			<div class="controls" ng-init="currentDiscuss.featured=0">
-				<input type="radio" ng-model="currentDiscuss.featured" name="featured" value="1" id="featured">&nbsp;Featured&nbsp;&nbsp;&nbsp;&nbsp;
-				<input type="radio" ng-model="currentDiscuss.featured" name="featured" value="0" id="featured">&nbsp;Not Featured
+				<input type="checkbox" ng-model="currentDiscuss.featured" name="featured" value="0" id="featured">&nbsp;Featured&nbsp;&nbsp;&nbsp;&nbsp;
 			</div>
 	</div>
 

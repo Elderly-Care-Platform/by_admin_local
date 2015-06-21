@@ -3,6 +3,7 @@ package com.beautifulyears.rest;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -31,7 +32,7 @@ import com.beautifulyears.repository.custom.DiscussRepositoryCustom;
 @Controller
 @RequestMapping("/discuss")
 public class AdminDiscussController {
-
+	private static final Logger logger = Logger.getLogger(AdminDiscussController.class);
 	private DiscussRepository discussRepository;
 	private MongoTemplate mongoTemplate;
 
@@ -49,24 +50,21 @@ public class AdminDiscussController {
 
 		if (discuss == null || discuss.getId() == null
 				|| discuss.getId().equals("")) {
-			System.out.println("NEW DISCUSS");
+			logger.debug("NEW DISCUSS");
 			Discuss discussWithExtractedInformation = setDiscussBean(discuss);
 			discussRepository.save(discussWithExtractedInformation);
 			ResponseEntity<Void> responseEntity = new ResponseEntity<>(
 					HttpStatus.CREATED);
 			return responseEntity;
 		} else {
-			System.out.println("EDIT DISCUSS");
+			logger.debug("EDIT DISCUSS");
 			Discuss newDiscuss = getDiscuss(discuss.getId());
 			newDiscuss.setDiscussType(discuss.getDiscussType());
 			newDiscuss.setTitle(discuss.getTitle());
 			newDiscuss.setStatus(discuss.getStatus());
-			newDiscuss.setFeatured(discuss.getFeatured());
+			newDiscuss.setFeatured(discuss.isFeatured());
 			newDiscuss.setArticlePhotoFilename(discuss.getArticlePhotoFilename());
 
-			System.out.println("** status from form = ** "
-					+ discuss.getStatus());
-			System.out.println("** text from form = ** " + discuss.getText());
 			String tags = discuss.getTags();
 			String edited_tags = "";
 
@@ -80,24 +78,24 @@ public class AdminDiscussController {
 				for (int i = 0; i < tagArr.length; i++) {
 					new_tag_str = new_tag_str + tagArr[i] + ",";
 				}
+				
+				edited_tags = "";
 
-				// prepend new subtopic and topic (if that is the case in edit)
-				edited_tags = discuss.getTopicId() + ","
-						+ discuss.getSubTopicId() + "," + new_tag_str;
+//				edited_tags = discuss.getTopicId() + ","
+//						+ discuss.getSubTopicId() + "," + new_tag_str;
 			} else {
-				edited_tags = discuss.getTopicId() + ","
-						+ discuss.getSubTopicId();
+				edited_tags = "";
+//				edited_tags = discuss.getTopicId() + ","
+//						+ discuss.getSubTopicId();
 			}
 			newDiscuss.setTags(edited_tags);
 
 			newDiscuss.setText(discuss.getText());
 			newDiscuss.setUserId(discuss.getUserId());
 			newDiscuss.setTopicId(discuss.getTopicId());
-			newDiscuss.setSubTopicId(discuss.getSubTopicId());
 			discussRepository.save(newDiscuss);
 			ResponseEntity<Void> responseEntity = new ResponseEntity<>(
 					HttpStatus.CREATED);
-			System.out.println("responseEntity = " + responseEntity);
 			return responseEntity;
 		}
 	}
@@ -105,7 +103,6 @@ public class AdminDiscussController {
 	@RequestMapping(method = RequestMethod.GET, value = "/list/all", produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public List<Discuss> allDiscuss() {
-		System.out.println("show ALL discuss of ALL discuss types");
 		return discussRepository.findAll(new Sort(Sort.Direction.DESC,
 				"createdAt"));
 	}
@@ -115,8 +112,6 @@ public class AdminDiscussController {
 	public List<Discuss> showDiscussByDiscussType(
 			@PathVariable("discussType") String discussType) {
 		try {
-			System.out.println("show ALL discuss of discuss type = "
-					+ discussType);
 			Query q = new Query();
 			q.addCriteria(Criteria.where("discussType").is(discussType));
 			q.with(new Sort(Sort.Direction.DESC, "createdAt"));
@@ -156,8 +151,6 @@ public class AdminDiscussController {
 			throw new DiscussNotFoundException(discussId);
 		}
 
-		System.out.println(">> text = " + discuss.getText());
-		System.out.println(">> status = " + discuss.getStatus());
 		String tagsToShowToUser = discuss.getTags();
 		if (tagsToShowToUser != null) {
 			tagsToShowToUser = tagsToShowToUser.substring(tagsToShowToUser
@@ -197,7 +190,6 @@ public class AdminDiscussController {
 		discussRepository.delete(discussId);
 		ResponseEntity<Void> responseEntity = new ResponseEntity<>(
 				HttpStatus.CREATED);
-		System.out.println("responseEntity = " + responseEntity);
 		return responseEntity;
 	}
 
@@ -213,18 +205,15 @@ public class AdminDiscussController {
 			}
 			String text = discuss.getText();
 			String discussStatus = discuss.getStatus() == null ? "0" : "1";
-			String topicId = discuss.getTopicId();
-			String subTopicId = discuss.getSubTopicId();
-			String tags = discuss.getTags() == null ? (topicId + "," + subTopicId)
-					: topicId + "," + subTopicId + "," + discuss.getTags();
+			List<String> topicId = discuss.getTopicId();
+			String tags = "";
+//			String tags = discuss.getTags() == null ? (topicId + "," + subTopicId)
+//					: topicId + "," + subTopicId + "," + discuss.getTags();
 			int aggrReplyCount = 0;
 			int aggrLikeCount = 0;
 			
-			System.out.println("### FEATURED #### " + discuss.getFeatured());
-
-			return new Discuss(userId, username, discussType, topicId,
-					subTopicId, title, text, discussStatus, tags,
-					aggrReplyCount, aggrLikeCount, discuss.getArticlePhotoFilename() == null ? "":discuss.getArticlePhotoFilename(), discuss.getFeatured());
+			return new Discuss(userId, username, discussType, topicId, title, text, discussStatus, tags,
+					aggrReplyCount, discuss.getArticlePhotoFilename() == null ? "":discuss.getArticlePhotoFilename(), discuss.isFeatured());
 
 		} catch (Exception e) {
 			e.printStackTrace();

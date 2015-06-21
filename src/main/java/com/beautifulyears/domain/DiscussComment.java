@@ -27,15 +27,11 @@ public class DiscussComment {
 
 	// the following cannot be SET by CLIENT JR TBD - Update @JsonIgnore
 	private Date createdAt = new Date();
-	private String status;
-	
 	private int ancestorOffset;
 	private int descendentCount;
 	private int siblingPosition;
-	private int discussCommentLikeCount;
+	private int discussCommentLikeCount = 0;
 	private int discussCommentCommentCount;
-	private String topicId;
-	private String subTopicId;
 
 	@Transient
 	private List<DiscussComment> children = new ArrayList<DiscussComment>();
@@ -48,7 +44,7 @@ public class DiscussComment {
 			String discussCommenContent, Date createdAt, int ancestorOffset,
 			int descendentCount, int siblingPosition,
 			int discussCommentLikeCount, int discussCommentCommentCount,
-			String topicId, String subTopicId, String status) {
+			String topicId, String subTopicId) {
 		super();
 		this.discussId = discussId;
 		this.userId = userId;
@@ -62,9 +58,6 @@ public class DiscussComment {
 		this.siblingPosition = siblingPosition;
 		this.discussCommentLikeCount = discussCommentLikeCount;
 		this.discussCommentCommentCount = discussCommentCommentCount;
-		this.topicId = topicId;
-		this.subTopicId = subTopicId;
-		this.status = status;
 	}
 
 	public String getId() {
@@ -85,14 +78,6 @@ public class DiscussComment {
 
 	public String getUserId() {
 		return userId;
-	}
-
-	public String getStatus() {
-		return status;
-	}
-
-	public void setStatus(String status) {
-		this.status = status;
 	}
 
 	public void setUserId(String userId) {
@@ -169,22 +154,6 @@ public class DiscussComment {
 
 	public void setDiscussCommentCommentCount(int discussCommentCommentCount) {
 		this.discussCommentCommentCount = discussCommentCommentCount;
-	}
-
-	public String getTopicId() {
-		return topicId;
-	}
-
-	public void setTopicId(String topicId) {
-		this.topicId = topicId;
-	}
-
-	public String getSubTopicId() {
-		return subTopicId;
-	}
-
-	public void setSubTopicId(String subTopicId) {
-		this.subTopicId = subTopicId;
 	}
 
 	public Date getCreatedAt() {
