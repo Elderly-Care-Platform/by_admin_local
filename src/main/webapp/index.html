@@ -4,17 +4,19 @@
     <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
 	<script src="js/jquery-1.9.1.js"></script>
 	<script src="js/angular.js"></script>
+	<script src="js/angular-resource.js"></script>
+	<script src="js/angular-route.js"></script>
+	<script src="js/angular-sanitize.js"></script>
 
 
 	<!-- jQuery UI -->
   <!-- <script type="text/javascript" src="js/jquery-ui.js"></script> -->
   <!-- TinyMCE -->
-  <script type="text/javascript" src="http://tinymce.cachefly.net/4.1/tinymce.min.js"></script>
 
-	<script type="text/javascript" src="js/tinymce.js"></script>
+	<script type="text/javascript" src="js/tinymce/tinymce.min.js"></script>
 	<!--<script type="text/javascript" src="js/one.js"></script>-->
 
-	<script src="js/angular-resource.js"></script>
+	
 	<script src="js/toastr.js"></script>
 	<script src="js/app.js"></script>
 	<script src="js/bootstrap.js"></script>
@@ -22,6 +24,7 @@
 
     <link rel="stylesheet" href="css/bootstrap.css"/>
     <link rel="stylesheet" href="css/toastr.css"/>
+    <link rel="stylesheet" href="css/custom.css"/>
 
     <!--  JQXGRID widget  -->
     <!-- JQXWIDGETS -->
@@ -40,6 +43,7 @@
 	<script type="text/javascript" src="jqwidgets/jqxgrid.filter.js"></script>
 	<script type="text/javascript" src="jqwidgets/jqxgrid.columnsresize.js"></script>
 	<script type="text/javascript" src="jqwidgets/jqxgrid.pager.js"></script>
+	<script type="text/javascript" src="http://malsup.github.com/jquery.form.js"></script>
 	<link rel="Stylesheet" type="text/css" href="jqwidgets/styles/jqx.energyblue.css" />
 	<link rel="Stylesheet" type="text/css" href="jqwidgets/styles/jqx.base.css" />
 	<!-- JQXWIDGETS -->
@@ -50,6 +54,36 @@
     <title>BeautifulYears - Admin Module</title>
 </head>
 <body ng-app="byAdminApp">
+
+<div class="tnymcePopUpwrapper">
+    <div class="tnymcePopUpwrapperInside">
+        <div class="imagebgNew">
+            <div class="tnymcePopUpwrapperInsideTitle divLeft">
+                Insert Image
+            </div>
+            <div class="tnymcePopUpwrapperInsideClose tnymceCloseImage divRight">
+                X
+            </div> <div class="clearfix"></div>
+        </div>
+
+		<!-- insert image in tinymce -->
+		<form id="UploadImage" action="UploadFile" method="post" enctype="multipart/form-data">
+		<!-- insert image in tinymce -->
+
+        <div class="tnymcePopUpwrapperInsideLabel divLeft">Image URL</div>
+        <div class="tnymcePopUpwrapperInsideUrl divRight">
+             <input type="file" name="sp" id="sp" size="100">
+        </div>
+        <div class="clearfix"></div>
+        <div>
+            <button  type="submit"  class="tnymceCloseImageAdd">Ok</button>
+            <button  type="button"  class="tnymceCloseImage tnymceCloseImageButton">Cancel</button>
+        </div> <div class="clearfix"></div>
+        </form>
+
+
+    </div>
+</div>
 
 <div class="navbar navbar-inverse navbar-fixed-top">
     <div class="navbar-inner">
@@ -116,7 +150,50 @@
 			element.innerHTML = "Login";
             element.href = "#/users/login";
      	}
+     	
+     	
+     	var options1 = {
+		        beforeSend : function() {
+		                //$("#progressbox").show();
+		                // clear everything
+		                //$("#progressbar").width('0%');
+		                //$("#message").empty();
+		                //$("#percent").html("0%");
+		        },
+		        uploadProgress : function(event, position, total, percentComplete) {
+		                //$("#progressbar").width(percentComplete + '%');
+		                //$("#percent").html(percentComplete + '%');
+
+		                // change message text to red after 50%
+		                //if (percentComplete > 50) {
+		                //$("#message").html("<font color='red'>File Upload is in progress</font>");
+		               // }
+		        },
+		        success : function(response) {
+		               // $("#progressbar").width('100%');
+		               // $("#percent").html('100%');
+		        	//var img = "<img src = 'uploaded_files/" +  response.responseText.substring(response.responseText.lastIndexOf('/')+1) + "' />";
+					//tinyMCE.activeEditor.execCommand("mceInsertContent", true, img);
+		        },
+		        complete : function(response) {
+					//tinyMCE.activeEditor.focus();
+					//tinyMCE.get('submit-article').getBody().focus();
+
+					//?????var img = "<img style = 'height:80px;width:80px' src = 'http://" + response.responseText + "' />";
+					//alert("img path = " + response.responseText.substring(response.responseText.lastIndexOf('/')+1));
+					var img = "<img src = 'uploaded_files/" +  response.responseText.substring(response.responseText.lastIndexOf('/')+1) + "' />";
+					tinyMCE.activeEditor.execCommand("mceInsertContent", true, img);
+					//$("#articlePhotoFilename").val(response.responseText);
+		        },
+		        error : function() {
+		        //$("#articlePhotoFilename").val("<font color='red'> ERROR: unable to upload files</font>");
+		        tinyMCE.activeEditor.execCommand("mceInsertContent", true, "<font color='red'> ERROR: unable to upload files</font>");
+		        }
+			};
+
+			$("#UploadImage").ajaxForm(options1);
      });
 	</script>
+	
 </body>
 </html>

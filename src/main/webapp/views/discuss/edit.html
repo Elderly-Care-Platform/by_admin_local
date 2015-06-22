@@ -18,18 +18,81 @@
     <div id="wrapper" class="row-fluid">
         <h3 class='menu'>Edit {{currentDiscuss.discussType == 'A' && 'Article' || currentDiscuss.discussType == 'Q' && 'Question' || 'Post'}}</h3>
         <div class="alert alert-error" ng-show="error">{{errorMessage}}</div>
-<form novalidate class="form-horizontal">
 
 <script type="text/javascript">
-	tinyMCE
-			.init({
-				selector : "#edittext",
-				plugins : [
-						"advlist autolink lists link image charmap print preview anchor",
-						"searchreplace visualblocks code fullscreen",
-						"insertdatetime media table contextmenu paste" ],
-				toolbar : "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image"
-			});
+	tinymce.init({
+		selector : "#edittext",
+	    theme: "modern",
+	    skin: 'light',
+	    content_css : "css/tinyMce_custom.css",
+	    statusbar: false,
+	    menubar: false,
+	    plugins: [
+	              "advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker",
+	              "searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",
+	              " emoticons textcolor paste autoresize "
+	          ],
+	          toolbar: "styleselect | bold italic | bullist numlist hr  | undo redo | link unlink emoticons image media  preview ",
+	          setup : function(ed) {
+	              var placeholder = $('#' + ed.id).attr('placeholder');
+	              if (typeof placeholder !== 'undefined' && placeholder !== false) {
+	                  var is_default = false;
+	                  ed.on('init', function () {
+	                      // get the current content
+	                      var cont = ed.getContent();
+
+	                      // If its empty and we have a placeholder set the value
+	                      if (cont.length === 0) {
+	                          ed.setContent(placeholder);
+	                          // Get updated content
+	                          cont = placeholder;
+	                      }
+	                      // convert to plain text and compare strings
+	                      is_default = (cont == placeholder);
+
+	                      // nothing to do
+	                      if (!is_default) {
+	                          return;
+	                      }
+	                  }).on('keydown', function () {
+	                      // replace the default content on focus if the same as original placeholder
+	                      if (is_default) {
+	                          ed.setContent('');
+	                          is_default = false;
+	                      }
+	                  }).on('blur', function () {
+	                      if (ed.getContent().length === 0) {
+	                          ed.setContent(placeholder);
+	                      }
+	                  });
+	              }
+	              ed.on('init', function (evt) {
+	                  var toolbar = $(evt.target.editorContainer)
+	                      .find('>.mce-container-body >.mce-toolbar-grp');
+	                  var editor = $(evt.target.editorContainer)
+	                      .find('>.mce-container-body >.mce-edit-area');
+
+	                  // switch the order of the elements
+	                  toolbar.detach().insertAfter(editor);
+	              });
+	              ed.on("keyup", function () {
+	                  var id = ed.id;
+	                  if ($.trim(ed.getContent({format: 'text'})).length) {
+	                      $("#" + id).parents(".textarea-label").find(".btn").removeClass("disabled");
+	                  } else {
+	                      $("#" + id).parents(".textarea-label").find(".btn").addClass("disabled");
+	                  }
+	              });
+
+	              ed.on('blur', function(e) {
+	                  console.log('reset event', e);
+	              });
+
+	              ed.on('remove', function(e) {
+	                  console.log('remove event', e);
+	              });
+	          }
+		});
 
 	$(document).ready(function() {
 		$('#edit_text').click(function() {
@@ -38,12 +101,23 @@
 		});
 	});
 </script>
-	<div class="control-group" ng-show="currentDiscuss.discussType == 'A'">
+	<div class="control-group" ng-if="currentDiscuss.discussType == 'A'">
 		<label class="control-label" for="title"><strong>Title</strong></label>
 		<div class="controls">
 			<input type="text" ng-model="currentDiscuss.title" id="title" required/>
 		</div>
-	</div>
+				<form id="UploadImage12" action="UploadFile" method="post"
+					enctype="multipart/form-data">
+					<label class="myLabel" ng-style="{'background-image': 'url({{ currentDiscuss.articlePhotoFilename }})'}"> <input name="sp" id="sp"
+						type="file" required onchange="javascript:uploadImage(this)" /> <span>Please
+							upload<br> your main <br>photo (optional)
+					</span>
+					</label>
+				</form>
+				<input type="text" id="articleTitleImage"
+					ng-model="currentDiscuss.articlePhotoFilename" value=""
+					style="display: none" onchange="javascript:previewImage(this)"/>
+			</div>
 
 
 
@@ -75,7 +149,7 @@
 
 				<div class="control-group">
 					<label class="control-label" for="text"></label>
-					<div class="controls" id="mce">
+					<div class="controls byEditor" id="mce">
 						<textarea data-ui-tinymce id="edittext" name="edittext"
 							ng-model="currentDiscuss.text"></textarea>
 					</div>
@@ -90,18 +164,12 @@
 	</div>
 
 
-		<div class="control-group" data-ng-controller="myCtrl">
+		<div class="control-group">
 			<label class="control-label" for="topic"> <strong>Topic/Sub Topic</strong></label>
 			<div class="controls">
-			<!-- <select data-ng-model="currentDiscuss.topicId" data-ng-options="option for option in options1" data-ng-load="getOptions2()">
-	    </select>
-			<select data-ng-model="currentDiscuss.subTopicId" data-ng-options="option for option in options2">
-	    </select>
-	    	-->
+			
 
-	    	<input type="text" ng-model="currentDiscuss.topicId" id="tags" disabled/>
-
-	    	<input type="text" ng-model="currentDiscuss.subTopicId" id="tags" disabled/>
+	    	<input type="text" value="{{$root.discussCategoryListMap[topics].name}}" ng-repeat="topics in currentDiscuss.topicId" id="tags" disabled/>
 
 	    </div>
 		</div>
@@ -111,4 +179,51 @@
 		<!-- <button id="save" class="btn btn-primary">Edit Article</button> -->
 		<a ng-click="editdiscuss()" class="btn btn-primary">Edit Article </a>
 	</div>
-</form>
+	<script type="text/javascript">
+function uploadImage(input){
+	if (input.files && input.files[0]) {
+		previewImage(input);
+        $("#UploadImage12").bind('submit', function(e) {
+        	var postData = new FormData(jQuery('#UploadImage12')[0]);
+        	$.ajax(
+        		    {
+        		        url : 'UploadFile',
+        		        type: "POST",
+        		        enctype:"multipart/form-data",
+        		        data : postData,
+        		      //  contentType: "application/json",
+        		        cache: false,
+					    contentType: false,
+					    processData: false,
+        		        success:function(data, textStatus, jqXHR) 
+        		        {
+        		            $("#articleTitleImage").val(data);
+        		            $("#articleTitleImage").trigger('input');
+        		        },
+        		        error: function(jqXHR, textStatus, errorThrown) 
+        		        {
+        		        	alert("Image upload failed");
+        		        }
+        		    });
+            e.preventDefault();
+      });
+        $('#UploadImage12').submit();
+        
+        //input.form.submit();
+    }
+}
+
+
+function previewImage(input) {
+	var input = input || document.querySelector("input#sp");
+	if ((input.files && input.files[0])||input.value) {
+		var reader = new FileReader();
+		reader.onload = function(e) {
+			$('.myLabel').css('background-image',
+					'url(' + e.target.result + ')')
+		}
+
+		reader.readAsDataURL(input.files[0] || input.value);
+	}
+}
+	</script>

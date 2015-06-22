@@ -8,6 +8,8 @@ import org.springframework.web.WebApplicationInitializer;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springframework.web.servlet.DispatcherServlet;
 
+import com.beautifulyears.servlet.UploadFile;
+
 public class GetByWebApplicationInitializer implements
 		WebApplicationInitializer {
 
@@ -23,6 +25,12 @@ public class GetByWebApplicationInitializer implements
 				new DispatcherServlet(webApplicationContext));
 		dynamc.addMapping("/api/v1/*");
 		dynamc.setLoadOnStartup(1);
+		
+		Dynamic dynamc2 = servletContext.addServlet("UploadFile",
+				new UploadFile());
+		dynamc2.addMapping("/UploadFile");
+		dynamc2.setLoadOnStartup(1);
+		dynamc2.setAsyncSupported(true);
 
 		/*
 		 * // create a security constraint element

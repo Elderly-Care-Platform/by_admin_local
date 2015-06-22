@@ -1,0 +1,135 @@
+@CHARSET "ISO-8859-1";
+
+.byEditor {
+    border: 1px solid #ccc;
+      margin-bottom: 70px;
+}
+
+
+.tnymcePopUpwrapper
+{
+	width: 100%;
+	height: 100%;
+	position: fixed;
+	top: 0px;
+	left: 0px;
+	background: rgba(0, 0, 0, 0.8);;
+	display: none;
+	z-index: 9999999;
+}
+.tnymcePopUpwrapperInside
+{
+	width: 370px;
+	height: auto;
+	padding: 10px;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 20%;
+	background: #fff;
+	color: #000;
+	font-size: 14px;
+}
+.imagebgNew
+{
+	background: #f3f3f3;
+	width: 370px;
+	padding: 8px 10px 6px 10px;
+	margin-left: -10px;
+	margin-top: -10px;
+	  line-height: 20px;
+}
+.tnymcePopUpwrapperInsideTitle
+{
+	line-height: 20px;
+	font-size: 20px;
+	font-weight: 700;
+}
+.tnymcePopUpwrapperInsideClose
+{
+	color: #8C8585;
+	font-weight: 700;
+	font-size: 15px;
+	cursor: pointer;
+}
+.tnymcePopUpwrapperInsideLabel
+{
+	width: 100px;
+	height: auto;
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+.tnymcePopUpwrapperInsideUrl
+{
+	width: 220px;
+	height: auto;
+	margin-top: 10px;
+	margin-bottom: 10px;
+	oveflow-y:hidden;
+}
+.tnymcePopUpwrapperInsideUrl input
+{
+	width: 220px;
+}
+.tnymceCloseImageAdd
+{
+	width: 50px;
+	height: 20px;
+	line-height: 15px;
+	background: #7fba00;	
+	min-width: 50px;
+	color: #fff;
+	border: 1px solid #b1b1b1;
+	font-size: 13px;
+	margin-left: 236px;
+	margin-bottom: 7px;
+	margin-top: 4px;
+}
+.tnymceCloseImageButton
+{
+	width: 60px;
+	height: 20px;
+	line-height: 15px;
+	background: #f0f0f0;	
+	min-width: 50px;
+	color: #000;
+	border: 1px solid #b1b1b1;
+	font-size: 13px;
+	margin-bottom: 7px;
+	margin-top: 4px;
+}
+
+.divRight
+{
+	float: right;
+}
+
+.myLabel {
+   border: 1px solid #d0d0d0;
+  border-radius: 4px;
+  padding: 25px 25px;
+  text-align: center;
+  margin: 2px;
+  background: #ececec;
+  display: inline-block;
+    background-size: 100%;
+  background-repeat: round;
+  width:100px;
+}
+
+.myLabel:hover {
+    /*background: #CCC;*/
+    color:white;
+}
+.myLabel:active {
+    /*background: #CCF;*/
+}
+.myLabel :invalid + span {
+    color: #2a2a2a;
+}
+.myLabel :valid + span {
+    color: #2a2a2a;
+}
+label.myLabel input[type="file"] {
+    position: fixed;
+    top: -1000px;
+}

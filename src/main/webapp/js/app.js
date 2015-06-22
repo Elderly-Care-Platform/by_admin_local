@@ -1,7 +1,19 @@
 var adminServices = angular.module("adminServices", ["ngResource"]);
 var adminControllers = angular.module("adminControllers", []);
 
-
+var discussCategoryList = adminServices.factory('discussCategoryList', function ($resource) {
+	return $resource('api/v1/topic/list/all', 
+			{q: '*' }, 
+		      {'query': { method: 'GET' ,
+		    	  interceptor: {
+		              response: function(response) {  
+		                  return response.data;
+		                }
+		              }
+		    	  }
+				
+	})
+});
 
 
 var discuss = adminServices.factory('SessionIdService', function() {
@@ -133,7 +145,9 @@ var discussShow_admin = adminServices.factory('AdminDiscussShow', function($reso
 
 var byAdminApp = angular.module('byAdminApp', [
  	"adminControllers",
- 	"adminServices"
+ 	"adminServices",
+ 	"ngRoute",
+ 	'ngSanitize'
  ]);
 
 
@@ -191,7 +205,7 @@ byAdminApp.config(['$routeProvider',
 
 
 //Routing and Session Check for Login
-byAdminApp.run(function($rootScope, $location, SessionIdService) {
+byAdminApp.run(function($rootScope, $location, SessionIdService,discussCategoryList) {
 
     // register listener to watch route changes
     $rootScope.$on("$routeChangeStart", function(event, next, current) {
@@ -210,6 +224,24 @@ byAdminApp.run(function($rootScope, $location, SessionIdService) {
             }
         }
     });
+    
+    
+    
+    discussCategoryList.query().$promise.then(
+    	    function(categories){
+    	    	$rootScope.discussCategoryList = categories;
+    	    	$rootScope.discussCategoryListMap = {};
+    	    	$rootScope.discussCategoryNameIdMap = {};
+    	        angular.forEach(categories, function(category, index){
+    	        	$rootScope.discussCategoryListMap[category.id] = category;
+    	        	$rootScope.discussCategoryNameIdMap[category.name.toLowerCase()] = category.id;
+    	        	angular.forEach(category.children, function(subCategory, index){
+	    				$rootScope.discussCategoryListMap[subCategory.id] = subCategory;
+	    				$rootScope.discussCategoryNameIdMap[subCategory.name.toLowerCase()] = subCategory.id;
+	    			});
+    	        });
+    	    }
+    	);
 });
 
 
@@ -578,6 +610,17 @@ function($scope, $location, $rootScope, $location, AdminPostDiscuss) {
 	$location.path('/discuss/P');
 }]);
 
+adminControllers.controller('AdminListFeedbackController', ['$scope', '$rootScope', '$location', 'AdminFeedbackDiscuss',
+function($scope, $rootScope, $location, AdminFeedbackDiscuss) {
+	if(localStorage.getItem("SessionId") == '') {
+		return;
+	}
+	$scope.discuss = AdminFeedbackDiscuss.query();
+	$scope.discuss.discussType = 'F';
+	$rootScope.bc_discussType = 'F';
+	$location.path('/discuss/F');
+}]);
+
 adminControllers.controller('AdminListArticleController', ['$scope', '$location', '$rootScope', '$location', 'AdminArticleDiscuss',
 function($scope, $location, $rootScope, $location, AdminArticleDiscuss) {
 	if(localStorage.getItem("SessionId") == '') {
@@ -600,13 +643,78 @@ adminControllers.controller('LoadTMController', ['$scope', '$route',
   function($scope, $route) {
 	tinymce.init({
     selector: "textarea",
+    theme: "modern",
+    skin: 'light',
+    content_css : "css/tinyMce_custom.css",
+    statusbar: false,
+    menubar: false,
     plugins: [
-        "advlist autolink lists link image charmap print preview anchor",
-        "searchreplace visualblocks code fullscreen",
-        "insertdatetime media table contextmenu paste"
-    ],
-    toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image"
+              "advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker",
+              "searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",
+              " emoticons textcolor paste autoresize "
+          ],
+          toolbar: "styleselect | bold italic | bullist numlist hr  | undo redo | link unlink emoticons image media  preview ",
+          setup : function(ed) {
+              var placeholder = $('#' + ed.id).attr('placeholder');
+              if (typeof placeholder !== 'undefined' && placeholder !== false) {
+                  var is_default = false;
+                  ed.on('init', function () {
+                      // get the current content
+                      var cont = ed.getContent();
+
+                      // If its empty and we have a placeholder set the value
+                      if (cont.length === 0) {
+                          ed.setContent(placeholder);
+                          // Get updated content
+                          cont = placeholder;
+                      }
+                      // convert to plain text and compare strings
+                      is_default = (cont == placeholder);
+
+                      // nothing to do
+                      if (!is_default) {
+                          return;
+                      }
+                  }).on('keydown', function () {
+                      // replace the default content on focus if the same as original placeholder
+                      if (is_default) {
+                          ed.setContent('');
+                          is_default = false;
+                      }
+                  }).on('blur', function () {
+                      if (ed.getContent().length === 0) {
+                          ed.setContent(placeholder);
+                      }
+                  });
+              }
+              ed.on('init', function (evt) {
+                  var toolbar = $(evt.target.editorContainer)
+                      .find('>.mce-container-body >.mce-toolbar-grp');
+                  var editor = $(evt.target.editorContainer)
+                      .find('>.mce-container-body >.mce-edit-area');
+
+                  // switch the order of the elements
+                  toolbar.detach().insertAfter(editor);
+              });
+              ed.on("keyup", function () {
+                  var id = ed.id;
+                  if ($.trim(ed.getContent({format: 'text'})).length) {
+                      $("#" + id).parents(".textarea-label").find(".btn").removeClass("disabled");
+                  } else {
+                      $("#" + id).parents(".textarea-label").find(".btn").addClass("disabled");
+                  }
+              });
+
+              ed.on('blur', function(e) {
+                  console.log('reset event', e);
+              });
+
+              ed.on('remove', function(e) {
+                  console.log('remove event', e);
+              });
+          }
 	});
+	
 
 
 	}
@@ -791,43 +899,68 @@ var option2Options = [
 
 
 
-function myCtrl($scope){
-    $scope.options1 = option1Options;
-    $scope.options2 = []; // we'll get these later
-    $scope.getOptions2 = function(){
-        // just some silly stuff to get the key of what was selected since we are using simple arrays.
-        var key = $scope.options1.indexOf($scope.discuss.topicId);
-        // Here you could actually go out and fetch the options for a server.
-        var myNewOptions = option2Options[key];
-        // Now set the options.
-        // If you got the results from a server, this would go in the callback
-        $scope.options2 = myNewOptions;
-    };
-    $scope.getOptionsforId = function(topicId){
-        // just some silly stuff to get the key of what was selected since we are using simple arrays.
-        var key = $scope.options1.indexOf(topicId);
-        // Here you could actually go out and fetch the options for a server.
-        var myNewOptions = option2Options[key];
-        // Now set the options.
-        // If you got the results from a server, this would go in the callback
-        $scope.options2 = myNewOptions;
-    };
-    $scope.getOption = function(topicId){
-        // just some silly stuff to get the key of what was selected since we are using simple arrays.
-        return $scope.options1.indexOf(topicId);
-    };
-    $scope.getSubOption = function(topicId, subTopicId){
-    	var key = $scope.options1.indexOf(topicId);
-        // Here you could actually go out and fetch the options for a server.
-        var myNewOptions = option2Options[key];
-        // Now set the options.
-        // If you got the results from a server, this would go in the callback
-        key = myNewOptions.indexOf(subTopicId);
-        return  key;
-    };
-}
+//function myCtrl($scope){
+//    $scope.options1 = option1Options;
+//    $scope.options2 = []; // we'll get these later
+//    $scope.getOptions2 = function(){
+//        // just some silly stuff to get the key of what was selected since we are using simple arrays.
+//        var key = $scope.options1.indexOf($scope.discuss.topicId);
+//        // Here you could actually go out and fetch the options for a server.
+//        var myNewOptions = option2Options[key];
+//        // Now set the options.
+//        // If you got the results from a server, this would go in the callback
+//        $scope.options2 = myNewOptions;
+//    };
+//    $scope.getOptionsforId = function(topicId){
+//        // just some silly stuff to get the key of what was selected since we are using simple arrays.
+//        var key = $scope.options1.indexOf(topicId);
+//        // Here you could actually go out and fetch the options for a server.
+//        var myNewOptions = option2Options[key];
+//        // Now set the options.
+//        // If you got the results from a server, this would go in the callback
+//        $scope.options2 = myNewOptions;
+//    };
+//    $scope.getOption = function(topicId){
+//        // just some silly stuff to get the key of what was selected since we are using simple arrays.
+//        return $scope.options1.indexOf(topicId);
+//    };
+//    $scope.getSubOption = function(topicId, subTopicId){
+//    	var key = $scope.options1.indexOf(topicId);
+//        // Here you could actually go out and fetch the options for a server.
+//        var myNewOptions = option2Options[key];
+//        // Now set the options.
+//        // If you got the results from a server, this would go in the callback
+//        key = myNewOptions.indexOf(subTopicId);
+//        return  key;
+//    };
+//}
 
 
+adminControllers.controller('topicController', ['$scope', '$rootScope', '$routeParams',
+                                                             function($scope,  $rootScope, $routeParams) {
+	$scope.options1 = $rootScope.discussCategoryList;
+	$scope.options2 = {};
+	
+	$scope.selectedTopicIndex = '';
+	$scope.selectedSubTopicIndex = '';
+	
+	var topicId = [];
+	
+	
+	
+	$scope.loadSubCategories = function(){
+		topicId = [];
+		topicId = [$rootScope.discussCategoryList[$scope.selectedTopicIndex].id];
+		$scope.options2 = $rootScope.discussCategoryList[$scope.selectedTopicIndex].children;
+		$scope.$parent.currentDiscuss.topicId = topicId;
+	}
+	
+	$scope.subCategoryChanged = function(){
+		topicId = [];
+		topicId = [$rootScope.discussCategoryList[$scope.selectedTopicIndex].id, $rootScope.discussCategoryList[$scope.selectedTopicIndex].children[$scope.selectedSubTopicIndex].id];
+		$scope.$parent.currentDiscuss.topicId = topicId;
+	}
+}]);
 
 
 

@@ -1,0 +1,23 @@
+@font-face {
+    font-family: 'century_gothic';
+    src: url('../font/century_gothic/gothic.eot');
+    src: url('../font/century_gothic/gothic.eot?#iefix') format('embedded-opentype'),
+    url('../font/century_gothic/gothic.woff') format('woff'),
+    url('../font/century_gothic/gothic.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+body{
+	margin:  0 10px;
+	padding: 0 15px;
+}
+
+body, td, pre, p {
+	color: rgb(10, 10, 10);
+	line-height: 25px;
+	font-family: century_gothic;
+	font-size: 15px;
+}
+
