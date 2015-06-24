@@ -1,6 +1,7 @@
 package com.beautifulyears.rest;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -64,6 +65,7 @@ public class AdminDiscussController {
 			newDiscuss.setStatus(discuss.getStatus());
 			newDiscuss.setFeatured(discuss.isFeatured());
 			newDiscuss.setArticlePhotoFilename(discuss.getArticlePhotoFilename());
+			newDiscuss.setLastModifiedAt(new Date());
 
 			String tags = discuss.getTags();
 			String edited_tags = "";

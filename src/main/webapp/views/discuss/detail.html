@@ -2,7 +2,7 @@
 <h2> by {{discuss.username}} <small class="muted">{{discuss.createdAt | date:'medium'}}</small></h2>
 <hr>
 <div>
-<img alt="title image" ng-src="discuss.articlePhotoFilename" ng-if="discuss.discussType == 'A'">
+<img alt="title image" class="articleTitleImage" src="{{discuss.articlePhotoFilename}}" ng-if="discuss.discussType == 'A'">
 <p class="lead">
 	<span ng-bind-html="discuss.text"></span>
 </p>

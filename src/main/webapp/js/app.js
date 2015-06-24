@@ -558,14 +558,20 @@ adminControllers.controller('AdminCommentCreateController', ['$scope', '$http', 
 				//putting the userId to discuss being created
 				$scope.currentComment.userId = localStorage.getItem("USER_ID");
 				$scope.currentComment.userName = localStorage.getItem("USER_NAME");
+				
+				$scope.currentComment.status = $scope.currentComment.status === true ? 1:0;
 
 
 	 			$scope.currentComment.$save(function () {
 					toastr.success('Comment edited successfully');
-					$location.path('/comment/'+ $scope.currentComment.discussId + '/' + $scope.currentComment.discussId);
+					$location.path('/comment/'+ $scope.currentComment.discussId + '/' + ($scope.currentComment.parentReplyId||"null"));
 	 			});
 	 		};
 
+	 		$scope.goBack = function () {
+
+					$location.path('/comment/'+ $scope.currentComment.discussId + '/' + ($scope.currentComment.parentReplyId||"null"));
+	 		};
 
 	 		$location.path('/comment/' + commentId);
 
@@ -858,82 +864,15 @@ adminControllers.controller('AdminDiscussDeleteController', ['$scope', '$locatio
 
 
 
-var UserRoleController = function($scope) {
-    $scope.userRoleIds =
-    [
-        "SUPER_USER",
-        "WRITER",
-        "EDITOR",
-        "USER"
-    ];
-};
+adminControllers.controller('UserRoleController', [ '$scope', function($scope) {
+	$scope.userRoleIds = [ "SUPER_USER", "EDITOR", "USER" ];
+} ]);
 
+adminControllers.controller('UserStateController', [ '$scope',
+		function($scope) {
+			$scope.isActives = [ "In-Active", "Active" ];
+		} ]);
 
-var UserStateController = function($scope) {
-    $scope.isActives =
-    [
-        "In-Active",
-        "Active"
-    ];
-};
-
-
-
-//Topic/Sub Topic drop down in DISCUSS Create
-var option1Options =	[
-		"BEAUTIFUL LIVES",
-		"ELDER'S ROUTINE",
-		"HEALTH CONDITIONS",
-		"CAREGIVER'S CORNER",
-		"FAMILY AND RELATIONSHIPS"
-
-	];
-
-var option2Options = [
-		["Stars forever","Personal stories"],
-		["Chores","Medications", "Personal hygiene", "Food & Nutrition", "Mobility", "Activities"],
-		["Alzheimer's and dementia","Parkinson's", "Mental disorders", "Broken hip", "Stroke", "Heart", "Arthritis", "Diabetes", "Incontinence", "Vision & Hearing loss", "Cancer", "Respiratory", "Kidney", "Digestive system", "Sleep disorders", "Osteoporosis", "Other"],
-		["Caregiving guides","Stress and burnout", "Personal stories"]
-
-	];
-
-
-
-//function myCtrl($scope){
-//    $scope.options1 = option1Options;
-//    $scope.options2 = []; // we'll get these later
-//    $scope.getOptions2 = function(){
-//        // just some silly stuff to get the key of what was selected since we are using simple arrays.
-//        var key = $scope.options1.indexOf($scope.discuss.topicId);
-//        // Here you could actually go out and fetch the options for a server.
-//        var myNewOptions = option2Options[key];
-//        // Now set the options.
-//        // If you got the results from a server, this would go in the callback
-//        $scope.options2 = myNewOptions;
-//    };
-//    $scope.getOptionsforId = function(topicId){
-//        // just some silly stuff to get the key of what was selected since we are using simple arrays.
-//        var key = $scope.options1.indexOf(topicId);
-//        // Here you could actually go out and fetch the options for a server.
-//        var myNewOptions = option2Options[key];
-//        // Now set the options.
-//        // If you got the results from a server, this would go in the callback
-//        $scope.options2 = myNewOptions;
-//    };
-//    $scope.getOption = function(topicId){
-//        // just some silly stuff to get the key of what was selected since we are using simple arrays.
-//        return $scope.options1.indexOf(topicId);
-//    };
-//    $scope.getSubOption = function(topicId, subTopicId){
-//    	var key = $scope.options1.indexOf(topicId);
-//        // Here you could actually go out and fetch the options for a server.
-//        var myNewOptions = option2Options[key];
-//        // Now set the options.
-//        // If you got the results from a server, this would go in the callback
-//        key = myNewOptions.indexOf(subTopicId);
-//        return  key;
-//    };
-//}
 
 
 adminControllers.controller('topicController', ['$scope', '$rootScope', '$routeParams',

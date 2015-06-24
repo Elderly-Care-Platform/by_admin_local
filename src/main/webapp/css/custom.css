@@ -133,3 +133,9 @@ label.myLabel input[type="file"] {
     position: fixed;
     top: -1000px;
 }
+
+@media (min-width: 500px){
+	.articleTitleImage {
+  max-width: 444px;
+}
+}

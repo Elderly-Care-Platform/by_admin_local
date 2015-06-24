@@ -1,9 +1,13 @@
 <script type="text/javascript">
         $(document).ready(function () {
-        	var this_url = window.location.href;
-        	var dis_id = this_url.substring(this_url.lastIndexOf('/')+1).trim();
+        	var this_url_parts = window.location.href.split("/");
+        	console.log(this_url_parts);
+        	var dis_id = this_url_parts[this_url_parts.length -2].trim();
+        	console.log(dis_id);
+        	var parentId = this_url_parts[this_url_parts.length -1].trim();
+        	console.log(parentId);
 
-            var url = '/byadmin/api/v1/comment/' + dis_id + '/' + dis_id;
+            var url = '/byadmin/api/v1/comment/' + dis_id + '/' + parentId;
 
             // prepare the data
             var source = '';
@@ -11,11 +15,11 @@
             source = {
                 datatype: "json",
                 datafields: [
-                	{ name: 'discussCommenContent', type: 'string' },
+                	{ name: 'text', type: 'string' },
 					{ name: 'userName', type: 'string' },
                     { name: 'createdAt', type: 'date' },
                     { name: 'status', type: 'string' },
-                    { name: 'id1', type: 'string' },
+                    { name: 'directChildrenCount', type: 'string' },
 					{ name: 'id', type: 'string' }
                     ],
                 url: url,
@@ -47,8 +51,10 @@
 
 
 			var statusrenderer = function (row, column, value) {
-				if(value == '0') return '<div style="text-align: center; margin-top: 5px;" height="26" width="26">Un-Published</div>';
-				else return '<div style="text-align: center; margin-top: 5px;" height="26" width="26">Published</div>';
+				console.log("-----------------------");
+				console.log(value);
+				if(value == '0' || value == '') return '<div style="text-align: center; margin-top: 5px;" height="26" width="26">Published</div>';
+				else return '<div style="text-align: center; margin-top: 5px;" height="26" width="26">Withdrawn</div>';
 			}
 
 
@@ -57,14 +63,28 @@
 
                 return '<div style="text-align: center; margin-top: 5px;"><a href="#/comment/'+ value +'"><img src="../../../byadmin/img/edit.png" alt="edit" height="26" width="26"></a></div>'
 			}
+			
+			var commentsrenderer = function (row, column, value) {
+				if(value != undefined){
+					var count = parseInt(value.substring(0, value.indexOf('#')));
+					var id = value.substring(value.indexOf('#')+1);
+				}
+				if(count > 0){
+					return '<div style="text-align: center; margin-top: 5px;"><a href="#/comment/'+ dis_id  + '/' + id + '">Answers/Comments</a></div>'
+				}else{
+					return "";
+				}
+				
+			}
 
 			var dataAdapter = new $.jqx.dataAdapter(source, {
 				beforeLoadComplete: function (records) {
 
                         for (var i = 0; i < records.length; i++) {
-                            records[i].id1= records[i].id;
+                            //records[i].id1= records[i].id;
                             //records[i].title= records[i].title + "#" + records[i].id;
-                            records[i].discussCommenContent= records[i].discussCommenContent+ "#" + records[i].id;
+                            records[i].text= records[i].text+ "#" + records[i].id;
+                            records[i].directChildrenCount = records[i].directChildrenCount + "#" + records[i].id;
                         };
                         return records;
                     }
@@ -83,10 +103,11 @@
 				altrows: true,
 				columnsresize: true,
 				columns: [
-				  { text: 'Text', datafield: 'discussCommenContent', cellsrenderer:titlerenderer, width: 200, cellsalign:'center', align:'center' },
+				  { text: 'Text', datafield: 'text', cellsrenderer:titlerenderer, width: 200, cellsalign:'center', align:'center' },
 				  { text: 'Created/Updated By', datafield: 'userName', width: 150, cellsalign:'center', align:'center' },
 				  { text: 'Date Created', datafield: 'createdAt', cellsformat: 'dd.MM.yyyy  HH:mm:ss', width: 150, cellsalign:'center', align:'center' },
 				  { text: 'Status', datafield: 'status', cellsrenderer:statusrenderer, width: 150, cellsalign:'center', align:'center' },
+				  { text: 'Comments', datafield: 'directChildrenCount', cellsrenderer:commentsrenderer, width: 150, cellsalign:'center', align:'center' },
 				  { text: 'Edit', datafield: 'id', cellsrenderer: editrenderer, minwidth: 100, cellsalign:'center', align:'center' }
 
 				]

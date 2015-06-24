@@ -20,6 +20,15 @@ public class Session {
 	private String userEmail;
 	private Date createdAt = new Date();
 	private int status = STATUS_ACTIVE;
+	
+	
+
+	public Session() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+
 
 	public Session(User user) {
 		this.setUserId(user.getId());

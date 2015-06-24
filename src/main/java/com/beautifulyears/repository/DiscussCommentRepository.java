@@ -5,12 +5,12 @@ import java.util.List;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
-import com.beautifulyears.domain.DiscussComment;
+import com.beautifulyears.domain.DiscussReply;
 
 @Repository
 public interface DiscussCommentRepository extends
-		MongoRepository<DiscussComment, String> {
+		MongoRepository<DiscussReply, String> {
 
-	public List<DiscussComment> findAll();
+	public List<DiscussReply> findAll();
 
 }

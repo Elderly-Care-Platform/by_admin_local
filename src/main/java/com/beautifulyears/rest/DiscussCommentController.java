@@ -1,7 +1,6 @@
 package com.beautifulyears.rest;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -22,13 +21,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.beautifulyears.Util;
-import com.beautifulyears.domain.Discuss;
-import com.beautifulyears.domain.DiscussComment;
-import com.beautifulyears.domain.User;
+import com.beautifulyears.domain.DiscussReply;
 import com.beautifulyears.repository.DiscussCommentRepository;
 import com.beautifulyears.repository.DiscussRepository;
 
@@ -58,8 +54,8 @@ public class DiscussCommentController {
 
 	@RequestMapping(method = RequestMethod.GET, value = "/{commentId}", produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
-	public DiscussComment getComment(@PathVariable("commentId") String commentId) {
-		DiscussComment comment = discussCommentRepository.findOne(commentId);
+	public DiscussReply getComment(@PathVariable("commentId") String commentId) {
+		DiscussReply comment = discussCommentRepository.findOne(commentId);
 		if (comment == null) {
 			throw new DiscussNotFoundException(commentId);
 		}
@@ -68,13 +64,11 @@ public class DiscussCommentController {
 		return comment;
 	}
 
-	@RequestMapping(method = RequestMethod.GET, value = "/{parentId}/{ancestorId}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(method = RequestMethod.GET, value = "/{discussId}/{parentReplyId}", produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
-	public List<DiscussComment> allDiscussComment(
-
-	@PathVariable("parentId") String parentId,
-			@PathVariable("ancestorId") String ancestorId) {
-		List<DiscussComment> result = new ArrayList<DiscussComment>();
+	public List<DiscussReply> allDiscussComment(
+			@PathVariable("discussId") String discussId,@PathVariable("parentReplyId") String parentReplyId) throws Exception {
+		List<DiscussReply> result = new ArrayList<DiscussReply>();
 		boolean buildTree = false;
 		Query q = new Query();
 		/*
@@ -82,110 +76,31 @@ public class DiscussCommentController {
 		 * BasicQuery("{ $where : 'this.parentId == this._id' }");
 		 * q.addCriteria(Criteria.where("discussId").is(discussId)); } else
 		 */
-		if (!Util.isEmpty(parentId) && Util.isEmpty(ancestorId)) {
+		if (!Util.isEmpty(discussId)) {
 			// looking for children
-			q = new BasicQuery("{ $where : 'this.parentId != this._id' }");
-			q.addCriteria(Criteria.where("parentId").is(parentId));
-		} else if (!Util.isEmpty(parentId) && !Util.isEmpty(ancestorId)) {
-			// looking for tree
-			if (parentId.equals(ancestorId)) {
-				// tree from some discuss -- This could be a LARGE amount of
-				// data
-				q = new Query();
-				q.addCriteria(Criteria.where("ancestorId").is(ancestorId));
-
-			} else {
-				// tree from some comment node
-				DiscussComment rootDiscussComment = mongoTemplate.findOne(
-						new Query().addCriteria(Criteria.where("id").is(
-								parentId)), DiscussComment.class);
-				if (rootDiscussComment != null) {
-					q.addCriteria(Criteria.where("ancestorId").is(ancestorId));
-					q.addCriteria(Criteria.where("ancestorOffset").gt(
-							rootDiscussComment == null ? 0 : rootDiscussComment
-									.getAncestorOffset()));
-					buildTree = true;
-				} else {
-					q = new Query();
-				}
+			q = new Query();
+			q.addCriteria(Criteria.where("discussId").is(discussId));
+			if(!Util.isEmpty(parentReplyId) && !"null".equals(parentReplyId)){
+				q.addCriteria(Criteria.where("parentReplyId").is(parentReplyId));
+			}else{
+				q.addCriteria(Criteria.where("parentReplyId").is(""));
 			}
-			// Need flattened data for admin comment management
-			// ?????buildTree = true;
-		} /*
-		 * else if (!Util.isEmpty(id)) {// instance
-		 * q.addCriteria(Criteria.where("id").is(id)); }
-		 */
-		if (!q.equals(new Query())) {
-			q.with(new Sort(Sort.Direction.ASC, "ancestorOffset"));
-			q.with(new Sort(Sort.Direction.DESC, "createdAt"));
-			logger.info(q.toString());
-			result = mongoTemplate.find(q, DiscussComment.class);
-		}
-		if (buildTree) {
-			result = buildTree(result);
+			result = mongoTemplate.find(q, DiscussReply.class);
+		} else{
+			throw new Exception();
 		}
 		return result;
 	}
 
-	private List<DiscussComment> buildTree(List<DiscussComment> result) {
-		// The list contains a flattened tree .. convert Back to a tree.
-		Map<String, DiscussComment> nodesMap = new HashMap<String, DiscussComment>(
-				25);
-		List<DiscussComment> tree = new ArrayList<DiscussComment>();
-		if (result != null && !result.isEmpty()) {
-			int startOffset = result.get(0).getAncestorOffset();
-			DiscussComment curDiscussComment = null;
-			DiscussComment curParentDiscussComment = null;
-			Iterator<DiscussComment> it = result.iterator();
-			while (it.hasNext()) {
-				curDiscussComment = it.next();
-				nodesMap.put(curDiscussComment.getId(), curDiscussComment);
-				if (curDiscussComment.getAncestorOffset() == startOffset) {
-					tree.add(curDiscussComment);
-					nodesMap.put(curDiscussComment.getId(), curDiscussComment);
-				} else {
-					curParentDiscussComment = nodesMap.get(curDiscussComment
-							.getParentId());
-					if (curParentDiscussComment != null) {
-						curParentDiscussComment.getChildren().add(
-								curDiscussComment);
-					}
-				}
-
-			}
-		}
-
-		return tree;
-	}
-
-	
 	// Editing a comment
 	@RequestMapping(consumes = { "application/json" })
 	@ResponseBody
-	public ResponseEntity<Void> submitComment(@RequestBody DiscussComment comment) {
+	public ResponseEntity<Void> submitComment(@RequestBody DiscussReply comment) {
 
 		logger.debug("EDIT COMMENT");
-		DiscussComment newComment = getComment(comment.getId());
+		DiscussReply newComment = getComment(comment.getId());
 		
-		
-//		newComment.setStatus(comment.getStatus());
-		newComment.setDiscussCommenContent(comment.getDiscussCommenContent());
-		newComment.setUserId(comment.getUserId());
-		newComment.setAncestorId(comment.getAncestorId());
-		newComment.setAncestorOffset(comment.getAncestorOffset());
-		newComment.setChildren(comment.getChildren());
-		newComment.setDescendentCount(comment.getDescendentCount());
-		
-		newComment.setDiscussCommentCommentCount(comment.getDiscussCommentCommentCount());
-		newComment.setDiscussCommentLikeCount(comment.getDiscussCommentLikeCount());
-		newComment.setDiscussCommentTitle(comment.getDiscussCommentTitle());
-		newComment.setDiscussId(comment.getDiscussId());
-		newComment.setParentId(comment.getParentId());
-		newComment.setSiblingPosition(comment.getSiblingPosition());
-		
-//		newComment.setTopicId(comment.getTopicId());
-		
-		newComment.setUserName(comment.getUserName());
+		newComment.setStatus(comment.getStatus());
 		
 		discussCommentRepository.save(newComment);
 		ResponseEntity<Void> responseEntity = new ResponseEntity<>(

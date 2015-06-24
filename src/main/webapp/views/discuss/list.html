@@ -17,7 +17,7 @@
                         { name: 'createdAt', type: 'date' },
                         { name: 'status', type: 'string' },
                         { name: 'featured', type: 'string' },
-                        { name: 'comments', type: 'string' },
+                        { name: 'aggrReplyCount', type: 'string' },
                         { name: 'id2', type: 'string' },
                         { name: 'id1', type: 'string' },
 						{ name: 'id', type: 'string' }
@@ -61,8 +61,17 @@
 			}
 
 			var commentsrenderer = function (row, column, value) {
-				if(value != undefined)
-				return '<div style="text-align: center; margin-top: 5px;"><a href="#/comment/'+ value  + '/' + value + '">Answers/Comments</a></div>'
+				if(value != undefined){
+					var count = parseInt(value.substring(0, value.indexOf('#')));
+					var id = value.substring(value.indexOf('#')+1);
+				}
+				if(count > 0){
+					return '<div style="text-align: center; margin-top: 5px;"><a href="#/comment/'+ id  + '/' + null + '">Answers/Comments</a></div>'
+				}else{
+					return "";
+				}
+				
+				
 			}
 
 			var editrenderer = function (row, column, value) {
@@ -80,7 +89,7 @@
                             records[i].id2= records[i].id;
                             records[i].title= records[i].title + "#" + records[i].id;
                             records[i].text= records[i].text + "#" + records[i].id;
-                            records[i].comments =  records[i].id2;
+                            records[i].comments =  records[i].aggrReplyCount+ "#" + records[i].id;
 
 
                         };
