@@ -32,6 +32,8 @@ public class Discuss {
 
 	private int aggrReplyCount;
 
+	private int directReplyCount;
+
 	private final Date createdAt = new Date();
 
 	private Date lastModifiedAt = new Date();
@@ -44,6 +46,14 @@ public class Discuss {
 
 	public Discuss() {
 
+	}
+
+	public int getDirectReplyCount() {
+		return directReplyCount;
+	}
+
+	public void setDirectReplyCount(int directReplyCount) {
+		this.directReplyCount = directReplyCount;
 	}
 
 	public String getUsername() {
