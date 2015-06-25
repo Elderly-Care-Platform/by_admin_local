@@ -18,10 +18,8 @@
         <!-- USERNAME -->
         <div class="form-group" ng-class="{ 'has-error' : userForm.userName.$invalid && !userForm.userName.$pristine }">
             <label><strong>Screen Name</strong></label>
-            <input type="text" name="userName" class="form-control" ng-model="user.userName" ng-minlength="3" ng-maxlength="8">
+            <input type="text" name="userName" class="form-control" ng-model="user.userName">
             <p ng-show="userForm.userName.$invalid && userForm.userName.$pristine" class="help-block">Screen Name is required.</p>
-            <p ng-show="userForm.userName.$error.minlength" class="help-block">Screen Name is too short.</p>
-            <p ng-show="userForm.userName.$error.maxlength" class="help-block">Screen Name is too long.</p>
 
         </div>
 
