@@ -16,12 +16,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class DiscussReply {
 	
-	public static final int REPLY_TYPE_ANSWER=1;
-	public static final int REPLY_TYPE_COMMENT=0;
-	
-	public static final int REPLY_STATUS_ACTIVE=0;
-	public static final int REPLY_STATUS_INACTIVE=1;
-	
 	@Id
 	private String id;
 	private String discussId;

@@ -26,7 +26,7 @@ public class Discuss {
 
 	private String text;
 
-	private String status; // published, unpublished
+	private int status; // published, unpublished
 
 	private String tags;
 
@@ -95,7 +95,7 @@ public class Discuss {
 	}
 
 	public Discuss(String userId, String username, String discussType,
-			List<String> topicId, String title, String text, String status,
+			List<String> topicId, String title, String text, int status,
 			String tags, int aggrReplyCount, String articlePhotoFilename,
 			Boolean isFeatured) {
 		super();
@@ -152,11 +152,11 @@ public class Discuss {
 		this.text = text;
 	}
 
-	public String getStatus() {
+	public int getStatus() {
 		return status;
 	}
 
-	public void setStatus(String status) {
+	public void setStatus(int status) {
 		this.status = status;
 	}
 

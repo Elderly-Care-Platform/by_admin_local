@@ -6,20 +6,18 @@ import java.util.UUID;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.beautifulyears.DiscussConstants;
+
 @Document(collection = "session")
 public class Session {
 	
-	public static final int STATUS_ACTIVE = 1;
-	public static final  int STATUS_INACTIVE = 0;
-	public static final  int STATUS_EXPIRED = 2;
-
 	@Id
 	private String sessionId = UUID.randomUUID().toString();
 	private String userId;
 	private String userName;
 	private String userEmail;
 	private Date createdAt = new Date();
-	private int status = STATUS_ACTIVE;
+	private int status = DiscussConstants.SESSION_STATUS_ACTIVE;
 	
 	
 

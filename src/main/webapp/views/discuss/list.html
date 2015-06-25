@@ -51,8 +51,8 @@
 
 
 			var statusrenderer = function (row, column, value) {
-				if(value == '0') return '<div style="text-align: center; margin-top: 5px;" height="26" width="26">Un-Published</div>';
-				else return '<div style="text-align: center; margin-top: 5px;" height="26" width="26">Published</div>';
+				if(value == '0' || value == '') return '<div style="text-align: center; margin-top: 5px;" height="26" width="26">Published</div>';
+				else return '<div style="text-align: center; margin-top: 5px;" height="26" width="26">Withdrawn</div>';
 			}
 
 			var featuredrenderer = function (row, column, value) {

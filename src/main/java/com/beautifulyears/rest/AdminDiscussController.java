@@ -206,7 +206,7 @@ public class AdminDiscussController {
 				title = discuss.getTitle();
 			}
 			String text = discuss.getText();
-			String discussStatus = discuss.getStatus() == null ? "0" : "1";
+			int discussStatus = discuss.getStatus();
 			List<String> topicId = discuss.getTopicId();
 			String tags = "";
 //			String tags = discuss.getTags() == null ? (topicId + "," + subTopicId)

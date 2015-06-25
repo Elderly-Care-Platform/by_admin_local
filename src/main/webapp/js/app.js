@@ -760,6 +760,8 @@ adminControllers.controller('AdminDiscussCreateController', ['$scope', '$http', 
 				}
 
 				$scope.currentDiscuss.text=htmlval;
+				$scope.currentDiscuss.status = $scope.currentDiscuss.status === true ? 1:0;
+				
 
 				//putting the userId to discuss being created
 				$scope.currentDiscuss.userId = localStorage.getItem("USER_ID");
