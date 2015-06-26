@@ -138,13 +138,11 @@ public class AdminController {
 				}
 				User userWithExtractedInformation = decorateWithInformation(user);
 				userRepository.save(userWithExtractedInformation);
-				ResponseEntity<String> responseEntity = new ResponseEntity<String>(
-						"User created successully", HttpStatus.CREATED);
+				ResponseEntity<String> responseEntity = new ResponseEntity<String>(HttpStatus.CREATED);
 				return responseEntity;
 			} catch (Exception e) {
 				e.printStackTrace();
-				ResponseEntity<String> responseEntity = new ResponseEntity<String>(
-						"Error while registering user!", HttpStatus.CREATED);
+				ResponseEntity<String> responseEntity = new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
 				throw e;
 			}
 
