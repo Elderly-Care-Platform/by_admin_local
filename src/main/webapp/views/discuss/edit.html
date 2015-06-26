@@ -159,7 +159,7 @@
 	<div class="control-group">
 		<label class="control-label" for="tags"><strong>Tags</strong></label>
 		<div class="controls">
-			<input type="text" ng-model="currentDiscuss.tags" id="tags" required/>
+			<input type="text" ng-repeat="tag in currentDiscuss.systemTags" ng-model="tag" id="tags" disabled/>
 		</div>
 	</div>
 

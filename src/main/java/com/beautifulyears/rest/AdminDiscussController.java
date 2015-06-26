@@ -33,7 +33,8 @@ import com.beautifulyears.repository.custom.DiscussRepositoryCustom;
 @Controller
 @RequestMapping("/discuss")
 public class AdminDiscussController {
-	private static final Logger logger = Logger.getLogger(AdminDiscussController.class);
+	private static final Logger logger = Logger
+			.getLogger(AdminDiscussController.class);
 	private DiscussRepository discussRepository;
 	private MongoTemplate mongoTemplate;
 
@@ -64,34 +65,9 @@ public class AdminDiscussController {
 			newDiscuss.setTitle(discuss.getTitle());
 			newDiscuss.setStatus(discuss.getStatus());
 			newDiscuss.setFeatured(discuss.isFeatured());
-			newDiscuss.setArticlePhotoFilename(discuss.getArticlePhotoFilename());
+			newDiscuss.setArticlePhotoFilename(discuss
+					.getArticlePhotoFilename());
 			newDiscuss.setLastModifiedAt(new Date());
-
-			String tags = discuss.getTags();
-			String edited_tags = "";
-
-			if (tags != null) {
-				String[] tagArr = tags.split(",");
-
-				String new_tag_str = "";
-
-				// ignore the first 2 tags (topic and subtpic) - this will giive
-				// us user entered tags
-				for (int i = 0; i < tagArr.length; i++) {
-					new_tag_str = new_tag_str + tagArr[i] + ",";
-				}
-				
-				edited_tags = "";
-
-//				edited_tags = discuss.getTopicId() + ","
-//						+ discuss.getSubTopicId() + "," + new_tag_str;
-			} else {
-				edited_tags = "";
-//				edited_tags = discuss.getTopicId() + ","
-//						+ discuss.getSubTopicId();
-			}
-			newDiscuss.setTags(edited_tags);
-
 			newDiscuss.setText(discuss.getText());
 			newDiscuss.setUserId(discuss.getUserId());
 			newDiscuss.setTopicId(discuss.getTopicId());
@@ -133,15 +109,6 @@ public class AdminDiscussController {
 		if (discuss == null) {
 			throw new DiscussNotFoundException(discussId);
 		}
-		String tagsToShowToUser = discuss.getTags();
-		if (tagsToShowToUser != null) {
-			tagsToShowToUser = tagsToShowToUser.substring(tagsToShowToUser
-					.indexOf(",") + 1);
-			tagsToShowToUser = tagsToShowToUser.substring(tagsToShowToUser
-					.indexOf(",") + 1);
-			discuss.setTags(tagsToShowToUser);
-
-		}
 		return discuss;
 	}
 
@@ -153,15 +120,6 @@ public class AdminDiscussController {
 			throw new DiscussNotFoundException(discussId);
 		}
 
-		String tagsToShowToUser = discuss.getTags();
-		if (tagsToShowToUser != null) {
-			tagsToShowToUser = tagsToShowToUser.substring(tagsToShowToUser
-					.indexOf(",") + 1);
-			tagsToShowToUser = tagsToShowToUser.substring(tagsToShowToUser
-					.indexOf(",") + 1);
-			discuss.setTags(tagsToShowToUser);
-
-		}
 		return discuss;
 	}
 
@@ -171,15 +129,6 @@ public class AdminDiscussController {
 		Discuss discuss = discussRepository.findOne(discussId);
 		if (discuss == null) {
 			throw new DiscussNotFoundException(discussId);
-		}
-		String tagsToShowToUser = discuss.getTags();
-		if (tagsToShowToUser != null) {
-			tagsToShowToUser = tagsToShowToUser.substring(tagsToShowToUser
-					.indexOf(",") + 1);
-			tagsToShowToUser = tagsToShowToUser.substring(tagsToShowToUser
-					.indexOf(",") + 1);
-			discuss.setTags(tagsToShowToUser);
-
 		}
 		return discuss;
 	}
@@ -209,13 +158,17 @@ public class AdminDiscussController {
 			int discussStatus = discuss.getStatus();
 			List<String> topicId = discuss.getTopicId();
 			String tags = "";
-//			String tags = discuss.getTags() == null ? (topicId + "," + subTopicId)
-//					: topicId + "," + subTopicId + "," + discuss.getTags();
+			// String tags = discuss.getTags() == null ? (topicId + "," +
+			// subTopicId)
+			// : topicId + "," + subTopicId + "," + discuss.getTags();
 			int aggrReplyCount = 0;
 			int aggrLikeCount = 0;
-			
-			return new Discuss(userId, username, discussType, topicId, title, text, discussStatus, tags,
-					aggrReplyCount, discuss.getArticlePhotoFilename() == null ? "":discuss.getArticlePhotoFilename(), discuss.isFeatured());
+
+			return new Discuss(userId, username, discussType, topicId, title,
+					text, discussStatus, aggrReplyCount,
+					discuss.getSystemTags(), discuss.getUserTags(),
+					discuss.getArticlePhotoFilename() == null ? "" : discuss
+							.getArticlePhotoFilename(), discuss.isFeatured());
 
 		} catch (Exception e) {
 			e.printStackTrace();

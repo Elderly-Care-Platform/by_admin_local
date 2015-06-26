@@ -28,7 +28,9 @@ public class Discuss {
 
 	private int status; // published, unpublished
 
-	private String tags;
+	private List<String> systemTags = new ArrayList<String>();
+
+	private List<String> userTags = new ArrayList<String>();
 
 	private int aggrReplyCount;
 
@@ -106,8 +108,7 @@ public class Discuss {
 
 	public Discuss(String userId, String username, String discussType,
 			List<String> topicId, String title, String text, int status,
-			String tags, int aggrReplyCount, String articlePhotoFilename,
-			Boolean isFeatured) {
+			int aggrReplyCount,List<String> systemTags,List<String> userTags, String articlePhotoFilename, Boolean isFeatured) {
 		super();
 		this.userId = userId;
 		this.username = username;
@@ -116,10 +117,11 @@ public class Discuss {
 		this.topicId = topicId;
 		this.text = text;
 		this.status = status;
-		this.tags = tags;
 		this.aggrReplyCount = aggrReplyCount;
 		this.articlePhotoFilename = articlePhotoFilename;
 		this.isFeatured = isFeatured;
+		this.systemTags = systemTags;
+		this.userTags = userTags;
 	}
 
 	public String getTitle() {
@@ -170,12 +172,20 @@ public class Discuss {
 		this.status = status;
 	}
 
-	public String getTags() {
-		return tags;
+	public List<String> getSystemTags() {
+		return systemTags;
 	}
 
-	public void setTags(String tags) {
-		this.tags = tags;
+	public void setSystemTags(List<String> systemTags) {
+		this.systemTags = systemTags;
+	}
+
+	public List<String> getUserTags() {
+		return userTags;
+	}
+
+	public void setUserTags(List<String> userTags) {
+		this.userTags = userTags;
 	}
 
 	public int getAggrReplyCount() {
