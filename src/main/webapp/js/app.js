@@ -748,21 +748,27 @@ adminControllers.controller('AdminDiscussCreateController', ['$scope', '$http', 
 		//EDIT MODE
 	 	if(discussId != null )
 	 	{
-	 		$scope.currentDiscuss = AdminDiscuss.get({discussId:discussId});
+	 		$scope.currentDiscuss = AdminDiscuss.get({discussId:discussId},function(){
+	 			for(var i=0; i<$scope.currentDiscuss.topicId.length; i++){
+	 				BY.editorCategoryList.addCategory($scope.currentDiscuss.topicId[i]);
+	 			}
+	 		});
 	 		$scope.editdiscuss = function () {
 	 			var htmlval = tinyMCE.activeEditor.getContent();
-
+	 			
 				if(htmlval == '')
 				{
 
 					htmlval = document.getElementById('texta').value;
 
 				}
+				
+				
 
 				$scope.currentDiscuss.text=htmlval;
 				$scope.currentDiscuss.status = $scope.currentDiscuss.status === true ? 1:0;
 				$scope.currentDiscuss.featured = $scope.currentDiscuss.featured === true ? 1:0;
-				
+				$scope.currentDiscuss.topicId = BY.editorCategoryList.getCategoryList();
 
 				//putting the userId to discuss being created
 				$scope.currentDiscuss.userId = localStorage.getItem("USER_ID");
@@ -771,6 +777,7 @@ adminControllers.controller('AdminDiscussCreateController', ['$scope', '$http', 
 
 	 			$scope.currentDiscuss.$save(function () {
 					toastr.success('Edited successfully');
+					BY.editorCategoryList.resetCategoryList();
 					var location = $scope.currentDiscuss.discussType;
 					$location.path('/discuss/' + location);
 	 			});
@@ -797,11 +804,13 @@ adminControllers.controller('AdminDiscussCreateController', ['$scope', '$http', 
 				
 				$scope.currentDiscuss.status = $scope.currentDiscuss.status === true ? 1:0;
 				$scope.currentDiscuss.featured = $scope.currentDiscuss.featured === true ? 1:0;
+				$scope.currentDiscuss.topicId = BY.editorCategoryList.getCategoryList();
 
 
 				//save the discuss
 				$scope.currentDiscuss.$save(function () {
 					toastr.success('Created successfully');
+					BY.editorCategoryList.resetCategoryList();
 					var location = $scope.currentDiscuss.discussType;
 					$location.path('/discuss/' + location);
 				});
@@ -907,6 +916,49 @@ adminControllers.controller('topicController', ['$scope', '$rootScope', '$routeP
 	}
 }]);
 
+var BY = BY || {};
+BY.editorCategoryList = (function(){
+    var selectedCategoryList = {};
+
+    return {
+        selectCategory:function(selectedInput){
+        	var $body = angular.element(document.body);   // 1
+            var $rootScope = $body.scope().$root;
+            if(selectedInput.checked===true){
+                selectedCategoryList[selectedInput.value] = selectedInput.value ;
+            }else{
+                delete selectedCategoryList[selectedInput.value];
+                if($rootScope.discussCategoryListMap[selectedInput.value] && $rootScope.discussCategoryListMap[selectedInput.value].parentId){
+                    delete selectedCategoryList[$rootScope.discussCategoryListMap[selectedInput.value].parentId];
+                }
+            }
+        },
+
+        addCategory:function(selectedCategory){
+            selectedCategoryList[selectedCategory] = selectedCategory;
+        },
+
+        getCategoryList:function(){
+            var $body = angular.element(document.body);   // 1
+            var $rootScope = $body.scope().$root;
+            for(key in selectedCategoryList){
+                if($rootScope.discussCategoryListMap[key] && $rootScope.discussCategoryListMap[key].parentId){
+                    selectedCategoryList[$rootScope.discussCategoryListMap[key].parentId] = $rootScope.discussCategoryListMap[key].parentId;
+                }
+
+            }
+
+            var categoryMap = $.map(selectedCategoryList, function(value, index) {
+                return [value];
+            });
+            return categoryMap;
+        },
+        resetCategoryList:function(){
+            selectedCategoryList = {};
+        }
+
+    }
+})();
 
 
 

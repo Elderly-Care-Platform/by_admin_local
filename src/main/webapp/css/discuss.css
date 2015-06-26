@@ -1,0 +1,94 @@
+.by_editor_ParentCategories{
+    display:inline !important;
+    padding: 0px !important;
+}
+.by_editor_ParentCategories input{
+    margin-left: 10px;
+    margin-right: 5px;
+    margin-top: 10px;
+    float: right;
+
+    width: 16px !important;
+    height: 16px !important;
+}
+
+.by_accordian {
+  background-color: #f5f5f5 !important;
+  border: 1px solid #ccc;
+  margin-bottom: 5px;
+  padding-left: 15px;
+  padding-top: 5px;
+	
+}
+.by_accordian input{
+    margin-left: 10px;
+}
+
+a.accordion-toggle.ng-binding {
+    display: inline-block !important;
+    font-size: 14px !important;
+    background: transparent !important;
+    vertical-align: top;
+    width: 95%;
+}
+
+.by_editor_ParentCategories label{
+    display: inline-block !important;
+    font-size: 14px !important;
+    background: transparent !important;
+    vertical-align: top;
+    width: 99%;
+    color: #0A0A0A;
+    font-family: century_gothic !important;
+    font-weight:bold;
+    cursor: pointer;
+}
+
+.by_editor_SubCategories {
+    padding-left: 0px;
+    padding-right: 0px;
+    text-transform: uppercase;
+    
+}
+.by_editor_SubCategories .panel-body {
+    padding: 5px !important;
+    line-height: 41px;
+    
+}
+.panel-body.col-md-4.ng-binding.ng-scope {
+    text-transform: uppercase;
+}
+.by_editor_SubCategories .panel-body input[type=checkbox] {
+    line-height: normal;
+    vertical-align: middle;
+    margin:0px 0px 0px 4px;
+}
+
+.by_editor_SubCategories .panel-body span{
+    vertical-align: middle;
+}
+
+.margin-bottom-35 {
+  margin-bottom: 35px;
+}
+
+.discussion-page div, .discussion-page p, .discussion-page a{
+	color: #0A0A0A;
+	font-family: century_gothic !important;
+}
+
+.triangle-down {
+    margin-top: 4px;
+    margin-right: 18px;
+    display: inline-block !important;
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 10px solid #282828;
+    float: right;
+    padding: 0px !important;
+    background: none !important;
+}
+
+
