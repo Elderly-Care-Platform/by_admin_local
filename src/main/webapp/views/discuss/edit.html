@@ -15,11 +15,13 @@
 </script>
 
 <div class="container-fluid">
-    <div id="wrapper" class="row-fluid">
-        <h3 class='menu'>Edit {{currentDiscuss.discussType == 'A' && 'Article' || currentDiscuss.discussType == 'Q' && 'Question' || 'Post'}}</h3>
-        <div class="alert alert-error" ng-show="error">{{errorMessage}}</div>
+	<div id="wrapper" class="row-fluid">
+		<h3 class='menu'>Edit {{currentDiscuss.discussType == 'A' &&
+			'Article' || currentDiscuss.discussType == 'Q' && 'Question' ||
+			'Post'}}</h3>
+		<div class="alert alert-error" ng-show="error">{{errorMessage}}</div>
 
-<script type="text/javascript">
+		<script type="text/javascript">
 	tinymce.init({
 		selector : "#edittext",
 	    theme: "modern",
@@ -101,105 +103,108 @@
 		});
 	});
 </script>
-	<div class="control-group" ng-if="currentDiscuss.discussType == 'A'">
-		<label class="control-label" for="title"><strong>Title</strong></label>
-		<div class="controls">
-			<input type="text" ng-model="currentDiscuss.title" id="title" required/>
-		</div>
-				<form id="UploadImage12" action="UploadFile" method="post"
-					enctype="multipart/form-data">
-					<label class="myLabel" ng-style="{'background-image': 'url({{ currentDiscuss.articlePhotoFilename }})'}"> <input name="sp" id="sp"
-						type="file" required onchange="javascript:uploadImage(this)" /> <span>Please
-							upload<br> your main <br>photo (optional)
-					</span>
-					</label>
-				</form>
-				<input type="text" id="articleTitleImage"
-					ng-model="currentDiscuss.articlePhotoFilename" value=""
-					style="display: none" onchange="javascript:previewImage(this)"/>
-			</div>
 
+		<table style="width: 900px;">
+			<tr ng-if="currentDiscuss.discussType == 'A'">
+				<td><label class="control-label" for="title"><strong>Title</strong></label>
+				</td>
+				<td><input type="text" ng-model="currentDiscuss.title" id="title" required /></td>
+			</tr>
 
+			<tr ng-if="currentDiscuss.discussType == 'A'">
+				<td><label class="control-label" for="title"><strong>Title Photo</strong></label></td>
+				<td><form id="UploadImage12" action="UploadFile" method="post" enctype="multipart/form-data">
+						<label class="myLabel" ng-style="{'background-image': 'url({{ currentDiscuss.articlePhotoFilename }})'}">
+							<input name="sp" id="sp" type="file" required onchange="javascript:uploadImage(this)" /> 
+							<span>Please upload<br> your main <br>photo (optional)
+							</span>
+						</label>
+					</form> 
+					<input type="text" id="articleTitleImage" ng-model="currentDiscuss.articlePhotoFilename" value="" style="display: none" onchange="javascript:previewImage(this)" />
+					</td>
+			</tr>
 
-	<div class="control-group">
-			<label class="control-label" for="status"><strong>Status</strong></label>
-			<div class="controls">
-				<input type="checkbox" ng-model="currentDiscuss.status" name="status" ng-checked="currentDiscuss.status" id="status">&nbsp;Withdraw
-			</div>
-	</div>
+			<tr>
+				<td><label class="control-label" for="title"><strong>Withdraw</strong></label>
+				</td>
+				<td><input type="checkbox" ng-model="currentDiscuss.status" name="status" ng-checked="currentDiscuss.status" id="status" style="vertical-align: top;"></td>
+			</tr>
 
-	<div class="control-group">
-		<label class="control-label" for="featured"><strong>Featured</strong></label>
-		<div class="controls">
-			<input type="checkbox" ng-model="currentDiscuss.featured" name="featured" ng-checked="currentDiscuss.featured" id="featured" checked>&nbsp;Featured &nbsp;&nbsp;&nbsp;&nbsp;
-		</div>
-	</div>
+			<tr>
+				<td><label class="control-label" for="title"><strong>Featured</strong></label>
+				</td>
+				<td><input type="checkbox" ng-model="currentDiscuss.featured" name="featured" ng-checked="currentDiscuss.featured" id="featured" style="vertical-align: top;"></td>
+			</tr>
 
-    <div class="control-group" ng-hide="1">
-					<label class="control-label" for="text"><strong>Text</strong></label>
+			<tr>
+				<td colspan="2">
 					<div class="controls">
-						<textarea id="texta" name="texta" rows="0" columns="0" ng-model="currentDiscuss.text">{{currentDiscuss.text}}</textarea>
-
+						<a id="edit_text">Edit Text</a>
 					</div>
-				</div>
 
-				<div class="controls">
-					<a id="edit_text">Edit Text</a>
-				</div>
-
-				<div class="control-group">
-					<label class="control-label" for="text"></label>
-					<div class="controls byEditor" id="mce">
-						<textarea data-ui-tinymce id="edittext" name="edittext"
-							ng-model="currentDiscuss.text"></textarea>
+					<div class="control-group">
+						<label class="control-label" for="text"></label>
+						<div class="controls byEditor" id="mce">
+							<textarea data-ui-tinymce id="edittext" name="edittext" ng-model="currentDiscuss.text"></textarea>
+						</div>
 					</div>
-				</div>
+				</td>
+			</tr>
+
+			<tr>
+				<td><label class="control-label" for="tags"><strong>Tags</strong></label></td>
+				<td><input type="text" ng-repeat="tag in currentDiscuss.systemTags" ng-model="tag" id="tags" disabled /></td>
+			</tr>
+
+			<tr>
+				<td colspan="2">
+					<div
+						class="row discussion-page article-outer-wrapper no-padding margin-bottom-35">
+						<div class="panel-group acc-v1" id="accordion-1">
+							<div class="col-md-12 panel panel-default by_accordian" ng-repeat="category in $root.discussCategoryList">
+								<div class="panel-heading">
+									<h4 class="panel-title by_editor_ParentCategories" ng-if="category.childCount <= 0">
+										<label> {{category.name}} <input type="checkbox" onchange="BY.editorCategoryList.selectCategory(this)" value="{{category.id}}" ng-checked="currentDiscuss.topicId.indexOf(category.id) > -1" ng-model="preSelected[category.id]">
+										</label>
+									</h4>
+									<h4 class="panel-title by_editor_ParentCategories" ng-if="category.childCount > 0">
+										<a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordion-1" href='{{ "#"+category.id}}' onclick="return false;"> {{category.name}} </a> 
+										<a class="triangle-down accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordion-1" href='{{ "#"+category.id}}' onclick="return false;"></a>
+									</h4>
+								</div>
+								<div id={{category.id}} class="col-md-12 whiteBg by_editor_SubCategories panel-collapse collapse">
+									<div class="panel-body col-md-4" ng-repeat="subCategory in category.children">
+										<input type="checkbox" onchange="BY.editorCategoryList.selectCategory(this)" ng-checked="currentDiscuss.topicId.indexOf(subCategory.id) > -1" value='{{subCategory.id}}' ng-model="preSelected[subCategory.id]"> 
+										<span>{{subCategory.name}}</span>
+									</div>
+								</div>
+								<div style="clear: both"></div>
+
+							</div>
+						</div>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2" style="text-align: right;">
+				<a ng-click="editdiscuss()" class="btn btn-primary">Save Changes</a></td>
+			</tr>
+
+		</table>
 
 
-	<div class="control-group">
-		<label class="control-label" for="tags"><strong>Tags</strong></label>
-		<div class="controls">
-			<input type="text" ng-repeat="tag in currentDiscuss.systemTags" ng-model="tag" id="tags" disabled/>
+		<div class="control-group" ng-hide="1">
+			<label class="control-label" for="text"><strong>Text</strong></label>
+			<div class="controls">
+				<textarea id="texta" name="texta" rows="0" columns="0"
+					ng-model="currentDiscuss.text">{{currentDiscuss.text}}</textarea>
+
+			</div>
 		</div>
-	</div>
-
-	<div class="row discussion-page article-outer-wrapper no-padding margin-bottom-35">
-	    <div class="panel-group acc-v1" id="accordion-1">
-	        <div class="col-md-12 panel panel-default by_accordian" ng-repeat="category in $root.discussCategoryList">
-	            <div class="panel-heading">
-	                <h4 class="panel-title by_editor_ParentCategories" ng-if="category.childCount <= 0">
-	                    <label>
-	                        {{category.name}}
-	
-	                        <input type="checkbox" onchange="BY.editorCategoryList.selectCategory(this)" value="{{category.id}}"  
-	                        		ng-checked="currentDiscuss.topicId.indexOf(category.id) > -1" ng-model="preSelected[category.id]">
-	                    </label>
-	                </h4>
-	                <h4 class="panel-title by_editor_ParentCategories" ng-if="category.childCount > 0">
-	                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordion-1" href={{"#"+category.id}} onclick="return false;">
-	                        {{category.name}}
-	                    </a>
-	                    <a class="triangle-down accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordion-1" href={{"#"+category.id}} onclick="return false;"></a>
-	                </h4>
-	            </div>
-	            <div id={{category.id}} class="col-md-12 whiteBg by_editor_SubCategories panel-collapse collapse">
-	                <div class="panel-body col-md-4" ng-repeat="subCategory in category.children">
-	                    <input type="checkbox" onchange="BY.editorCategoryList.selectCategory(this)" ng-checked="currentDiscuss.topicId.indexOf(subCategory.id) > -1"
-	                    value={{subCategory.id}} ng-model="preSelected[subCategory.id]"> <span>{{subCategory.name}}</span>
-	                </div>
-	            </div> <div style="clear:both"></div>
-	
-	        </div>
-	    </div>
-	</div>
-		
 
 
-	<div class="control-group">
-		<!-- <button id="save" class="btn btn-primary">Edit Article</button> -->
-		<a ng-click="editdiscuss()" class="btn btn-primary">Edit Article </a>
-	</div>
-	<script type="text/javascript">
+
+		<script type="text/javascript">
 function uploadImage(input){
 	if (input.files && input.files[0]) {
 		previewImage(input);
