@@ -761,6 +761,7 @@ adminControllers.controller('AdminDiscussCreateController', ['$scope', '$http', 
 
 				$scope.currentDiscuss.text=htmlval;
 				$scope.currentDiscuss.status = $scope.currentDiscuss.status === true ? 1:0;
+				$scope.currentDiscuss.featured = $scope.currentDiscuss.featured === true ? 1:0;
 				
 
 				//putting the userId to discuss being created
@@ -793,6 +794,9 @@ adminControllers.controller('AdminDiscussCreateController', ['$scope', '$http', 
 				//putting the userId to discuss being created
 				$scope.currentDiscuss.userId = localStorage.getItem("USER_ID");
 				$scope.currentDiscuss.username = localStorage.getItem("USER_NAME");
+				
+				$scope.currentDiscuss.status = $scope.currentDiscuss.status === true ? 1:0;
+				$scope.currentDiscuss.featured = $scope.currentDiscuss.featured === true ? 1:0;
 
 
 				//save the discuss
