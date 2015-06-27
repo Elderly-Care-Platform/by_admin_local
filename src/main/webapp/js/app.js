@@ -771,9 +771,6 @@ adminControllers.controller('AdminDiscussCreateController', ['$scope', '$http', 
 				$scope.currentDiscuss.topicId = BY.editorCategoryList.getCategoryList();
 
 				//putting the userId to discuss being created
-				$scope.currentDiscuss.userId = localStorage.getItem("USER_ID");
-				$scope.currentDiscuss.username = localStorage.getItem("USER_NAME");
-
 
 	 			$scope.currentDiscuss.$save(function () {
 					toastr.success('Edited successfully');

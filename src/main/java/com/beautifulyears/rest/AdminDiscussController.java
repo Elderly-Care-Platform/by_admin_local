@@ -50,7 +50,7 @@ public class AdminDiscussController {
 	@ResponseBody
 	public ResponseEntity<Void> submitDiscuss(@RequestBody Discuss discuss) {
 
-		if (discuss == null || discuss.getId() == null
+		if (discuss.getId() == null
 				|| discuss.getId().equals("")) {
 			logger.debug("NEW DISCUSS");
 			Discuss discussWithExtractedInformation = setDiscussBean(discuss);
@@ -69,7 +69,6 @@ public class AdminDiscussController {
 					.getArticlePhotoFilename());
 			newDiscuss.setLastModifiedAt(new Date());
 			newDiscuss.setText(discuss.getText());
-			newDiscuss.setUserId(discuss.getUserId());
 			newDiscuss.setTopicId(discuss.getTopicId());
 			discussRepository.save(newDiscuss);
 			ResponseEntity<Void> responseEntity = new ResponseEntity<>(
