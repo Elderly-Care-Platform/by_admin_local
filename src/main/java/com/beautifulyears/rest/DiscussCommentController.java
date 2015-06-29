@@ -83,7 +83,7 @@ public class DiscussCommentController {
 			if(!Util.isEmpty(parentReplyId) && !"null".equals(parentReplyId)){
 				q.addCriteria(Criteria.where("parentReplyId").is(parentReplyId));
 			}else{
-				q.addCriteria(Criteria.where("parentReplyId").is(""));
+				q.addCriteria(Criteria.where("parentReplyId").in(new Object[] {"",null}));
 			}
 			result = mongoTemplate.find(q, DiscussReply.class);
 		} else{

@@ -12,7 +12,7 @@
 					<input type="text" ng-model="currentDiscuss.title" id="currentDiscuss.title" required/>
 				</td>
 			</tr>
-			<tr>
+			<tr ng-show="currentDiscuss.discussType == 'A'">
 				<td>
 					<label class="control-label" for="title"><strong>Title Photo</strong></label>
 				</td>
