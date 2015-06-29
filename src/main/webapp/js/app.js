@@ -24,7 +24,7 @@ var discuss = adminServices.factory('SessionIdService', function() {
             {
 				if ("localStorage" in window)
 				{
-               		sessionID = localStorage.getItem("SessionId");
+               		sessionID = localStorage.getItem("AdminSessionId");
 				}
 				else
 				{
@@ -39,7 +39,7 @@ var discuss = adminServices.factory('SessionIdService', function() {
 
         setSessionId: function(sessId) {
             console.log("Set sessionId=" + sessId);
-            localStorage.setItem("SessionId", sessId);
+            localStorage.setItem("AdminSessionId", sessId);
             sessionID = sessId;
             return;
         }
@@ -354,7 +354,7 @@ function ($scope, $location, $rootScope) {
 	$rootScope.bc_userId = '';
 	$rootScope.bc_userRoleId = '';
 
-	localStorage.setItem("SessionId", "");
+	localStorage.setItem("AdminSessionId", "");
 	localStorage.setItem("USER_ID", "");
 	localStorage.setItem("USER_NAME", "");
 	localStorage.setItem("USER_ROLE", "");
@@ -402,7 +402,7 @@ adminControllers.controller('AdminLoginController', ['$scope', '$route', '$rootS
 
 				if ("localStorage" in window)
 				{
-					localStorage.setItem("SessionId", login.sessionId);
+					localStorage.setItem("AdminSessionId", login.sessionId);
 					localStorage.setItem("USER_ID", login.id);
 					localStorage.setItem("USER_NAME", login.userName);
 					localStorage.setItem("USER_ROLE", $rootScope.bc_userRoleId );
@@ -532,7 +532,7 @@ adminControllers.controller('CommentListController', ['$scope', '$location', 'Ad
 adminControllers.controller('AdminCommentCreateController', ['$scope', '$http', '$location', '$route', '$routeParams', '$location', 'AdminComment',
   function($scope, $http, $location, $route, $routeParams, $location, AdminComment) {
 	 $scope.currentComment = '';
-	 if(localStorage.getItem("SessionId") == '') {
+	 if(localStorage.getItem("AdminSessionId") == '') {
 		$location.path('/users/login');
 		return;
 	 }
@@ -585,7 +585,7 @@ adminControllers.controller('AdminCommentCreateController', ['$scope', '$http', 
 
 adminControllers.controller('AdminListQuestionController', ['$scope', '$location', '$rootScope', '$location', 'AdminQuestionDiscuss',
 function($scope, $location, $rootScope, $location, AdminQuestionDiscuss) {
-	if(localStorage.getItem("SessionId") == '') {
+	if(localStorage.getItem("AdminSessionId") == '') {
 		$location.path('/users/login');
 		return;
 	}
@@ -601,7 +601,7 @@ function($scope, $location, $rootScope, $location, AdminQuestionDiscuss) {
 
 adminControllers.controller('AdminListPostController', ['$scope', '$location', '$rootScope', '$location', 'AdminPostDiscuss',
 function($scope, $location, $rootScope, $location, AdminPostDiscuss) {
-	if(localStorage.getItem("SessionId") == '') {
+	if(localStorage.getItem("AdminSessionId") == '') {
 		$location.path('/users/login');
 		return;
 	}
@@ -618,7 +618,7 @@ function($scope, $location, $rootScope, $location, AdminPostDiscuss) {
 
 adminControllers.controller('AdminListFeedbackController', ['$scope', '$rootScope', '$location', 'AdminFeedbackDiscuss',
 function($scope, $rootScope, $location, AdminFeedbackDiscuss) {
-	if(localStorage.getItem("SessionId") == '') {
+	if(localStorage.getItem("AdminSessionId") == '') {
 		return;
 	}
 	$scope.discuss = AdminFeedbackDiscuss.query();
@@ -629,7 +629,7 @@ function($scope, $rootScope, $location, AdminFeedbackDiscuss) {
 
 adminControllers.controller('AdminListArticleController', ['$scope', '$location', '$rootScope', '$location', 'AdminArticleDiscuss',
 function($scope, $location, $rootScope, $location, AdminArticleDiscuss) {
-	if(localStorage.getItem("SessionId") == '') {
+	if(localStorage.getItem("AdminSessionId") == '') {
 		$location.path('/users/login');
 		return;
 	}
@@ -731,7 +731,7 @@ adminControllers.controller('LoadTMController', ['$scope', '$route',
 
 adminControllers.controller('AdminDiscussCreateController', ['$scope', '$http', '$location', '$route', '$routeParams', '$location', 'AdminDiscuss',
   function($scope, $http, $location, $route, $routeParams, $location, AdminDiscuss) {
-	 if(localStorage.getItem("SessionId") == '') {
+	 if(localStorage.getItem("AdminSessionId") == '') {
 		$location.path('/users/login');
 		return;
 	 }

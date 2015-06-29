@@ -12,7 +12,7 @@ var post = adminServices.factory('SessionIdService', function() {
             {
 				if ("localStorage" in window)
 				{
-               		sessionID = localStorage.getItem("SessionId");
+               		sessionID = localStorage.getItem("AdminSessionId");
 				}
 				else
 				{
@@ -27,7 +27,7 @@ var post = adminServices.factory('SessionIdService', function() {
 
         setSessionId: function(sessId) {
             console.log("Set sessionId=" + sessId);
-            localStorage.setItem("SessionId", sessId);
+            localStorage.setItem("AdminSessionId", sessId);
             sessionID = sessId;
             return;
         }
@@ -241,7 +241,7 @@ adminControllers.controller('AdminLoginController', ['$scope', '$http', '$locati
 
    			if ("localStorage" in window)
    			{
-				localStorage.setItem("SessionId", login.sessionId);
+				localStorage.setItem("AdminSessionId", login.sessionId);
                	$location.path("/users/all");
    			}
    			else
