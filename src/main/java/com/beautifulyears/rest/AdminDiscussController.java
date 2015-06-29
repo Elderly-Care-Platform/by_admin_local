@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.beautifulyears.domain.Discuss;
 import com.beautifulyears.repository.DiscussRepository;
-import com.beautifulyears.repository.custom.DiscussRepositoryCustom;
+import com.beautifulyears.repository.TopicRepository;
 
 /**
  * The REST based service for managing "discuss"
@@ -36,13 +36,15 @@ public class AdminDiscussController {
 	private static final Logger logger = Logger
 			.getLogger(AdminDiscussController.class);
 	private DiscussRepository discussRepository;
+	private TopicRepository topicRepository;
 	private MongoTemplate mongoTemplate;
 
 	@Autowired
 	public AdminDiscussController(DiscussRepository discussRepository,
-			DiscussRepositoryCustom discussRepositoryCustom,
+			TopicRepository topicRepository,
 			MongoTemplate mongoTemplate) {
 		this.discussRepository = discussRepository;
+		this.topicRepository = topicRepository;
 		this.mongoTemplate = mongoTemplate;
 	}
 
@@ -155,17 +157,15 @@ public class AdminDiscussController {
 			}
 			String text = discuss.getText();
 			int discussStatus = discuss.getStatus();
-			List<String> topicId = discuss.getTopicId();
-			String tags = "";
-			// String tags = discuss.getTags() == null ? (topicId + "," +
-			// subTopicId)
-			// : topicId + "," + subTopicId + "," + discuss.getTags();
+			List<String> topicIds = discuss.getTopicId();
 			int aggrReplyCount = 0;
 			int aggrLikeCount = 0;
+			
+			List<String> systemTags = topicRepository.getTopicNames(topicIds);
 
-			return new Discuss(userId, username, discussType, topicId, title,
-					text, discussStatus, aggrReplyCount,
-					discuss.getSystemTags(), discuss.getUserTags(),
+			return new Discuss(userId, username, discussType, topicIds, title,
+					text, discussStatus, discuss.getAggrReplyCount(),
+					systemTags, discuss.getUserTags(),
 					discuss.getArticlePhotoFilename() == null ? "" : discuss
 							.getArticlePhotoFilename(), discuss.isFeatured());
 

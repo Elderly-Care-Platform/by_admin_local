@@ -9,8 +9,6 @@ import org.springframework.data.mongodb.core.SimpleMongoDbFactory;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
 import com.beautifulyears.repository.DiscussRepository;
-import com.beautifulyears.repository.custom.DiscussRepositoryCustom;
-import com.beautifulyears.repository.custom.DiscussRepositoryCustomImpl;
 import com.mongodb.Mongo;
 import com.mongodb.WriteConcern;
 

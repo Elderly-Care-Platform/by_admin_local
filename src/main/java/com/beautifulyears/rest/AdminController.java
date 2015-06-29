@@ -25,7 +25,6 @@ import com.beautifulyears.domain.LoginResponse;
 import com.beautifulyears.domain.User;
 import com.beautifulyears.domain.UserRolePermissions;
 import com.beautifulyears.repository.UserRepository;
-import com.beautifulyears.repository.custom.UserRepositoryCustom;
 
 /**
  * /** The REST based service for managing "users"
@@ -43,7 +42,6 @@ public class AdminController {
 
 	@Autowired
 	public AdminController(UserRepository userRepository,
-			UserRepositoryCustom userRepositoryCustom,
 			MongoTemplate mongoTemplate) {
 		this.userRepository = userRepository;
 		this.mongoTemplate = mongoTemplate;
@@ -234,20 +232,4 @@ public class AdminController {
 		return user;
 	}
 
-	@RequestMapping(method = RequestMethod.GET, value = "/verify/{verificationCode}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody User verifyUser(
-			@PathVariable("verificationCode") String verificationCode) {
-		User user = null;
-		try {
-			user = userRepository.getByVerificationCode(verificationCode);
-			if (user == null) {
-				throw new UserNotFoundException(verificationCode);
-			}
-			user.setActive("Active");
-			userRepository.save(user);
-		} catch (Exception e) {
-
-		}
-		return user;
-	}
 }
