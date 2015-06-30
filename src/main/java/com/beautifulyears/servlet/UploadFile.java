@@ -1,11 +1,16 @@
 package com.beautifulyears.servlet;
 
+import java.awt.AlphaComposite;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 import java.util.UUID;
 
+import javax.imageio.ImageIO;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -22,11 +27,11 @@ public class UploadFile extends HttpServlet {
 	private String uploadDir = "";
 	private static final Logger logger = Logger.getLogger(UploadFile.class);
 
+	private static final int IMG_WIDTH = 100;
+	private static final int IMG_HEIGHT = 100;
+
 	public void init() {
 		System.out.println("Inside INIT of File Upload Servlet");
-		// uploadDir = getServletContext().getInitParameter("file-upload") ==
-		// null ? "/uploaded_files/"
-		// : getServletContext().getInitParameter("file-upload");
 		System.out.println("CONTEXT PATH ===== "
 				+ getServletContext().getContextPath());
 		uploadDir = "/home/ubuntu/uploads";
@@ -60,10 +65,21 @@ public class UploadFile extends HttpServlet {
 								.substring(name.lastIndexOf(".") + 1);
 						item.write(new File(uploadDir + File.separator + fname
 								+ "." + extension));
-						// out.println("Hello!!");
-						logger.debug("upload finishedvwith file name ---- "+"/uploaded_files/" + fname + "." + extension);
-						out.println("/uploaded_files/" + fname + "." + extension);
-						//?????out.println("52.74.82.29/uploaded_files/" + fname + "." + extension);
+						logger.debug("upload finishedvwith file name ---- "
+								+ "/uploaded_files/" + fname + "." + extension);
+//						BufferedImage originalImage = ImageIO.read(new File(
+//								uploadDir + File.separator + fname + "."
+//										+ extension));
+//						int type = originalImage.getType() == 0 ? BufferedImage.TYPE_INT_ARGB
+//								: originalImage.getType();
+
+//						BufferedImage resizeImageJpg = resizeImage(
+//								originalImage, type);
+//						ImageIO.write(resizeImageJpg, "jpg", new File(uploadDir
+//								+ File.separator + fname + "_resized" + "."
+//								+ extension));
+						out.println("/uploaded_files/" + fname + "."
+								+ extension);
 					}
 				}
 			} catch (Exception e) {
@@ -73,5 +89,36 @@ public class UploadFile extends HttpServlet {
 				throw new ServletException();
 			}
 		}
+	}
+
+	private static BufferedImage resizeImage(BufferedImage originalImage,
+			int type) {
+		BufferedImage resizedImage = new BufferedImage(IMG_WIDTH, IMG_HEIGHT,
+				type);
+		Graphics2D g = resizedImage.createGraphics();
+		g.drawImage(originalImage, 0, 0, IMG_WIDTH, IMG_HEIGHT, null);
+		g.dispose();
+
+		return resizedImage;
+	}
+
+	private static BufferedImage resizeImageWithHint(
+			BufferedImage originalImage, int type) {
+
+		BufferedImage resizedImage = new BufferedImage(IMG_WIDTH, IMG_HEIGHT,
+				type);
+		Graphics2D g = resizedImage.createGraphics();
+		g.drawImage(originalImage, 0, 0, IMG_WIDTH, IMG_HEIGHT, null);
+		g.dispose();
+		g.setComposite(AlphaComposite.Src);
+
+		g.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
+				RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+		g.setRenderingHint(RenderingHints.KEY_RENDERING,
+				RenderingHints.VALUE_RENDER_QUALITY);
+		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+				RenderingHints.VALUE_ANTIALIAS_ON);
+
+		return resizedImage;
 	}
 }
