@@ -249,7 +249,7 @@ byAdminApp.run(function($rootScope, $location, SessionIdService,discussCategoryL
 
 adminControllers.controller('AdminUserCreateController', ['$scope', '$routeParams', '$location', 'AdminUser',
   function($scope, $routeParams, $location, AdminUser) {
-	  	if(localStorage.getItem("USER_ROLE") == 'WRITER' || localStorage.getItem("USER_ROLE") == 'USER' || localStorage.getItem("USER_ROLE") == '' || localStorage.getItem("USER_ROLE") == 'EDITOR')
+	  	if(localStorage.getItem("ADMIN_USER_ROLE") == 'WRITER' || localStorage.getItem("ADMIN_USER_ROLE") == 'USER' || localStorage.getItem("ADMIN_USER_ROLE") == '' || localStorage.getItem("ADMIN_USER_ROLE") == 'EDITOR')
 	  			 {
 	  				 return;
 	 }
@@ -303,7 +303,7 @@ adminControllers.controller('AdminUserCreateController', ['$scope', '$routeParam
 //User Edit
 adminControllers.controller('AdminUserEditController', ['$scope', '$routeParams', '$location', 'AdminUserShow',
   function($scope, $routeParams, $location, AdminUserShow) {
-	  	if(localStorage.getItem("USER_ROLE") == 'WRITER' || localStorage.getItem("USER_ROLE") == 'USER' || localStorage.getItem("USER_ROLE") == '' || localStorage.getItem("USER_ROLE") == 'EDITOR')
+	  	if(localStorage.getItem("ADMIN_USER_ROLE") == 'WRITER' || localStorage.getItem("ADMIN_USER_ROLE") == 'USER' || localStorage.getItem("ADMIN_USER_ROLE") == '' || localStorage.getItem("ADMIN_USER_ROLE") == 'EDITOR')
 	  			 {
 	  				 return;
 	 }
@@ -316,7 +316,7 @@ adminControllers.controller('AdminUserEditController', ['$scope', '$routeParams'
 //User Delete
 adminControllers.controller('AdminUserDeleteController', ['$scope', '$routeParams', '$location', 'AdminUser',
   function($scope, $routeParams, $location, AdminUser) {
-	  	if(localStorage.getItem("USER_ROLE") == 'WRITER' || localStorage.getItem("USER_ROLE") == 'USER' || localStorage.getItem("USER_ROLE") == '' || localStorage.getItem("USER_ROLE") == 'EDITOR')
+	  	if(localStorage.getItem("ADMIN_USER_ROLE") == 'WRITER' || localStorage.getItem("ADMIN_USER_ROLE") == 'USER' || localStorage.getItem("ADMIN_USER_ROLE") == '' || localStorage.getItem("ADMIN_USER_ROLE") == 'EDITOR')
 	  			 {
 	  				 return;
 	 }
@@ -332,7 +332,7 @@ adminControllers.controller('AdminUserDeleteController', ['$scope', '$routeParam
 adminControllers.controller('AdminUserListController', ['$scope', '$location', 'AdminUserList',
 	function($scope, $location, AdminUserList) {
 
-		if(localStorage.getItem("USER_ROLE") == 'WRITER' || localStorage.getItem("USER_ROLE") == 'USER' || localStorage.getItem("USER_ROLE") == '' || localStorage.getItem("USER_ROLE") == 'EDITOR')
+		if(localStorage.getItem("ADMIN_USER_ROLE") == 'WRITER' || localStorage.getItem("ADMIN_USER_ROLE") == 'USER' || localStorage.getItem("ADMIN_USER_ROLE") == '' || localStorage.getItem("ADMIN_USER_ROLE") == 'EDITOR')
 		{
 			$location.path('/users/login');
 			return;
@@ -355,9 +355,9 @@ function ($scope, $location, $rootScope) {
 	$rootScope.bc_userRoleId = '';
 
 	localStorage.setItem("AdminSessionId", "");
-	localStorage.setItem("USER_ID", "");
-	localStorage.setItem("USER_NAME", "");
-	localStorage.setItem("USER_ROLE", "");
+	localStorage.setItem("ADMIN_USER_ID", "");
+	localStorage.setItem("ADMIN_USER_NAME", "");
+	localStorage.setItem("ADMIN_USER_ROLE", "");
 
 	localStorage.removeItem(0);
 	localStorage.removeItem(1);
@@ -403,16 +403,16 @@ adminControllers.controller('AdminLoginController', ['$scope', '$route', '$rootS
 				if ("localStorage" in window)
 				{
 					localStorage.setItem("AdminSessionId", login.sessionId);
-					localStorage.setItem("USER_ID", login.id);
-					localStorage.setItem("USER_NAME", login.userName);
-					localStorage.setItem("USER_ROLE", $rootScope.bc_userRoleId );
+					localStorage.setItem("ADMIN_USER_ID", login.id);
+					localStorage.setItem("ADMIN_USER_NAME", login.userName);
+					localStorage.setItem("ADMIN_USER_ROLE", $rootScope.bc_userRoleId );
 
 					var element = document.getElementById("login_placeholder");
 					element.innerHTML = "Logout";
 					element.href = "#/users/logout/"+login.sessionId;
 
 					///######## role based menu ############//
-					if(localStorage.getItem("USER_ROLE") == 'EDITOR')
+					if(localStorage.getItem("ADMIN_USER_ROLE") == 'EDITOR')
 					{
 						if(document.getElementById('manage_articles')) document.getElementById('manage_articles').style.display = 'block';
 						if(document.getElementById('manage_posts'))document.getElementById('manage_posts').style.display = 'block';
@@ -421,7 +421,7 @@ adminControllers.controller('AdminLoginController', ['$scope', '$route', '$rootS
 						destination = 'discuss/A';
 
             		}
-					else if(localStorage.getItem("USER_ROLE") == 'WRITER' || localStorage.getItem("USER_ROLE") == 'USER' || localStorage.getItem("USER_ROLE") == '')
+					else if(localStorage.getItem("ADMIN_USER_ROLE") == 'WRITER' || localStorage.getItem("ADMIN_USER_ROLE") == 'USER' || localStorage.getItem("ADMIN_USER_ROLE") == '')
 					{
 						if(document.getElementById('manage_articles'))document.getElementById('manage_articles').style.display = 'none';
 						if(document.getElementById('manage_posts'))document.getElementById('manage_posts').style.display = 'none';
@@ -439,7 +439,7 @@ adminControllers.controller('AdminLoginController', ['$scope', '$route', '$rootS
 						element.innerHTML = "Logout";
 						element.href = "#/users/logout/"+login.sessionId;
 					}
-            		else if(localStorage.getItem("USER_ROLE") == 'SUPER_USER')
+            		else if(localStorage.getItem("ADMIN_USER_ROLE") == 'SUPER_USER')
 					{
 						if(document.getElementById('manage_articles'))document.getElementById('manage_articles').style.display = 'block';
 						if(document.getElementById('manage_posts')) document.getElementById('manage_posts').style.display = 'block';
@@ -502,7 +502,7 @@ adminControllers.controller('AdminLoginController', ['$scope', '$route', '$rootS
 
 adminControllers.controller('AdminDiscussListController', ['$scope', '$location', 'AdminDiscussList',
   function($scope, $location, AdminDiscussList) {
-	  if(localStorage.getItem("USER_ROLE") == 'WRITER' || localStorage.getItem("USER_ROLE") == 'USER' || localStorage.getItem("USER_ROLE") == '')
+	  if(localStorage.getItem("ADMIN_USER_ROLE") == 'WRITER' || localStorage.getItem("ADMIN_USER_ROLE") == 'USER' || localStorage.getItem("ADMIN_USER_ROLE") == '')
 	  	 {
 
 	  		 $location.path('/users/login');
@@ -518,7 +518,7 @@ adminControllers.controller('AdminDiscussListController', ['$scope', '$location'
 //Answer and comments
 adminControllers.controller('CommentListController', ['$scope', '$location', 'AdminCommentList',
   function($scope, $location, AdminCommentList) {
-	 if(localStorage.getItem("USER_ROLE") == 'WRITER' || localStorage.getItem("USER_ROLE") == 'USER' || localStorage.getItem("USER_ROLE") == '')
+	 if(localStorage.getItem("ADMIN_USER_ROLE") == 'WRITER' || localStorage.getItem("ADMIN_USER_ROLE") == 'USER' || localStorage.getItem("ADMIN_USER_ROLE") == '')
 	 {
 
 	  	$location.path('/users/login');
@@ -536,7 +536,7 @@ adminControllers.controller('AdminCommentCreateController', ['$scope', '$http', 
 		$location.path('/users/login');
 		return;
 	 }
-	 if(localStorage.getItem("USER_ROLE") == 'WRITER' || localStorage.getItem("USER_ROLE") == 'USER' || localStorage.getItem("USER_ROLE") == '')
+	 if(localStorage.getItem("ADMIN_USER_ROLE") == 'WRITER' || localStorage.getItem("ADMIN_USER_ROLE") == 'USER' || localStorage.getItem("ADMIN_USER_ROLE") == '')
 	 {
 		 $location.path('/users/login');
 		 return;
@@ -556,8 +556,8 @@ adminControllers.controller('AdminCommentCreateController', ['$scope', '$http', 
 	 		$scope.editcomment = function () {
 
 				//putting the userId to discuss being created
-				$scope.currentComment.userId = localStorage.getItem("USER_ID");
-				$scope.currentComment.userName = localStorage.getItem("USER_NAME");
+				$scope.currentComment.userId = localStorage.getItem("ADMIN_USER_ID");
+				$scope.currentComment.userName = localStorage.getItem("ADMIN_USER_NAME");
 				
 				$scope.currentComment.status = $scope.currentComment.status === true ? 1:0;
 
@@ -589,7 +589,7 @@ function($scope, $location, $rootScope, $location, AdminQuestionDiscuss) {
 		$location.path('/users/login');
 		return;
 	}
-	if(localStorage.getItem("USER_ROLE") == 'WRITER' || localStorage.getItem("USER_ROLE") == 'USER' || localStorage.getItem("USER_ROLE") == '')
+	if(localStorage.getItem("ADMIN_USER_ROLE") == 'WRITER' || localStorage.getItem("ADMIN_USER_ROLE") == 'USER' || localStorage.getItem("ADMIN_USER_ROLE") == '')
 		 {
 			 return;
 	 }
@@ -605,7 +605,7 @@ function($scope, $location, $rootScope, $location, AdminPostDiscuss) {
 		$location.path('/users/login');
 		return;
 	}
-	if(localStorage.getItem("USER_ROLE") == 'WRITER' || localStorage.getItem("USER_ROLE") == 'USER' || localStorage.getItem("USER_ROLE") == '')
+	if(localStorage.getItem("ADMIN_USER_ROLE") == 'WRITER' || localStorage.getItem("ADMIN_USER_ROLE") == 'USER' || localStorage.getItem("ADMIN_USER_ROLE") == '')
 		 {
 			 $location.path('/users/login');
 			 return;
@@ -633,7 +633,7 @@ function($scope, $location, $rootScope, $location, AdminArticleDiscuss) {
 		$location.path('/users/login');
 		return;
 	}
-	if(localStorage.getItem("USER_ROLE") == 'WRITER' || localStorage.getItem("USER_ROLE") == 'USER' || localStorage.getItem("USER_ROLE") == '')
+	if(localStorage.getItem("ADMIN_USER_ROLE") == 'WRITER' || localStorage.getItem("ADMIN_USER_ROLE") == 'USER' || localStorage.getItem("ADMIN_USER_ROLE") == '')
 		 {
 			 $location.path('/users/login');
 			 return;
@@ -735,7 +735,7 @@ adminControllers.controller('AdminDiscussCreateController', ['$scope', '$http', 
 		$location.path('/users/login');
 		return;
 	 }
-	 if(localStorage.getItem("USER_ROLE") == 'WRITER' || localStorage.getItem("USER_ROLE") == 'USER' || localStorage.getItem("USER_ROLE") == '')
+	 if(localStorage.getItem("ADMIN_USER_ROLE") == 'WRITER' || localStorage.getItem("ADMIN_USER_ROLE") == 'USER' || localStorage.getItem("ADMIN_USER_ROLE") == '')
 	 {
 		 $location.path('/users/login');
 		 return;
@@ -796,8 +796,8 @@ adminControllers.controller('AdminDiscussCreateController', ['$scope', '$http', 
 				$scope.currentDiscuss.text=htmlval;
 
 				//putting the userId to discuss being created
-				$scope.currentDiscuss.userId = localStorage.getItem("USER_ID");
-				$scope.currentDiscuss.username = localStorage.getItem("USER_NAME");
+				$scope.currentDiscuss.userId = localStorage.getItem("ADMIN_USER_ID");
+				$scope.currentDiscuss.username = localStorage.getItem("ADMIN_USER_NAME");
 				
 				$scope.currentDiscuss.status = $scope.currentDiscuss.status === true ? 1:0;
 				$scope.currentDiscuss.featured = $scope.currentDiscuss.featured === true ? 1:0;
@@ -831,7 +831,7 @@ adminControllers.controller('AdminDiscussCreateController', ['$scope', '$http', 
 
 adminControllers.controller('AdminDiscussEditController', ['$scope', '$location', '$routeParams', '$location', 'AdminDiscussShow',
   function($scope, $location, $routeParams, $location, AdminDiscussShow) {
-	  if(localStorage.getItem("USER_ROLE") == 'WRITER' || localStorage.getItem("USER_ROLE") == 'USER' || localStorage.getItem("USER_ROLE") == '')
+	  if(localStorage.getItem("ADMIN_USER_ROLE") == 'WRITER' || localStorage.getItem("ADMIN_USER_ROLE") == 'USER' || localStorage.getItem("ADMIN_USER_ROLE") == '')
 	  	 {
 	  		 $location.path('/users/login');
 	  		 return;
@@ -844,7 +844,7 @@ adminControllers.controller('AdminDiscussEditController', ['$scope', '$location'
 
 adminControllers.controller('AdminDiscussDetailController', ['$scope', '$location', '$routeParams', '$location', 'AdminDiscussShow',
   function($scope, $location, $routeParams, $location, AdminDiscussShow) {
-	  if(localStorage.getItem("USER_ROLE") == 'WRITER' || localStorage.getItem("USER_ROLE") == 'USER' || localStorage.getItem("USER_ROLE") == '')
+	  if(localStorage.getItem("ADMIN_USER_ROLE") == 'WRITER' || localStorage.getItem("ADMIN_USER_ROLE") == 'USER' || localStorage.getItem("ADMIN_USER_ROLE") == '')
 	  	 {
 	  		 $location.path('/users/login');
 	  		 return;
@@ -856,7 +856,7 @@ adminControllers.controller('AdminDiscussDetailController', ['$scope', '$locatio
 
 adminControllers.controller('AdminDiscussDeleteController', ['$scope', '$location', '$rootScope', '$routeParams', '$location', 'AdminDiscuss',
   function($scope, $location, $rootScope, $routeParams, $location, AdminDiscuss) {
-	  if(localStorage.getItem("USER_ROLE") == 'WRITER' || localStorage.getItem("USER_ROLE") == 'USER' || localStorage.getItem("USER_ROLE") == '')
+	  if(localStorage.getItem("ADMIN_USER_ROLE") == 'WRITER' || localStorage.getItem("ADMIN_USER_ROLE") == 'USER' || localStorage.getItem("ADMIN_USER_ROLE") == '')
 	  	 {
 	  		 $location.path('/users/login');
 	  		 return;
