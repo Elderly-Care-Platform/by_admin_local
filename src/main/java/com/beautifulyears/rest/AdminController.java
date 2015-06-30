@@ -153,6 +153,7 @@ public class AdminController {
 			newUser.setPasswordCode(user.getPasswordCode());
 			newUser.setPasswordCodeExpiry(user.getPasswordCodeExpiry());
 			newUser.setUserRoleId(user.getUserRoleId());
+			newUser.setUserName(user.getUserName());
 			newUser.setActive(user.isActive());
 			userRepository.save(newUser);
 			ResponseEntity<String> responseEntity = new ResponseEntity<>(
