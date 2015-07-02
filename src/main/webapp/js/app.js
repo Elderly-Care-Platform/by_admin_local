@@ -748,21 +748,22 @@ adminControllers.controller('AdminDiscussCreateController', ['$scope', '$http', 
 		//EDIT MODE
 	 	if(discussId != null )
 	 	{
+	 		$scope.newArticlePhotoFilename = "";
 	 		$scope.currentDiscuss = AdminDiscuss.get({discussId:discussId},function(){
+	 			$scope.newArticlePhotoFilename = JSON.stringify($scope.currentDiscuss.articlePhotoFilename);
 	 			for(var i=0; i<$scope.currentDiscuss.topicId.length; i++){
 	 				BY.editorCategoryList.addCategory($scope.currentDiscuss.topicId[i]);
 	 			}
 	 		});
 	 		$scope.editdiscuss = function () {
 	 			var htmlval = tinyMCE.activeEditor.getContent();
-	 			
+	 			$scope.currentDiscuss.articlePhotoFilename = JSON.parse($scope.newArticlePhotoFilename);
 				if(htmlval == '')
 				{
 
 					htmlval = document.getElementById('texta').value;
 
 				}
-				
 				
 
 				$scope.currentDiscuss.text=htmlval;

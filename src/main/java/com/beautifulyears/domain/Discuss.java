@@ -3,12 +3,15 @@ package com.beautifulyears.domain;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 //The discuss collection represents Articles, Questions and Posts
 @Document(collection = "discuss")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Discuss {
 
 	@Id
@@ -16,7 +19,7 @@ public class Discuss {
 
 	private String title;
 
-	private String articlePhotoFilename;
+	private Map<String, String> articlePhotoFilename;
 
 	private String userId;
 
@@ -90,11 +93,11 @@ public class Discuss {
 		this.likedBy = likedBy;
 	}
 
-	public String getArticlePhotoFilename() {
+	public Map<String, String> getArticlePhotoFilename() {
 		return articlePhotoFilename;
 	}
 
-	public void setArticlePhotoFilename(String articlePhotoFilename) {
+	public void setArticlePhotoFilename(Map<String, String> articlePhotoFilename) {
 		this.articlePhotoFilename = articlePhotoFilename;
 	}
 
@@ -108,7 +111,7 @@ public class Discuss {
 
 	public Discuss(String userId, String username, String discussType,
 			List<String> topicId, String title, String text, int status,
-			int aggrReplyCount,List<String> systemTags,List<String> userTags, String articlePhotoFilename, Boolean isFeatured) {
+			int aggrReplyCount,List<String> systemTags,List<String> userTags, Map<String, String> articlePhotoFilename, Boolean isFeatured) {
 		super();
 		this.userId = userId;
 		this.username = username;

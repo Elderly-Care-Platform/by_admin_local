@@ -21,13 +21,13 @@
 			<tr ng-if="currentDiscuss.discussType == 'A'">
 				<td><label class="control-label" for="title"><strong>Title Photo</strong></label></td>
 				<td><form id="UploadImage12" action="UploadFile" method="post" enctype="multipart/form-data">
-						<label class="myLabel" ng-style="{'background-image': 'url({{ currentDiscuss.articlePhotoFilename }})'}">
+						<label class="myLabel" ng-style="{'background-image': 'url({{ currentDiscuss.articlePhotoFilename.original }})'}">
 							<input name="sp" id="sp" type="file" required onchange="javascript:uploadImage(this)" /> 
 							<span>Please upload<br> your main <br>photo (optional)
 							</span>
 						</label>
 					</form> 
-					<input type="text" id="articleTitleImage" ng-model="currentDiscuss.articlePhotoFilename" value="" style="display: none" onchange="javascript:previewImage(this)" />
+					<input type="text" id="articleTitleImage" ng-model="currentDiscuss.newArticlePhotoFilename" value="" style="display: none" onchange="javascript:previewImage(this)" />
 					</td>
 			</tr>
 
@@ -112,33 +112,38 @@
 
 
 		<script type="text/javascript">
+		var isLoaded = false;
 function uploadImage(input){
 	if (input.files && input.files[0]) {
 		previewImage(input);
-        $("#UploadImage12").bind('submit', function(e) {
-        	var postData = new FormData(jQuery('#UploadImage12')[0]);
-        	$.ajax(
-        		    {
-        		        url : 'UploadFile',
-        		        type: "POST",
-        		        enctype:"multipart/form-data",
-        		        data : postData,
-        		      //  contentType: "application/json",
-        		        cache: false,
-					    contentType: false,
-					    processData: false,
-        		        success:function(data, textStatus, jqXHR) 
-        		        {
-        		            $("#articleTitleImage").val(data);
-        		            $("#articleTitleImage").trigger('input');
-        		        },
-        		        error: function(jqXHR, textStatus, errorThrown) 
-        		        {
-        		        	alert("Image upload failed");
-        		        }
-        		    });
-            e.preventDefault();
-      });
+		if(!isLoaded){
+			$("#UploadImage12").bind('submit', function(e) {
+	        	var postData = new FormData(jQuery('#UploadImage12')[0]);
+	        	$.ajax(
+	        		    {
+	        		        url : 'UploadFile?transcoding=true',
+	        		        type: "POST",
+	        		        enctype:"multipart/form-data",
+	        		        data : postData,
+	        		      //  contentType: "application/json",
+	        		        cache: false,
+						    contentType: false,
+						    processData: false,
+	        		        success:function(data, textStatus, jqXHR) 
+	        		        {
+	        		            $("#articleTitleImage").val(data);
+	        		            $("#articleTitleImage").trigger('input');
+	        		        },
+	        		        error: function(jqXHR, textStatus, errorThrown) 
+	        		        {
+	        		        	alert("Image upload failed");
+	        		        }
+	        		    });
+	            e.preventDefault();
+	      });
+			isLoaded  = true;
+		}
+		
         $('#UploadImage12').submit();
         
         //input.form.submit();

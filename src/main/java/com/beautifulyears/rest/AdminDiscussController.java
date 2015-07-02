@@ -166,7 +166,7 @@ public class AdminDiscussController {
 			return new Discuss(userId, username, discussType, topicIds, title,
 					text, discussStatus, discuss.getAggrReplyCount(),
 					systemTags, discuss.getUserTags(),
-					discuss.getArticlePhotoFilename() == null ? "" : discuss
+					discuss.getArticlePhotoFilename() == null ? null : discuss
 							.getArticlePhotoFilename(), discuss.isFeatured());
 
 		} catch (Exception e) {
