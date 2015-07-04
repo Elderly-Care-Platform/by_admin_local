@@ -4,6 +4,7 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.List;
 import java.util.UUID;
 
@@ -55,6 +56,7 @@ public class UploadFile extends HttpServlet {
 			ServletFileUpload upload = new ServletFileUpload(factory);
 			try {
 				List<FileItem> multiparts = upload.parseRequest(request);
+				PrintWriter out = response.getWriter();
 				for (FileItem item : multiparts) {
 					if (!item.isFormField()) {
 						UUID fname = UUID.randomUUID();
@@ -142,9 +144,9 @@ public class UploadFile extends HttpServlet {
 		}
 
 		BufferedImage resizedImage = new BufferedImage(newWidth, newHeight,
-				BufferedImage.TYPE_INT_RGB);
+				image.getType());
 		Graphics2D g = resizedImage.createGraphics();
-		
+
 		g.drawImage(image, 0, 0, newWidth, newHeight, null);
 
 		g.dispose();

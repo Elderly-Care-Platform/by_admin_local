@@ -748,16 +748,16 @@ adminControllers.controller('AdminDiscussCreateController', ['$scope', '$http', 
 		//EDIT MODE
 	 	if(discussId != null )
 	 	{
-	 		$scope.newArticlePhotoFilename = "";
 	 		$scope.currentDiscuss = AdminDiscuss.get({discussId:discussId},function(){
-	 			$scope.newArticlePhotoFilename = JSON.stringify($scope.currentDiscuss.articlePhotoFilename);
+	 			$scope.currentDiscuss.newArticlePhotoFilename = "";
+	 			$scope.currentDiscuss.newArticlePhotoFilename = JSON.stringify($scope.currentDiscuss.articlePhotoFilename);
 	 			for(var i=0; i<$scope.currentDiscuss.topicId.length; i++){
-	 				BY.editorCategoryList.addCategory($scope.currentDiscuss.topicId[i]);
+	 				BY.editorCategoryList.addCategory($scope.currentDiscuss.topicId[i]);	
 	 			}
 	 		});
 	 		$scope.editdiscuss = function () {
 	 			var htmlval = tinyMCE.activeEditor.getContent();
-	 			$scope.currentDiscuss.articlePhotoFilename = JSON.parse($scope.newArticlePhotoFilename);
+	 			$scope.currentDiscuss.articlePhotoFilename = JSON.parse($scope.currentDiscuss.newArticlePhotoFilename);
 				if(htmlval == '')
 				{
 
@@ -803,7 +803,10 @@ adminControllers.controller('AdminDiscussCreateController', ['$scope', '$http', 
 				$scope.currentDiscuss.status = $scope.currentDiscuss.status === true ? 1:0;
 				$scope.currentDiscuss.featured = $scope.currentDiscuss.featured === true ? 1:0;
 				$scope.currentDiscuss.topicId = BY.editorCategoryList.getCategoryList();
-
+				if($scope.newArticlePhotoFilename){
+					$scope.currentDiscuss.articlePhotoFilename = JSON.parse($scope.newArticlePhotoFilename);
+				}
+				
 
 				//save the discuss
 				$scope.currentDiscuss.$save(function () {

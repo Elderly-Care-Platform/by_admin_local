@@ -131,7 +131,7 @@ function uploadImage(input){
 						    processData: false,
 	        		        success:function(data, textStatus, jqXHR) 
 	        		        {
-	        		            $("#articleTitleImage").val(data);
+	        		            $("#articleTitleImage").val(JSON.stringify(data));
 	        		            $("#articleTitleImage").trigger('input');
 	        		        },
 	        		        error: function(jqXHR, textStatus, errorThrown) 
