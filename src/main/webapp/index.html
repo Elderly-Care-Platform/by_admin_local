@@ -2,60 +2,66 @@
 <html>
 <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
-	<script src="js/jquery-1.9.1.js"></script>
-	<script src="js/jquery.form.js"></script>
-	<script src="js/angular.js"></script>
-	<script src="js/angular-resource.js"></script>
-	<script src="js/angular-route.js"></script>
-	<script src="js/angular-sanitize.js"></script>
+	<script src="lib/jquery-1.9.1.js"></script>
+	<script src="lib/jquery.form.js"></script>
+	<script src="lib/angular/angular.js"></script>
+	<script src="lib/angular/angular-resource.js"></script>
+	<script src="lib/angular/angular-route.js"></script>
+	<script src="lib/angular/angular-sanitize.js"></script>
 
 	<!-- Favicon -->
     <link rel="shortcut icon" href="img/favicon.ico">
 
-	<!-- jQuery UI -->
-  <!-- <script type="text/javascript" src="js/jquery-ui.js"></script> -->
-  <!-- TinyMCE -->
 
-	<script type="text/javascript" src="js/tinymce/tinymce.min.js"></script>
-	<!--<script type="text/javascript" src="js/one.js"></script>-->
-
+	<script src="lib/toastr.js"></script>
+	<script src="lib/bootstrap.js"></script>
+	<script src="lib/ui-bootstrap-0.13.1.js"></script>
 	
-	<script src="js/toastr.js"></script>
-	<script src="js/app.js"></script>
-	<script src="js/bootstrap.js"></script>
+	
 
 
     <link rel="stylesheet" href="css/bootstrap.css"/>
     <link rel="stylesheet" href="css/toastr.css"/>
     <link rel="stylesheet" href="css/custom.css"/>
     <link rel="stylesheet" href="css/discuss.css"/>
+    <link rel="stylesheet" href="css/jquery-ui.css"/>
+    <link rel="stylesheet" href="css/jquery-ui.structure.css"/>
+    <link rel="stylesheet" href="css/jquery-ui.theme.css"/>
+    
+    <link rel="Stylesheet" type="text/css" href="lib/jqwidgets/styles/jqx.energyblue.css" />
+	<link rel="Stylesheet" type="text/css" href="lib/jqwidgets/styles/jqx.base.css" />
 
     <!--  JQXGRID widget  -->
     <!-- JQXWIDGETS -->
-	<script type="text/javascript" src="jqwidgets/jqxcore.js"></script>
-	<script type="text/javascript" src="jqwidgets/jqxangular.js"></script>
-	<script type="text/javascript" src="jqwidgets/jqxgrid.js"></script>
-	<script type="text/javascript" src="jqwidgets/jqxdata.js"></script>
-	<script type="text/javascript" src="jqwidgets/jqxbuttons.js"></script>
-	<script type="text/javascript" src="jqwidgets/jqxcheckbox.js"></script>
-	<script type="text/javascript" src="jqwidgets/jqxgrid.selection.js"></script>
-    <script type="text/javascript" src="jqwidgets/jqxmenu.js"></script>
-    <script type="text/javascript" src="jqwidgets/jqxscrollbar.js"></script>
-    <script type="text/javascript" src="jqwidgets/jqxgrid.sort.js"></script>
-	<script type="text/javascript" src="jqwidgets/jqxlistbox.js"></script>
-    <script type="text/javascript" src="jqwidgets/jqxdropdownlist.js"></script>
-	<script type="text/javascript" src="jqwidgets/jqxgrid.filter.js"></script>
-	<script type="text/javascript" src="jqwidgets/jqxgrid.columnsresize.js"></script>
-	<script type="text/javascript" src="jqwidgets/jqxgrid.pager.js"></script>
+	<script type="text/javascript" src="lib/jqwidgets/jqxcore.js"></script>
+	<script type="text/javascript" src="lib/jqwidgets/jqxangular.js"></script>
+	<script type="text/javascript" src="lib/jqwidgets/jqxgrid.js"></script>
+	<script type="text/javascript" src="lib/jqwidgets/jqxdata.js"></script>
+	<script type="text/javascript" src="lib/jqwidgets/jqxbuttons.js"></script>
+	<script type="text/javascript" src="lib/jqwidgets/jqxcheckbox.js"></script>
+	<script type="text/javascript" src="lib/jqwidgets/jqxgrid.selection.js"></script>
+    <script type="text/javascript" src="lib/jqwidgets/jqxmenu.js"></script>
+    <script type="text/javascript" src="lib/jqwidgets/jqxscrollbar.js"></script>
+    <script type="text/javascript" src="lib/jqwidgets/jqxgrid.sort.js"></script>
+	<script type="text/javascript" src="lib/jqwidgets/jqxlistbox.js"></script>
+    <script type="text/javascript" src="lib/jqwidgets/jqxdropdownlist.js"></script>
+	<script type="text/javascript" src="lib/jqwidgets/jqxgrid.filter.js"></script>
+	<script type="text/javascript" src="lib/jqwidgets/jqxgrid.columnsresize.js"></script>
+	<script type="text/javascript" src="lib/jqwidgets/jqxgrid.pager.js"></script>
+	                                    
+	<script type="text/javascript" src="lib/tinymce/tinymce.min.js"></script>
 	
-	<script type="text/javascript" src="js/byEditor.js"></script>
 	
-	<link rel="Stylesheet" type="text/css" href="jqwidgets/styles/jqx.energyblue.css" />
-	<link rel="Stylesheet" type="text/css" href="jqwidgets/styles/jqx.base.css" />
-	<!-- JQXWIDGETS -->
+	
+	
 
-    <!--  JQXGRID Widget  -->
 
+	<script src="js/components/main/app.js"></script>
+	<script src="js/components/main/app-route.js"></script>
+	<script src="js/components/main/app-resource.js"></script>
+	<script type="text/javascript" src="js/components/common/byEditor.js"></script>
+	
+	<script src="js/components/menu/MenuController.js"></script>	
 
     <title>BeautifulYears - Admin Module</title>
 </head>
@@ -104,23 +110,26 @@
 
             <div class="nav-collapse collapse">
                 <ul class="nav" role="navigation">
-                    <li ng-hide="{{root.bc_userRoleId == 'USER'}}">
-                        <a href="#/discuss/A">Manage Articles</a>
+					<li ng-hide="{{root.bc_userRoleId == 'USER'}}">
+                        <a href="#/discuss/A">Articles</a>
                     </li>
                     <li ng-hide="{{root.bc_userRoleId == 'USER'}}">
-                        <a href="#/discuss/Q">Manage Questions</a>
+                        <a href="#/menu">Menu</a>
+                    </li>
+                    <li ng-hide="{{root.bc_userRoleId == 'USER'}}">
+                        <a href="#/discuss/Q">Questions</a>
                     </li>
 
                     <li ng-hide="{{root.bc_userRoleId == 'USER'}}">
-						<a href="#/discuss/P">Manage Posts</a>
+						<a href="#/discuss/P">Posts</a>
                     </li>
                     
                     <li ng-hide="{{root.bc_userRoleId == 'USER'}}">
-						<a href="#/discuss/F">Manage Feedback</a>
+						<a href="#/discuss/F">Feedback</a>
                     </li>
 
                     <li ng-hide="{{root.bc_userRoleId == 'USER'}}">
-                        <a href="#/users/all">Manage Users</a>
+                        <a href="#/users/all">Users</a>
                     </li>
                 </ul>
 
@@ -160,40 +169,16 @@
      	
      	var options1 = {
 		        beforeSend : function() {
-		                //$("#progressbox").show();
-		                // clear everything
-		                //$("#progressbar").width('0%');
-		                //$("#message").empty();
-		                //$("#percent").html("0%");
 		        },
 		        uploadProgress : function(event, position, total, percentComplete) {
-		                //$("#progressbar").width(percentComplete + '%');
-		                //$("#percent").html(percentComplete + '%');
-
-		                // change message text to red after 50%
-		                //if (percentComplete > 50) {
-		                //$("#message").html("<font color='red'>File Upload is in progress</font>");
-		               // }
 		        },
 		        success : function(response) {
-		               // $("#progressbar").width('100%');
-		               // $("#percent").html('100%');
-		        	//var img = "<img src = 'uploaded_files/" +  response.responseText.substring(response.responseText.lastIndexOf('/')+1) + "' />";
-					//tinyMCE.activeEditor.execCommand("mceInsertContent", true, img);
 		        },
 		        complete : function(response) {
-					//tinyMCE.activeEditor.focus();
-					//tinyMCE.get('submit-article').getBody().focus();
-
-					//?????var img = "<img style = 'height:80px;width:80px' src = 'http://" + response.responseText + "' />";
-					//alert("img path = " + response.responseText.substring(response.responseText.lastIndexOf('/')+1));
 					var img = "<img src = 'uploaded_files/" +  response.responseText.substring(response.responseText.lastIndexOf('/')+1) + "' />";
 					tinyMCE.activeEditor.execCommand("mceInsertContent", true, img);
-					//$("#articlePhotoFilename").val(response.responseText);
 		        },
 		        error : function() {
-		        //$("#articlePhotoFilename").val("<font color='red'> ERROR: unable to upload files</font>");
-		        //tinyMCE.activeEditor.execCommand("mceInsertContent", true, "<font color='red'> ERROR: unable to upload files</font>");
 		        }
 			};
 

@@ -1,20 +1,5 @@
 var adminServices = angular.module("adminServices", ["ngResource"]);
-var adminControllers = angular.module("adminControllers", []);
-
-var discussCategoryList = adminServices.factory('discussCategoryList', function ($resource) {
-	return $resource('api/v1/topic/list/all', 
-			{q: '*' }, 
-		      {'query': { method: 'GET' ,
-		    	  interceptor: {
-		              response: function(response) {  
-		                  return response.data;
-		                }
-		              }
-		    	  }
-				
-	})
-});
-
+var adminControllers = angular.module("adminControllers", ['ui.bootstrap']);
 
 var discuss = adminServices.factory('SessionIdService', function() {
     var sessionID = '';
@@ -49,99 +34,6 @@ var discuss = adminServices.factory('SessionIdService', function() {
 
 
 
-//User
-var user_admin = adminServices.factory('AdminUser', function($resource) {
-	return $resource('/byadmin/api/v1/users/:userId',{}, {
-		remove:{method: 'DELETE', params: {userId: '@id'}},
-		update:{method: 'PUT', params: {userId: '@id'}},
-		get: {method: 'GET', params: {userId: '@id'}}
-	})
-});
-
-var userShow_admin = adminServices.factory('AdminUserShow', function($resource) {
-	return $resource('/byadmin/api/v1/users/show/:userId',{}, {
-		show: {method: 'GET', params: {userId: '@id'}},
-		get: {method: 'GET', params: {userId: '@id'}}
-	})
-});
-
-var userEdit_admin = adminServices.factory('AdminUserEdit', function($resource) {
-	return $resource('/byadmin/api/v1/users/edit/:userId',{}, {
-		get: {method: 'GET', params: {userId: '@id'}}
-	})
-});
-
-var userByFilter_admin = adminServices.factory('AdminUserList', function($resource) {
-	return $resource('/byadmin/api/v1/users/list/all',{}, {
-
-	})
-});
-
-
-//Discuss - admin
-var discuss_admin = adminServices.factory('AdminDiscuss', function($resource) {
-	return $resource('/byadmin/api/v1/discuss/:discussId',{}, {
-		remove:{method: 'DELETE', params: {discussId: '@id'}},
-		update:{method: 'PUT', params: {discussId: '@id'}},
-		get: {method: 'GET', params: {discussId: '@id'}}
-	})
-});
-
-
-var discussByFilterPost_admin = adminServices.factory('AdminPostDiscuss', function($resource) {
-	return $resource('/byadmin/api/v1/discuss/list/P',{}, {
-	})
-});
-
-var discussByFilterFeedback_admin = adminServices.factory('AdminFeedbackDiscuss', function($resource) {
-	return $resource('/byadmin/api/v1/discuss/list/F',{}, {
-	})
-});
-
-
-var discussByFilterQuestion_admin = adminServices.factory('AdminQuestionDiscuss', function($resource) {
-	return $resource('/byadmin/api/v1/discuss/list/Q',{}, {
-	})
-});
-
-var discussByFilterArticle_admin = adminServices.factory('AdminArticleDiscuss', function($resource) {
-	return $resource('/byadmin/api/v1/discuss/list/A',{}, {
-	})
-});
-
-
-var discussByFilter_admin = adminServices.factory('AdminDiscussList', function($resource) {
-	return $resource('/byadmin/api/v1/discuss/list/all',{}, {
-
-	})
-});
-
-
-//////////////////////////////// comments ///////////////////////////////////////////////////
-var commentByFilter_admin = adminServices.factory('AdminCommentList', function($resource) {
-	return $resource('/byadmin/api/v1/comment/:parentId/:ancestorId',{}, {
-		//get: {method: 'GET', params: {parentId: '@discussId', ancestorId: '@ancestorId'}}
-
-	})
-});
-
-var discuss_admin = adminServices.factory('AdminComment', function($resource) {
-	return $resource('/byadmin/api/v1/comment/:commentId',{}, {
-		remove:{method: 'DELETE', params: {commentId: '@id'}},
-		update:{method: 'PUT', params: {commentId: '@id'}},
-		get: {method: 'GET', params: {commentId: '@id'}}
-	})
-});
-//////////////////////////////// comments ///////////////////////////////////////////////////
-
-var discussShow_admin = adminServices.factory('AdminDiscussShow', function($resource) {
-	return $resource('/byadmin/api/v1/discuss/show/:discussId',{}, {
-		show: {method: 'GET', params: {discussId: '@id'}},
-		get: {method: 'GET', params: {discussId: '@id'}}
-	})
-});
-
-
 
 var byAdminApp = angular.module('byAdminApp', [
  	"adminControllers",
@@ -171,37 +63,6 @@ byAdminApp.directive('bindHtmlUnsafe', function( $compile ) {
 
     };
 });
-
-
-byAdminApp.config(['$routeProvider',
-  function($routeProvider) {
-    $routeProvider
-    .when('/comment/:parentId/:ancestorId', {templateUrl: 'views/discuss/list2.html', controller: 'CommentListController'})
-    .when('/comment/:commentId', {templateUrl: 'views/discuss/edit2.html', controller: 'AdminCommentCreateController'})
-	.when('/comment/edit/:commentId', {templateUrl: 'views/discuss/list2.html', controller: 'AdminCommentCreateController'})
-	.when('/comment/delete/:commentId', {templateUrl: 'views/discuss/list2.html', controller: 'AdminCommentDeleteController'})
-
-    .when('/users/all', {templateUrl: 'views/users/list.html', controller: 'AdminUserListController'})
-    .when('/users/new', {templateUrl: 'views/users/create.html', controller: 'AdminUserCreateController'})
-    .when('/users/showedit/:userId', {templateUrl: 'views/users/edit.html', controller: 'AdminUserEditController'})
-    .when('/users/showedit/:userId', {templateUrl: 'views/users/edit.html', controller: 'AdminUserCreateController'})
-    .when('/users/delete/:userId', {templateUrl: 'views/users/list.html', controller: 'AdminUserDeleteController'})
-    .when('/users/login', {templateUrl: 'views/users/login.html', controller: 'AdminLoginController'})
-    .when('/users/logout/:sessionId', {templateUrl: 'views/users/list.html', controller: 'AdminLogoutController'})
-    .when('/discuss/all', {templateUrl: 'views/discuss/list.html', controller: 'AdminDiscussListController'})
-    .when('/discuss/P', {templateUrl: 'views/discuss/list.html', controller: 'AdminListPostController'})
-    .when('/discuss/F', {templateUrl: 'views/discuss/feedbackList.html', controller: 'AdminListFeedbackController'})
-      .when('/discuss/Q', {templateUrl: 'views/discuss/list.html', controller: 'AdminListQuestionController'})
-      .when('/discuss/A', {templateUrl: 'views/discuss/list.html', controller: 'AdminListArticleController'})
-      .when('/discuss/new/P', {templateUrl: 'views/discuss/create.html', controller: 'AdminDiscussCreateController'})
-	  .when('/discuss/new/Q', {templateUrl: 'views/discuss/create.html', controller: 'AdminDiscussCreateController'})
-	  .when('/discuss/new/A', {templateUrl: 'views/discuss/create.html', controller: 'AdminDiscussCreateController'})
-	  .when('/discuss/showedit/:discussId', {templateUrl: 'views/discuss/edit.html', controller: 'AdminDiscussCreateController'})
-	  .when('/discuss/edit/:discussId', {templateUrl: 'views/discuss/list.html', controller: 'AdminDiscussCreateController'})
-	  .when('/discuss/delete/:discussId', {templateUrl: 'views/discuss/list.html', controller: 'AdminDiscussDeleteController'})
-      .when('/discuss/:discussId', {templateUrl: 'views/discuss/detail.html', controller: 'AdminDiscussDetailController'});
-    //?????$routeProvider.otherwise({redirectTo: '/users/login'});
-  }]);
 
 
 //Routing and Session Check for Login
