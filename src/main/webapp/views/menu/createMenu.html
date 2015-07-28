@@ -1,0 +1,55 @@
+<div class="container-fluid">
+	<div id="wrapper" class="row-fluid">
+		<h3 class='menu'>Create Menu</h3>
+		<div class="alert alert-error" ng-show="error">{{errorMessage}}</div>
+
+		<table style="width: 900px;">
+			<tr>
+				<td><label class="control-label" for="title"><strong>Menu
+							display name</strong></label></td>
+				<td><input type="text" ng-model="newMenu.displayMenuName"
+					required /></td>
+			</tr>
+			<tr>
+				<td><label class="control-label" for="title"><strong>Select
+							Tags</strong></label></td>
+				<td><input type="text" ng-model="selectedTag"
+					typeahead="tag as tag.name for tag in existingTags | filter:{name: $viewValue} | limitTo:20"
+					class="form-control"></td>
+			</tr>
+			<tr>
+				<td><label class="control-label" for="title"><strong>Select
+							Module</strong></label></td>
+				<td><select ng-model="newMenu.module" convert-to-number>
+						<option value="0">DISCUSS</option>
+						<option value="1">SERVICE</option>
+				</select></td>
+			</tr>
+			<tr>
+				<td><label class="control-label" for="title"><strong>Select
+							Link to other menu</strong></label></td>
+				<td><input type="text" ng-model="linkedMenu"
+					typeahead="menu as menu.displayMenuName for menu in existingMenus | filter:{displayMenuName: $viewValue} | limitTo:20"
+					class="form-control"></td>
+			</tr>
+			<tr>
+				<td><label class="control-label" for="title"><strong>Select
+							Parent Menu</strong></label></td>
+				<td><input type="text" ng-model="parentMenu"
+					typeahead="menu as menu.displayMenuName for menu in existingMenus | filter:{displayMenuName: $viewValue} | limitTo:20"
+					class="form-control"></td>
+			</tr>
+			<tr>
+				<td><label class="control-label" for="title"><strong>Enter
+							Filter name (if any)</strong></label></td>
+				<td><input type="text" ng-model="newMenu.filterName" required /></td>
+			</tr>
+
+			<tr>
+				<td colspan="2" style="text-align: right;">
+					<button type="submit" class="btn btn-primary" ng-click="addMenu()">Submit</button>
+				</td>
+			</tr>
+		</table>
+	</div>
+</div>
