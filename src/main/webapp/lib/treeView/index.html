@@ -1,0 +1,90 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+	<title>webrevisions.com - jQuery Tree view without plugin</title>
+	<link rel="stylesheet" href="css/style.css">
+	<script src="http://code.jquery.com/jquery-1.7.2.min.js" type="text/javascript" > </script>
+	
+	<script type="text/javascript">
+
+		$( document ).ready( function( ) {
+				$( '.tree li' ).each( function() {
+						if( $( this ).children( 'ul' ).length > 0 ) {
+								$( this ).addClass( 'parent' );     
+						}
+				});
+				
+				$( '.tree li.parent > a' ).click( function( ) {
+						$( this ).parent().toggleClass( 'active' );
+						$( this ).parent().children( 'ul' ).slideToggle( 'fast' );
+				});
+				
+				$( '#all' ).click( function() {
+					
+					$( '.tree li' ).each( function() {
+						$( this ).toggleClass( 'active' );
+						$( this ).children( 'ul' ).slideToggle( 'fast' );
+					});
+				});
+				
+				$( '.tree li' ).each( function() {
+						$( this ).toggleClass( 'active' );
+						$( this ).children( 'ul' ).slideToggle( 'fast' );
+				});
+				
+		});
+        
+	</script>
+</head>
+<body>
+<div id="pgtitle">
+jQuery Expandble Tree view without plugin
+</div>	
+<div id="wrapper">
+<div class="tree">
+		<button id="all">Toggle All</button>
+		
+<ul>
+		<li><a>First Level</a>
+			<ul>
+				<li><a>Second Level</a></li>
+				<li><a>Second Level</a></li>
+				<li><a>Second Level</a></li>
+			</ul>
+		</li>
+		<li><a>First Level</a>
+			<ul>
+				<li><a>Second Level</a>
+					<ul>
+						<li><a>Third Level</a></li>
+						<li><a>Third Level</a></li>
+						<li><a>Third Level</a>
+							<ul>
+								<li><a>Fourth Level</a></li>
+								<li><a>Fourth Level</a></li>
+								<li><a>Fourth Level</a>
+									<ul>
+										<li><a>Fifth Level</a></li>
+										<li><a>Fifth Level</a></li>
+										<li><a>Fifth Level</a></li>
+									</ul>
+								</li>
+							</ul>
+						</li>
+					</ul>
+				</li>
+				<li><a>Second Level</a></li>
+			</ul>
+		</li>
+		<li><a>First Level</a>
+			<ul>
+				<li><a>Second Level</a></li>
+				<li><a>Second Level</a></li>
+			</ul>
+		</li>
+</ul>
+</div>
+</div>
+
+</body>
+</html>
