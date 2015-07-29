@@ -10,12 +10,15 @@
 				<td><input type="text" ng-model="newMenu.displayMenuName"
 					required /></td>
 			</tr>
-			<tr>
+			<tr ng-repeat="newTag in allTags track by $index">
 				<td><label class="control-label" for="title"><strong>Select
 							Tags</strong></label></td>
-				<td><input type="text" ng-model="selectedTag"
+				<td><input type="text" ng-model="allTags[$index]"
 					typeahead="tag as tag.name for tag in existingTags | filter:{name: $viewValue} | limitTo:20"
-					class="form-control"></td>
+					class="form-control"><a ng-click="removeTag($index)">REMOVE</a></td>
+			</tr>
+			<tr>
+				<td></td><td><a ng-click="addTag()">Add more tags</a></td>
 			</tr>
 			<tr>
 				<td><label class="control-label" for="title"><strong>Select
