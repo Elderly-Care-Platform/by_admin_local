@@ -27,6 +27,8 @@ public class Menu {
 	private String displayMenuName;
 	private List<String> ancestorIds = new ArrayList<String>();
 	private String parentMenuId;
+	private String slug;
+	
 	@DBRef
 	private List<Menu> children = new ArrayList<Menu>();
 	private String filterName;
@@ -104,6 +106,14 @@ public class Menu {
 
 	public void setLinkedMenuId(String linkedMenuId) {
 		this.linkedMenuId = linkedMenuId;
+	}
+
+	public String getSlug() {
+		return slug;
+	}
+
+	public void setSlug(String slug) {
+		this.slug = slug;
 	}
 
 	@Override

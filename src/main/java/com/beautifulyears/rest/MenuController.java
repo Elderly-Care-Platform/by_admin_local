@@ -9,6 +9,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -75,6 +76,7 @@ public class MenuController {
 		oldmenu.setModule(menu.getModule());
 		oldmenu.setParentMenuId(menu.getParentMenuId());
 		oldmenu.setTags(menu.getTags());
+		oldmenu.setSlug(getSlugFromTags(oldmenu.getTags()));
 
 		if (oldmenu.getParentMenuId() != null) {
 			Menu parent = mongoTemplate.findById(oldmenu.getParentMenuId(),
@@ -122,6 +124,16 @@ public class MenuController {
 
 		List<Menu> menus = this.mongoTemplate.find(q, Menu.class);
 		return menus;
+	}
+	
+	private String getSlugFromTags(List<Tag> tags){
+		StringBuilder slug = new StringBuilder("");
+		for (Tag tag : tags) {
+			slug.append(tag.getName().replace(' ', '_'));
+			slug.append("_");
+		}
+		
+		return slug.toString();
 	}
 
 }
