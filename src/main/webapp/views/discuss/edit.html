@@ -65,6 +65,9 @@
 					typeahead="tag as tag.name for tag in existingTags | filter:{name: $viewValue} | limitTo:20"
 					class="form-control"><a ng-click="removeTag($index)">REMOVE</a></td>
 			</tr>
+			<tr>
+				<td></td><td><a ng-click="addTag()">Add more tags</a></td>
+			</tr>
 			
 			<tr>
 				<td colspan="2" style="text-align: right;">
