@@ -69,6 +69,7 @@ public class AdminDiscussController {
 			newDiscuss.setFeatured(discuss.isFeatured());
 			newDiscuss.setArticlePhotoFilename(discuss
 					.getArticlePhotoFilename());
+			newDiscuss.setSystemTags(discuss.getSystemTags());
 			newDiscuss.setLastModifiedAt(new Date());
 			newDiscuss.setText(discuss.getText());
 			newDiscuss.setTopicId(discuss.getTopicId());
