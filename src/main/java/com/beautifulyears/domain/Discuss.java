@@ -7,7 +7,10 @@ import java.util.Map;
 
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import com.beautifulyears.domain.menu.Tag;
 
 //The discuss collection represents Articles, Questions and Posts
 @Document(collection = "discuss")
@@ -31,7 +34,8 @@ public class Discuss {
 
 	private int status; // published, unpublished
 
-	private List<String> systemTags = new ArrayList<String>();
+	@DBRef
+	private List<Tag> systemTags = new ArrayList<Tag>();
 
 	private List<String> userTags = new ArrayList<String>();
 
@@ -111,7 +115,7 @@ public class Discuss {
 
 	public Discuss(String userId, String username, String discussType,
 			List<String> topicId, String title, String text, int status,
-			int aggrReplyCount,List<String> systemTags,List<String> userTags, Map<String, String> articlePhotoFilename, Boolean isFeatured) {
+			int aggrReplyCount,List<Tag> systemTags,List<String> userTags, Map<String, String> articlePhotoFilename, Boolean isFeatured) {
 		super();
 		this.userId = userId;
 		this.username = username;
@@ -175,11 +179,11 @@ public class Discuss {
 		this.status = status;
 	}
 
-	public List<String> getSystemTags() {
+	public List<Tag> getSystemTags() {
 		return systemTags;
 	}
 
-	public void setSystemTags(List<String> systemTags) {
+	public void setSystemTags(List<Tag> systemTags) {
 		this.systemTags = systemTags;
 	}
 

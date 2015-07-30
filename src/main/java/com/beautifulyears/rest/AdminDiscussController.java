@@ -21,8 +21,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.beautifulyears.domain.Discuss;
+import com.beautifulyears.domain.menu.Tag;
 import com.beautifulyears.repository.DiscussRepository;
-import com.beautifulyears.repository.TopicRepository;
 
 /**
  * The REST based service for managing "discuss"
@@ -36,15 +36,15 @@ public class AdminDiscussController {
 	private static final Logger logger = Logger
 			.getLogger(AdminDiscussController.class);
 	private DiscussRepository discussRepository;
-	private TopicRepository topicRepository;
+//	private TopicRepository topicRepository;
 	private MongoTemplate mongoTemplate;
 
 	@Autowired
 	public AdminDiscussController(DiscussRepository discussRepository,
-			TopicRepository topicRepository,
+//			TopicRepository topicRepository,
 			MongoTemplate mongoTemplate) {
 		this.discussRepository = discussRepository;
-		this.topicRepository = topicRepository;
+//		this.topicRepository = topicRepository;
 		this.mongoTemplate = mongoTemplate;
 	}
 
@@ -158,10 +158,15 @@ public class AdminDiscussController {
 			String text = discuss.getText();
 			int discussStatus = discuss.getStatus();
 			List<String> topicIds = discuss.getTopicId();
-			int aggrReplyCount = 0;
-			int aggrLikeCount = 0;
+//			int aggrReplyCount = 0;
+//			int aggrLikeCount = 0;
 			
-			List<String> systemTags = topicRepository.getTopicNames(topicIds);
+//			List<String> systemTags = topicRepository.getTopicNames(topicIds);
+			List<Tag> systemTags = new ArrayList<Tag>();
+			for (Tag tag : discuss.getSystemTags()) {
+				Tag newTag = mongoTemplate.findById(tag.getId(), Tag.class);
+				systemTags.add(newTag);
+			}
 
 			return new Discuss(userId, username, discussType, topicIds, title,
 					text, discussStatus, discuss.getAggrReplyCount(),

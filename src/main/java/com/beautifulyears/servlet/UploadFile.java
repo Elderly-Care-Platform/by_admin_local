@@ -20,7 +20,7 @@ import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.log4j.Logger;
 
-import com.beautifulyears.BYConstants;
+import com.beautifulyears.constants.BYConstants;
 
 public class UploadFile extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -56,7 +56,7 @@ public class UploadFile extends HttpServlet {
 			ServletFileUpload upload = new ServletFileUpload(factory);
 			try {
 				List<FileItem> multiparts = upload.parseRequest(request);
-				PrintWriter out = response.getWriter();
+//				PrintWriter out = response.getWriter();
 				for (FileItem item : multiparts) {
 					if (!item.isFormField()) {
 						UUID fname = UUID.randomUUID();

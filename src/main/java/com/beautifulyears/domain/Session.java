@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import com.beautifulyears.DiscussConstants;
+import com.beautifulyears.constants.DiscussConstants;
 
 @Document(collection = "session")
 public class Session {

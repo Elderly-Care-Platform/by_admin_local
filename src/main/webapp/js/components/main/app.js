@@ -590,8 +590,8 @@ adminControllers.controller('LoadTMController', ['$scope', '$route',
 
 
 
-adminControllers.controller('AdminDiscussCreateController', ['$scope', '$http', '$location', '$route', '$routeParams', '$location', 'AdminDiscuss',
-  function($scope, $http, $location, $route, $routeParams, $location, AdminDiscuss) {
+adminControllers.controller('AdminDiscussCreateController', ['$scope', '$http', '$location', '$route', '$routeParams', '$location', 'AdminDiscuss','MenuTag',
+  function($scope, $http, $location, $route, $routeParams, $location, AdminDiscuss,MenuTag) {
 	 if(localStorage.getItem("AdminSessionId") == '') {
 		$location.path('/users/login');
 		return;
@@ -601,6 +601,12 @@ adminControllers.controller('AdminDiscussCreateController', ['$scope', '$http', 
 		 $location.path('/users/login');
 		 return;
 	 }
+	 MenuTag.get(function(res) {
+			$scope.existingTags = res;
+		}, function() {
+			alert("error fetching tags");
+		});
+	 
 	 var segment = $location.path();
 
 	//P or Q or A
@@ -612,6 +618,7 @@ adminControllers.controller('AdminDiscussCreateController', ['$scope', '$http', 
 	 		$scope.currentDiscuss = AdminDiscuss.get({discussId:discussId},function(){
 	 			$scope.currentDiscuss.newArticlePhotoFilename = "";
 	 			$scope.currentDiscuss.newArticlePhotoFilename = JSON.stringify($scope.currentDiscuss.articlePhotoFilename);
+	 			$scope.allTags = $scope.currentDiscuss.systemTags;
 	 			for(var i=0; i<$scope.currentDiscuss.topicId.length; i++){
 	 				BY.editorCategoryList.addCategory($scope.currentDiscuss.topicId[i]);	
 	 			}
@@ -628,6 +635,7 @@ adminControllers.controller('AdminDiscussCreateController', ['$scope', '$http', 
 				
 
 				$scope.currentDiscuss.text=htmlval;
+				$scope.currentDiscuss.systemTags = $scope.allTags;
 				$scope.currentDiscuss.status = $scope.currentDiscuss.status === true ? 1:0;
 				$scope.currentDiscuss.featured = $scope.currentDiscuss.featured === true ? 1:0;
 				$scope.currentDiscuss.topicId = BY.editorCategoryList.getCategoryList();
@@ -645,6 +653,7 @@ adminControllers.controller('AdminDiscussCreateController', ['$scope', '$http', 
 	 	//CREATE MODE
 	 	else
 	 	{
+	 		$scope.allTags = [ "" ];
 	 		$scope.currentDiscuss = new AdminDiscuss();
 	 		$scope.currentDiscuss.discussType = segment;
 
@@ -656,6 +665,7 @@ adminControllers.controller('AdminDiscussCreateController', ['$scope', '$http', 
 				}
 
 				$scope.currentDiscuss.text=htmlval;
+				$scope.currentDiscuss.systemTags = $scope.allTags;
 
 				//putting the userId to discuss being created
 				$scope.currentDiscuss.userId = localStorage.getItem("ADMIN_USER_ID");
@@ -687,6 +697,12 @@ adminControllers.controller('AdminDiscussCreateController', ['$scope', '$http', 
 				});*/
 				};
 		}//else
+	 	$scope.addTag = function() {
+			$scope.allTags.push("");
+		}
+		$scope.removeTag = function(idx) {
+			$scope.allTags.splice(idx, 1);
+		}
   }]);
 
 

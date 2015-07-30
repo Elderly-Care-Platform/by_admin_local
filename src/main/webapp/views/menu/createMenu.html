@@ -30,15 +30,16 @@
 			</tr>
 			<tr>
 				<td><label class="control-label" for="title"><strong>Select
-							Link to other menu</strong></label></td>
-				<td><input type="text" ng-model="linkedMenu"
+							Parent Menu</strong></label></td>
+				<td><input type="text" ng-model="parentMenu"
 					typeahead="menu as menu.displayMenuName for menu in existingMenus | filter:{displayMenuName: $viewValue} | limitTo:20"
 					class="form-control"></td>
 			</tr>
+			<tr><td></td><td></td></tr>
 			<tr>
 				<td><label class="control-label" for="title"><strong>Select
-							Parent Menu</strong></label></td>
-				<td><input type="text" ng-model="parentMenu"
+							Link to other menu</strong></label></td>
+				<td><input type="text" ng-model="linkedMenu"
 					typeahead="menu as menu.displayMenuName for menu in existingMenus | filter:{displayMenuName: $viewValue} | limitTo:20"
 					class="form-control"></td>
 			</tr>

@@ -7,7 +7,10 @@ package com.beautifulyears.domain;
 
 import java.util.Date;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonProperty;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "discuss_likes")
@@ -19,7 +22,9 @@ public class DiscussLike {
 	private Date likedAt = new Date();
 	private String contentId;
 	private int contentType;
-	
+	@Transient
+	private String url;
+
 	public DiscussLike() {
 		super();
 	}
@@ -28,6 +33,16 @@ public class DiscussLike {
 		this.userId = user.getId();
 		this.contentId = contentId;
 		this.contentType = contentType;
+	}
+
+	@JsonIgnore
+	public String getUrl() {
+		return url;
+	}
+
+	@JsonProperty
+	public void setUrl(String url) {
+		this.url = url;
 	}
 
 	public String getId() {

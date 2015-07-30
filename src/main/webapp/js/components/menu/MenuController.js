@@ -335,9 +335,14 @@ adminControllers
 												}
 												if (res.parentMenuId) {
 													$http
-													.get("api/v1/menu/getMenuById?id=" + res.parentMenuId).success(function(res){
-														$scope.parentMenu = res;
-													})
+															.get(
+																	"api/v1/menu/getMenuById?id="
+																			+ res.parentMenuId)
+															.success(
+																	function(
+																			res) {
+																		$scope.parentMenu = res;
+																	})
 												}
 												$scope.newMenu.filterName = res.filterName;
 

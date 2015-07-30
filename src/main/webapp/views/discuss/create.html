@@ -49,38 +49,15 @@
 					</div>
 				</td>
 			</tr>
+			<tr ng-repeat="newTag in allTags track by $index">
+				<td><label class="control-label" for="title"><strong>Select
+							Tags</strong></label></td>
+				<td><input type="text" ng-model="allTags[$index]"
+					typeahead="tag as tag.name for tag in existingTags | filter:{name: $viewValue} | limitTo:20"
+					class="form-control"><a ng-click="removeTag($index)">REMOVE</a></td>
+			</tr>
 			<tr>
-				<td colspan="2">
-					<div class="row discussion-page article-outer-wrapper no-padding margin-bottom-35">
-					    <div class="panel-group acc-v1" id="accordion-1">
-					        <div class="col-md-12 panel panel-default by_accordian" ng-repeat="category in $root.discussCategoryList">
-					            <div class="panel-heading">
-					                <h4 class="panel-title by_editor_ParentCategories" ng-if="category.childCount <= 0">
-					                    <label>
-					                        {{category.name}}
-					
-					                        <input type="checkbox" onchange="BY.editorCategoryList.selectCategory(this)" value="{{category.id}}"  
-					                        		ng-checked="currentDiscuss.topicId.indexOf(category.id) > -1" ng-model="preSelected[category.id]">
-					                    </label>
-					                </h4>
-					                <h4 class="panel-title by_editor_ParentCategories" ng-if="category.childCount > 0">
-					                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordion-1" href={{"#"+category.id}} onclick="return false;">
-					                        {{category.name}}
-					                    </a>
-					                    <a class="triangle-down accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordion-1" href={{"#"+category.id}} onclick="return false;"></a>
-					                </h4>
-					            </div>
-					            <div id={{category.id}} class="col-md-12 whiteBg by_editor_SubCategories panel-collapse collapse">
-					                <div class="panel-body col-md-4" ng-repeat="subCategory in category.children">
-					                    <input type="checkbox" onchange="BY.editorCategoryList.selectCategory(this)" ng-checked="currentDiscuss.topicId.indexOf(subCategory.id) > -1"
-					                    value={{subCategory.id}} ng-model="preSelected[subCategory.id]"> <span>{{subCategory.name}}</span>
-					                </div>
-					            </div> 
-					            <div style="clear:both"></div>
-						        </div>
-						    </div>
-						</div>
-				</td>
+				<td></td><td><a ng-click="addTag()">Add more tags</a></td>
 			</tr>
 			<tr>
 				<td colspan="2" style="text-align: right;">

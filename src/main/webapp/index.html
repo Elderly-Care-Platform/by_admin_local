@@ -112,11 +112,11 @@
 
             <div class="nav-collapse collapse">
                 <ul class="nav" role="navigation">
+                	<li ng-hide="{{root.bc_userRoleId == 'USER'}}">
+                        <a href="#/menu">Menu</a>
+                    </li>
 					<li ng-hide="{{root.bc_userRoleId == 'USER'}}">
                         <a href="#/discuss/A">Articles</a>
-                    </li>
-                    <li ng-hide="{{root.bc_userRoleId == 'USER'}}">
-                        <a href="#/menu">Menu</a>
                     </li>
                     <li ng-hide="{{root.bc_userRoleId == 'USER'}}">
                         <a href="#/discuss/Q">Questions</a>
