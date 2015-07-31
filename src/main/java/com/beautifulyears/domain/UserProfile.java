@@ -9,9 +9,11 @@ import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import com.beautifulyears.domain.BasicProfileInfo;
+import com.beautifulyears.domain.menu.Tag;
 
 /**
  * The UserProfile class specifies profile information of all types of users
@@ -28,29 +30,29 @@ public class UserProfile {
 	private String id;
 
 	// primary user ID from User.java
-	private String userId; 
+	private String userId;
 
-	//@see @UserTypes.java
-	private List<Integer> userTypes = new ArrayList<Integer>(); 
+	// @see @UserTypes.java
+	private List<Integer> userTypes = new ArrayList<Integer>();
 
 	// contains all common user profile information.
 	private BasicProfileInfo basicProfileInfo = new BasicProfileInfo();
 
-	//contains information applicable to an individual
-	private IndividualProfileInfo individualInfo = new IndividualProfileInfo(); 
-	
-	//contains information about service provider
-	private ServiceProviderInfo serviceProviderInfo = new ServiceProviderInfo(); 
+	// contains information applicable to an individual
+	private IndividualProfileInfo individualInfo = new IndividualProfileInfo();
+
+	// contains information about service provider
+	private ServiceProviderInfo serviceProviderInfo = new ServiceProviderInfo();
 
 	private String tags;
 
 	private boolean isFeatured;
-	
+
 	private final Date createdAt = new Date();
 
 	private Date lastModifiedAt = new Date();
-
-	private List<String> systemTags = new ArrayList<String>();
+	@DBRef
+	private List<Tag> systemTags = new ArrayList<Tag>();
 
 	private List<String> userTags = new ArrayList<String>();
 
@@ -164,11 +166,11 @@ public class UserProfile {
 		this.isFeatured = isFeatured;
 	}
 
-	public List<String> getSystemTags() {
+	public List<Tag> getSystemTags() {
 		return systemTags;
 	}
 
-	public void setSystemTags(List<String> systemTags) {
+	public void setSystemTags(List<Tag> systemTags) {
 		this.systemTags = systemTags;
 	}
 
@@ -179,8 +181,6 @@ public class UserProfile {
 	public void setUserTags(List<String> userTags) {
 		this.userTags = userTags;
 	}
-	
-	
 
 	public Date getLastModifiedAt() {
 		return lastModifiedAt;

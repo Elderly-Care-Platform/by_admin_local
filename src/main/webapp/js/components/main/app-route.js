@@ -31,6 +31,7 @@ byAdminApp.config(['$routeProvider',
       .when('/menu/addMenu', {templateUrl: 'views/menu/createMenu.html', controller: 'MenuCreateController'})
       .when('/menu/viewMenu', {templateUrl: 'views/menu/viewMenu.html', controller: 'MenuViewController'})
       .when('/menu/editMenu/:menuId', {templateUrl: 'views/menu/editMenu.html', controller: 'MenuEditController'})
+      .when('/menu/listTag', {templateUrl: 'views/menu/listTag.html', controller: 'TagListController'})
       ;
     //?????$routeProvider.otherwise({redirectTo: '/users/login'});
   }]);

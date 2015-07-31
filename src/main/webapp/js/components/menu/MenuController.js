@@ -268,14 +268,18 @@ adminControllers
 							};
 
 							$scope.deleteMenu = function() {
-								var menuResource = new Menu();
-								menuResource.id = $scope.newMenu.id;
-								menuResource.$delete(function() {
-									location.href = "#/menu/viewMenu";
-								}, function(e) {
-									console.log(e);
-									alert("error");
-								});
+								var isDelete = confirm("You are going to delete this menu and all its submenus!");
+								if (isDelete == true) {
+									var menuResource = new Menu();
+									menuResource.id = $scope.newMenu.id;
+									menuResource.$delete(function() {
+										location.href = "#/menu/viewMenu";
+									}, function(e) {
+										console.log(e);
+										alert("error");
+									});
+								} 
+								
 							}
 
 							$scope.editMenu = function() {
@@ -304,14 +308,14 @@ adminControllers
 								} else {
 									$scope.errorMessage = "please select atleast one tag";
 								}
-								if ($scope.parentMenu
-										&& !$scope.parentMenu.id) {
+								if (menuResource.parentMenuId
+										&& !menuResource.parentMenuId.id) {
 									$scope.error = true;
 									$scope.errorMessage = "please select a valid parent menu";
-								} else if ($scope.newMenu.module == undefined) {
+								} else if (menuResource.module == undefined) {
 									$scope.error = true;
 									$scope.errorMessage = "please select a module for this menu";
-								} else if (!$scope.newMenu.displayMenuName) {
+								} else if (!menuResource.displayMenuName) {
 									$scope.error = true;
 									$scope.errorMessage = "please entter a display name";
 								} else {

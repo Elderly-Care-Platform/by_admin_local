@@ -1,0 +1,60 @@
+<script type="text/javascript">
+        $(document).ready(function () {
+           //var url = "http://52.74.82.29:80/byadmin/api/v1/users/list/all";
+           var url = "/byadmin/api/v1/menu/tag";
+            // prepare the data
+            var source =
+            {
+                datatype: "json",
+                datafields: [
+                        { name: 'name', type: 'string' },
+                        { name: 'description', type: 'string' }
+                    ],
+                url: url,
+                root: 'data',
+				pager: function (pagenum, pagesize, oldpagenum) {
+                    // callback called when a page or page size is changed.
+                }
+            };
+            
+            
+            var dataAdapter = new $.jqx.dataAdapter(source, {
+				beforeLoadComplete: function (records) {
+                      //for (var i = 0; i < records.length; i++) {
+                      //    records[i].id1= records[i].id;
+                      //};
+                      //return records;
+                    }
+			});
+
+            $("#jqxgrid").jqxGrid(
+            {
+                width: 1050,
+                source: dataAdapter,
+                sortable: true,
+				filterable: true,
+				showfilterrow: true,
+                pageable: true,
+                autorowheight: true,
+                autoheight: true,
+                altrows: true,
+                columnsresize: true,
+                columns: [
+                  { text: 'Tag Name', datafield: 'name', width: 400, cellsalign:'center', align:'center' },
+                  { text: 'Description', datafield: 'description', width: 800, cellsalign:'center', align:'center' }
+                ]
+            });
+
+        });
+    </script>
+
+<h2>
+	MENU <a class="btn btn-primary pull-right" href="#/menu/addTag"><i
+		class="icon-plus-sign icon-white"></i> Create New Tag</a>
+</h2>
+
+
+
+<div id='jqxWidget' style="font-size: 13px; font-family: Verdana; float: left;">
+        <div id="jqxgrid"></div>
+</div>
