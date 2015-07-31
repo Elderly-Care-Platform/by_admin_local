@@ -65,7 +65,7 @@ adminControllers
 								alert("error fetching tags");
 							});
 
-							$http.get("api/v1/menu/getAllMenu").success(
+							$http.get("api/v1/menu/getMenu").success(
 									function(response) {
 										$scope.existingMenus = response;
 									}, function(err) {
@@ -127,7 +127,7 @@ adminControllers
 									$scope.errorMessage = "please entter a display name";
 								} else {
 									menuResource.$save(function() {
-										location.href = "#/menu";
+										location.href = "#/menu/viewMenu";
 									}, function(e) {
 										console.log(e);
 										alert("error");
@@ -172,17 +172,20 @@ adminControllers.controller('MenuViewController', [
 
 			function createSubMenu(container, menu) {
 				for (var i = 0; i < menu.length; i++) {
-					var mainLi = document.createElement("li");
-					var title = document.createElement("a");
-					title.href = "#/menu/editMenu/" + menu[i].id;
-					title.innerText = menu[i].displayMenuName;
-					mainLi.appendChild(title);
-					container.appendChild(mainLi);
-					if (menu[i].children.length > 0) {
-						var subMenu = document.createElement("ul");
-						mainLi.appendChild(subMenu);
-						createSubMenu(subMenu, menu[i].children);
+					if(menu[i] && menu[i].id){
+						var mainLi = document.createElement("li");
+						var title = document.createElement("a");
+						title.href = "#/menu/editMenu/" + menu[i].id;
+						title.innerText = menu[i].displayMenuName;
+						mainLi.appendChild(title);
+						container.appendChild(mainLi);
+						if (menu[i].children.length > 0) {
+							var subMenu = document.createElement("ul");
+							mainLi.appendChild(subMenu);
+							createSubMenu(subMenu, menu[i].children);
+						}
 					}
+					
 				}
 			}
 
@@ -242,7 +245,7 @@ adminControllers
 								alert("error fetching tags");
 							});
 
-							$http.get("api/v1/menu/getAllMenu").success(
+							$http.get("api/v1/menu/getMenu").success(
 									function(response) {
 										$scope.existingMenus = response;
 									}, function(err) {
@@ -264,12 +267,25 @@ adminControllers
 								displayMenuName : ""
 							};
 
-							$scope.addMenu = function() {
+							$scope.deleteMenu = function() {
+								var menuResource = new Menu();
+								menuResource.id = $scope.newMenu.id;
+								menuResource.$delete(function() {
+									location.href = "#/menu/viewMenu";
+								}, function(e) {
+									console.log(e);
+									alert("error");
+								});
+							}
+
+							$scope.editMenu = function() {
 								$scope.error = false;
 								var menuResource = new Menu();
+								menuResource.id = $scope.newMenu.id;
 								menuResource.displayMenuName = $scope.newMenu.displayMenuName;
 								menuResource.tags = $scope.allTags;
 								menuResource.module = $scope.newMenu.module;
+								menuResource.children = $scope.newMenu.children;
 								menuResource.linkedMenuId = ($scope.linkedMenu && $scope.linkedMenu.id) ? $scope.linkedMenu.id
 										: null;
 								menuResource.displayMenuName = $scope.newMenu.displayMenuName;
@@ -288,8 +304,8 @@ adminControllers
 								} else {
 									$scope.errorMessage = "please select atleast one tag";
 								}
-								if (menuResource.parentMenu
-										&& !menuResource.parentMenu.id) {
+								if ($scope.parentMenu
+										&& !$scope.parentMenu.id) {
 									$scope.error = true;
 									$scope.errorMessage = "please select a valid parent menu";
 								} else if ($scope.newMenu.module == undefined) {
@@ -300,7 +316,7 @@ adminControllers
 									$scope.errorMessage = "please entter a display name";
 								} else {
 									menuResource.$save(function() {
-										location.href = "#/menu";
+										location.href = "#/menu/viewMenu";
 									}, function(e) {
 										console.log(e);
 										alert("error");
@@ -325,10 +341,8 @@ adminControllers
 									.get(url)
 									.success(
 											function(res) {
-												$scope.newMenu.displayMenuName = res.displayMenuName;
-
+												$scope.newMenu = res;
 												$scope.allTags = res.tags;
-												$scope.newMenu.module = res.module;
 												if (res.linkedMenuId
 														&& res.linkedMenuId.id) {
 													$scope.linkedMenu = res.linkedMenuId;

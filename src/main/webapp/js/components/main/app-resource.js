@@ -194,5 +194,15 @@ adminServices.factory('MenuTag', function($resource) {
 });
 
 adminServices.factory('Menu', function($resource) {
-	return $resource('/byadmin/api/v1/menu', {}, {})
+	return $resource('/byadmin/api/v1/menu', {}, {
+		'save' : {
+			method : 'POST'
+		},
+		'delete' : {
+			method : 'DELETE',
+			params: {
+				id : '@id'
+			}
+		}
+	})
 });
