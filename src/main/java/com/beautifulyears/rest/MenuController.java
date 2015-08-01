@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -42,21 +43,31 @@ public class MenuController {
 
 	@RequestMapping(method = { RequestMethod.POST }, consumes = { "application/json" }, value = { "/tag" })
 	@ResponseBody
-	public Object addTag(@RequestBody Tag tag) {
+	public Object addTag(@RequestBody Tag tag,HttpServletResponse res) {
 		Tag oldTag = null;
-		if (null != tag.getId()) {
-			Query q = new Query();
-			q.addCriteria(Criteria.where("id").is(tag.getId()));
-			oldTag = mongoTemplate.findOne(q, Tag.class);
+		try{
+			if (null != tag.getId()) {
+				Query q = new Query();
+				q.addCriteria(Criteria.where("id").is(tag.getId()));
+				oldTag = mongoTemplate.findOne(q, Tag.class);
+			}
+			if (oldTag == null) {
+				oldTag = new Tag();
+			}
+			oldTag.setName(tag.getName());
+			oldTag.setType(tag.getType());
+			oldTag.setDescription(tag.getDescription());
+			mongoTemplate.save(oldTag);
+			return oldTag;
+		}catch(DuplicateKeyException e){
+			res.setStatus(404);
+			return new Exception("tag name already exists!");
 		}
-		if (oldTag == null) {
-			oldTag = new Tag();
+		catch(Exception e){
+			res.setStatus(404);
+			return new Exception("internal server error");
 		}
-		oldTag.setName(tag.getName());
-		oldTag.setType(tag.getType());
-		oldTag.setDescription(tag.getDescription());
-		mongoTemplate.save(oldTag);
-		return oldTag;
+		
 	}
 
 	@RequestMapping(method = { RequestMethod.DELETE }, value = { "" })

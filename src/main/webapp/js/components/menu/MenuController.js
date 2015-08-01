@@ -38,8 +38,8 @@ adminControllers.controller('TagCreateController', [
 				tagResource.$save(function() {
 					location.href = "#/menu";
 				}, function(e) {
-					console.log(e);
-					alert("error");
+					$scope.error = true;
+					$scope.errorMessage = e.data.localizedMessage || e.data.message;
 				})
 
 			}
