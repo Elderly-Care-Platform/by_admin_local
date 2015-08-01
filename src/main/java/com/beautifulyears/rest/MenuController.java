@@ -93,9 +93,10 @@ public class MenuController {
 				Query q = new Query();
 				q.addCriteria(Criteria.where("id").is(menu.getId()));
 				oldmenu = mongoTemplate.findOne(q, Menu.class);
-				if (oldmenu == null) {
-					oldmenu = new Menu();
-				}
+				
+			}
+			if (oldmenu == null) {
+				oldmenu = new Menu();
 			}
 			if (!checkOrderIdx(menu)) {
 				res.setStatus(404);
