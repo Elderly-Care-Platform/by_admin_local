@@ -171,10 +171,14 @@ adminControllers.controller('MenuViewController', [
 				for (var i = 0; i < menu.length; i++) {
 					if(menu[i] && menu[i].id){
 						var mainLi = document.createElement("li");
+						var liDiv = document.createElement("div");
+						mainLi.appendChild(liDiv);
+						var icon = document.createElement("i");
 						var title = document.createElement("a");
+						liDiv.appendChild(icon);
+						liDiv.appendChild(title);
 						title.href = "#/menu/editMenu/" + menu[i].id;
 						title.innerText = menu[i].orderIdx + " -> " +menu[i].displayMenuName;
-						mainLi.appendChild(title);
 						container.appendChild(mainLi);
 						if (menu[i].children.length > 0) {
 							var subMenu = document.createElement("ul");
@@ -193,9 +197,9 @@ adminControllers.controller('MenuViewController', [
 					}
 				});
 
-				$('.tree li.parent > a').click(function() {
-					$(this).parent().toggleClass('active');
-					$(this).parent().children('ul').slideToggle('fast');
+				$('.tree li.parent > div > i').click(function() {
+					$(this).parent().parent().toggleClass('active');
+					$(this).parent().parent().children('ul').slideToggle('fast');
 				});
 
 				$('#all').click(function() {
