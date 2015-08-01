@@ -94,6 +94,7 @@ adminControllers
 							$scope.addMenu = function() {
 								$scope.error = false;
 								var menuResource = new Menu();
+								menuResource.orderIdx = $scope.newMenu.orderIdx;
 								menuResource.displayMenuName = $scope.newMenu.displayMenuName;
 								menuResource.tags = $scope.allTags;
 								menuResource.module = $scope.newMenu.module;
@@ -115,11 +116,7 @@ adminControllers
 								} else {
 									$scope.errorMessage = "please select atleast one tag";
 								}
-								if (menuResource.parentMenu
-										&& !menuResource.parentMenu.id) {
-									$scope.error = true;
-									$scope.errorMessage = "please select a valid parent menu";
-								} else if ($scope.newMenu.module == undefined) {
+								if ($scope.newMenu.module == undefined) {
 									$scope.error = true;
 									$scope.errorMessage = "please select a module for this menu";
 								} else if (!$scope.newMenu.displayMenuName) {
@@ -129,8 +126,8 @@ adminControllers
 									menuResource.$save(function() {
 										location.href = "#/menu/viewMenu";
 									}, function(e) {
-										console.log(e);
-										alert("error");
+										$scope.error = true;
+										$scope.errorMessage = e.data.localizedMessage || e.data.message;
 									});
 								}
 
@@ -176,7 +173,7 @@ adminControllers.controller('MenuViewController', [
 						var mainLi = document.createElement("li");
 						var title = document.createElement("a");
 						title.href = "#/menu/editMenu/" + menu[i].id;
-						title.innerText = menu[i].displayMenuName;
+						title.innerText = menu[i].orderIdx + " -> " +menu[i].displayMenuName;
 						mainLi.appendChild(title);
 						container.appendChild(mainLi);
 						if (menu[i].children.length > 0) {
@@ -286,6 +283,7 @@ adminControllers
 								$scope.error = false;
 								var menuResource = new Menu();
 								menuResource.id = $scope.newMenu.id;
+								menuResource.orderIdx = $scope.newMenu.orderIdx;
 								menuResource.displayMenuName = $scope.newMenu.displayMenuName;
 								menuResource.tags = $scope.allTags;
 								menuResource.module = $scope.newMenu.module;
@@ -308,11 +306,7 @@ adminControllers
 								} else {
 									$scope.errorMessage = "please select atleast one tag";
 								}
-								if (menuResource.parentMenuId
-										&& !menuResource.parentMenuId.id) {
-									$scope.error = true;
-									$scope.errorMessage = "please select a valid parent menu";
-								} else if (menuResource.module == undefined) {
+								if (menuResource.module == undefined) {
 									$scope.error = true;
 									$scope.errorMessage = "please select a module for this menu";
 								} else if (!menuResource.displayMenuName) {
@@ -323,7 +317,8 @@ adminControllers
 										location.href = "#/menu/viewMenu";
 									}, function(e) {
 										console.log(e);
-										alert("error");
+										$scope.error = true;
+										$scope.errorMessage = e.data.localizedMessage || e.data.message;
 									});
 								}
 

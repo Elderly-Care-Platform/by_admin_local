@@ -3,8 +3,12 @@ package com.beautifulyears.rest;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -80,27 +84,34 @@ public class MenuController {
 
 	@RequestMapping(method = { RequestMethod.POST }, consumes = { "application/json" }, value = { "" })
 	@ResponseBody
-	public Object addMenu(@RequestBody Menu menu) {
+	public Object addMenu(@RequestBody Menu menu, HttpServletRequest req,
+			HttpServletResponse res) {
 		Menu oldmenu = null;
-		try{
+
+		try {
 			if (null != menu.getId()) {
 				Query q = new Query();
 				q.addCriteria(Criteria.where("id").is(menu.getId()));
 				oldmenu = mongoTemplate.findOne(q, Menu.class);
+				if (oldmenu == null) {
+					oldmenu = new Menu();
+				}
 			}
-			if (oldmenu == null) {
-				oldmenu = new Menu();
-			}else{
-				if (oldmenu.getParentMenuId() != null) {
-					Menu oldParent = mongoTemplate.findById(oldmenu.getParentMenuId(),
-							Menu.class);
-					if (oldParent.getChildren().contains(oldmenu)) {
-						oldParent.getChildren().remove(oldmenu);
-						mongoTemplate.save(oldParent);
-					}
-					}
+			if (!checkOrderIdx(menu)) {
+				res.setStatus(404);
+				return new Exception(
+						"Oder index is already used for another menu.");
+			}
+			if (oldmenu.getParentMenuId() != null) {
+				Menu oldParent = mongoTemplate.findById(
+						oldmenu.getParentMenuId(), Menu.class);
+				if (oldParent.getChildren().contains(oldmenu)) {
+					oldParent.getChildren().remove(oldmenu);
+					mongoTemplate.save(oldParent);
+				}
 			}
 			oldmenu.setChildren(menu.getChildren());
+			oldmenu.setOrderIdx(menu.getOrderIdx());
 			oldmenu.setDisplayMenuName(menu.getDisplayMenuName());
 			oldmenu.setLinkedMenuId(menu.getLinkedMenuId());
 			oldmenu.setModule(menu.getModule());
@@ -112,25 +123,46 @@ public class MenuController {
 				Menu parent = mongoTemplate.findById(oldmenu.getParentMenuId(),
 						Menu.class);
 				if (parent != null) {
-					addAncestors(oldmenu,parent);
-					if (!parent.getChildren().contains(oldmenu)) {
-						parent.getChildren().add(oldmenu);
-						mongoTemplate.save(parent);
+					addAncestors(oldmenu, parent);
+					parent.getChildren().remove(oldmenu);
+					int index = oldmenu.getOrderIdx() > parent.getChildren()
+							.size() ? parent.getChildren().size() : oldmenu
+							.getOrderIdx();
+					parent.getChildren().add(index, oldmenu);
+					if (index != oldmenu.getOrderIdx()) {
+						oldmenu.setOrderIdx(index);
+						mongoTemplate.save(oldmenu);
 					}
+
+					mongoTemplate.save(parent);
 				}
 			} else {
 				mongoTemplate.save(oldmenu);
 			}
 
-		}catch(Exception e){
-			System.out.println(e);
+		} catch (Exception e) {
+			res.setStatus(404);
+			return new Exception("internal server error");
 		}
-		
-		
+
 		return oldmenu;
 	}
 
-	private void addAncestors(Menu child,Menu parent) {
+	private boolean checkOrderIdx(Menu menu) {
+		boolean isValid = true;
+		Query q = new Query();
+		q.addCriteria(Criteria.where("orderIdx").is(menu.getOrderIdx())
+				.and("parentMenuId").is(menu.getParentMenuId()).and("id")
+				.ne(menu.getId()));
+		long count = mongoTemplate.count(q, Menu.class);
+		if (count > 0) {
+			isValid = false;
+		}
+		return isValid;
+
+	}
+
+	private void addAncestors(Menu child, Menu parent) {
 		child.setAncestorIds(new ArrayList<String>());
 		child.getAncestorIds().addAll(parent.getAncestorIds());
 		child.getAncestorIds().add(parent.getId());
@@ -140,7 +172,7 @@ public class MenuController {
 			menu.getAncestorIds().addAll(child.getAncestorIds());
 			menu.getAncestorIds().add(child.getId());
 			mongoTemplate.save(menu);
-			addAncestors(menu,child);
+			addAncestors(menu, child);
 		}
 	}
 
@@ -166,6 +198,7 @@ public class MenuController {
 				parentId = null;
 			}
 			q.addCriteria(Criteria.where("parentMenuId").is(parentId));
+			q.with(new Sort(Sort.Direction.ASC, "orderIdx"));
 		}
 
 		List<Menu> menus = this.mongoTemplate.find(q, Menu.class);
