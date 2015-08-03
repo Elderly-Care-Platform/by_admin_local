@@ -1,63 +1,108 @@
 <div class="container-fluid">
-    <div id="wrapper" class="row-fluid">
-        <h3 class='menu'>Create {{currentDiscuss.discussType == 'A' && 'Article' ||currentDiscuss.discussType == 'Q' && 'Question' || 'Post'}}</h3>
-        <div class="alert alert-error" ng-show="error">{{errorMessage}}</div>
+	<div id="wrapper" class="row-fluid">
+		<h3 class='menu'>Create {{currentDiscuss.discussType == 'A' &&
+			'Article' ||currentDiscuss.discussType == 'Q' && 'Question' ||
+			'Post'}}</h3>
+		<div class="alert alert-error" ng-show="error">{{errorMessage}}</div>
 
 		<table style="width: 900px;">
 			<tr ng-show="currentDiscuss.discussType == 'A'">
-				<td>
-					<label class="control-label" for="title"><strong>Title</strong></label>
+				<td><label class="control-label" for="title"><strong>Title</strong></label>
 				</td>
-				<td>
-					<input type="text" ng-model="currentDiscuss.title" id="currentDiscuss.title" required/>
-				</td>
+				<td><input type="text" ng-model="currentDiscuss.title"
+					id="currentDiscuss.title" required /></td>
 			</tr>
 			<tr ng-show="currentDiscuss.discussType == 'A'">
+				<td><label class="control-label" for="title"><strong>Title
+							Photo</strong></label></td>
 				<td>
-					<label class="control-label" for="title"><strong>Title Photo</strong></label>
-				</td>
-				<td>
-					<form id="UploadImage12" action="UploadFile" method="post"	enctype="multipart/form-data">
-						<label class="myLabel"> <input name="sp" id="sp" type="file" required onchange="javascript:uploadImage(this)" />
-						 	<span>Please upload<br> your main <br>photo (optional)</span>
+					<form id="UploadImage12" action="UploadFile" method="post"
+						enctype="multipart/form-data">
+						<label class="myLabel"> <input name="sp" id="sp"
+							type="file" required onchange="javascript:uploadImage(this)" />
+							<span>Please upload<br> your main <br>photo
+								(optional)
+						</span>
 						</label>
-					</form>
-					<input type="text" id="articleTitleImage" ng-model="newArticlePhotoFilename" value='' style="display:none"/>
+					</form> <input type="text" id="articleTitleImage"
+					ng-model="newArticlePhotoFilename" value='' style="display: none" />
 				</td>
 			</tr>
 			<tr>
-				<td>
-					<label class="control-label" for="title"><strong>Withdraw</strong></label>
+				<td><label class="control-label" for="title"><strong>Withdraw</strong></label>
 				</td>
-				<td>
-					<input type="checkbox" ng-model="currentDiscuss.status" name="status" ng-checked="currentDiscuss.status" id="status" style="vertical-align: top;">
-				</td>
+				<td><input type="checkbox" ng-model="currentDiscuss.status"
+					name="status" ng-checked="currentDiscuss.status" id="status"
+					style="vertical-align: top;"></td>
 			</tr>
 			<tr>
-				<td>
-					<label class="control-label" for="title"><strong>Featured</strong></label>
+				<td><label class="control-label" for="title"><strong>Featured</strong></label>
 				</td>
-				<td>
-					<input type="checkbox" ng-model="currentDiscuss.featured" name="featured" ng-checked="currentDiscuss.featured" id="featured" style="vertical-align: top;">
-				</td>
+				<td><input type="checkbox" ng-model="currentDiscuss.featured"
+					name="featured" ng-checked="currentDiscuss.featured" id="featured"
+					style="vertical-align: top;"></td>
+			</tr>
+			<tr>
+				<td colspan="2"><label class="control-label" for="text"><strong>Text</strong></label>
+					<div class="controls byEditor">
+						<textarea ui:tinymce id="text" ng-model="currentDiscuss.text"></textarea>
+					</div></td>
 			</tr>
 			<tr>
 				<td colspan="2">
-					<label class="control-label" for="text"><strong>Text</strong></label>
-					<div class="controls byEditor">
-						<textarea ui:tinymce id="text" ng-model="currentDiscuss.text"></textarea>
+					<div class="col-md-12 no-padding margin-bottom-35">
+						<div class="panel-group acc-v1" id="accordion-1">
+							<div class="panel panel-default by_accordian"
+								ng-repeat="category in $root.discussCategoryMap">
+								<div class="panel-heading">
+									<h4 class="panel-title by_editor_ParentCategories"
+										ng-if="category.children.length <= 0">
+										<label ng-if="category.parentMenuId">
+											{{$root.menuCategoryMap[category.parentMenuId].displayMenuName
+											+ " >> " + category.displayMenuName}} <input type="checkbox"
+											ng-click="selectTag($event, category)"
+											value="{{category.id}}"
+											ng-checked="{{selectedMenuId[category.id] != undefined}}">
+										</label> <label ng-if="!category.parentMenuId">
+											{{category.displayMenuName}} <input type="checkbox"
+											ng-click="selectTag($event, category)"
+											value="{{category.id}}"
+											ng-checked="{{selectedMenuId[category.id] != undefined}}">
+										</label>
+									</h4>
+									<h4 class="panel-title by_editor_ParentCategories"
+										ng-if="category.children.length > 0">
+										<a ng-if="!category.parentMenuId"
+											class="accordion-toggle collapsed" data-toggle="collapse"
+											data-parent="#accordion-1" href={{"#"+category.id}} onclick="return false;">
+											{{category.displayMenuName}} </a> <a
+											ng-if="category.parentMenuId"
+											class="accordion-toggle collapsed" data-toggle="collapse"
+											data-parent="#accordion-1" href={{
+											"#"+category.id}} onclick="return false;">
+											{{$root.menuCategoryMap[category.parentMenuId].displayMenuName
+											+ " >> " + category.displayMenuName}} </a> <a
+											class="triangle-down accordion-toggle collapsed"
+											data-toggle="collapse" data-parent="#accordion-1" href={{
+											"#"+category.id}} onclick="return false;"></a>
+									</h4>
+								</div>
+								<div id={{category.id}}
+									class="col-md-12 whiteBg by_editor_SubCategories panel-collapse collapse">
+									<div class="panel-body col-md-6"
+										ng-repeat="subCategory in category.children"
+										ng-if="subCategory.module===0">
+										<input type="checkbox"
+											ng-click="selectTag($event, subCategory)"
+											value={{subCategory.id}}
+											ng-checked="{{selectedMenuId[subCategory.id] != undefined}}"> <span>{{subCategory.displayMenuName}}</span>
+									</div>
+								</div>
+								<div style="clear: both"></div>
+							</div>
+						</div>
 					</div>
 				</td>
-			</tr>
-			<tr ng-repeat="newTag in allTags track by $index">
-				<td><label class="control-label" for="title"><strong>Select
-							Tags</strong></label></td>
-				<td><input type="text" ng-model="allTags[$index]"
-					typeahead="tag as tag.name for tag in existingTags | filter:{name: $viewValue} | limitTo:20"
-					class="form-control"><a ng-click="removeTag($index)">REMOVE</a></td>
-			</tr>
-			<tr>
-				<td></td><td><a ng-click="addTag()">Add more tags</a></td>
 			</tr>
 			<tr>
 				<td colspan="2" style="text-align: right;">
@@ -65,50 +110,50 @@
 				</td>
 			</tr>
 		</table>
-	
-	
-<script type="text/javascript">
-$("#UploadImage12").bind('submit', function(e) {
-	var postData = new FormData(jQuery('#UploadImage12')[0]);
-	$.ajax(
-		    {
-		        url : 'UploadFile?transcoding=true',
-		        type: "POST",
-		        enctype:"multipart/form-data",
-		        data : postData,
-		      //  contentType: "application/json",
-		        cache: false,
-			    contentType: false,
-			    processData: false,
-		        success:function(data, textStatus, jqXHR) 
-		        {
-		            $("#articleTitleImage").val(JSON.stringify(data));
-		            $("#articleTitleImage").trigger('input');
-		        },
-		        error: function(jqXHR, textStatus, errorThrown) 
-		        {
-		        	console.log(textStatus);
-		        	alert("Image upload failed");
-		        }
-		    });
-    e.preventDefault();
-});
 
-function uploadImage(input){
-	if (input.files && input.files[0]) {
-        var reader = new FileReader();
-        reader.onload = function (e) {
-        	$('.myLabel').css('background-image', 'url(' + e.target.result + ')')
-        }
-        
-        reader.readAsDataURL(input.files[0]);
-        $('#UploadImage12').submit();
-        
-        //input.form.submit();
-    }
-}
 
-BYAdmin.addEditor({"editorTextArea":"text"});
-</script>
-</div>
+		<script type="text/javascript">
+			$("#UploadImage12").bind('submit', function(e) {
+				var postData = new FormData(jQuery('#UploadImage12')[0]);
+				$.ajax({
+					url : 'UploadFile?transcoding=true',
+					type : "POST",
+					enctype : "multipart/form-data",
+					data : postData,
+					//  contentType: "application/json",
+					cache : false,
+					contentType : false,
+					processData : false,
+					success : function(data, textStatus, jqXHR) {
+						$("#articleTitleImage").val(JSON.stringify(data));
+						$("#articleTitleImage").trigger('input');
+					},
+					error : function(jqXHR, textStatus, errorThrown) {
+						console.log(textStatus);
+						alert("Image upload failed");
+					}
+				});
+				e.preventDefault();
+			});
+
+			function uploadImage(input) {
+				if (input.files && input.files[0]) {
+					var reader = new FileReader();
+					reader.onload = function(e) {
+						$('.myLabel').css('background-image',
+								'url(' + e.target.result + ')')
+					}
+
+					reader.readAsDataURL(input.files[0]);
+					$('#UploadImage12').submit();
+
+					//input.form.submit();
+				}
+			}
+
+			BYAdmin.addEditor({
+				"editorTextArea" : "text"
+			});
+		</script>
+	</div>
 </div>

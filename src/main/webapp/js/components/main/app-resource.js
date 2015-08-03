@@ -206,3 +206,14 @@ adminServices.factory('Menu', function($resource) {
 		}
 	})
 });
+
+adminServices.factory('BYMenu', function($resource) {
+    return $resource('api/v1/menu/getMenu?parentId=root',{q: '*'}, {
+        get: {method: 'GET', params: {}},
+        query: {method: 'GET',interceptor: {
+            response: function(response) {
+                return response.data;
+            }
+        }, isArray: true}
+    })
+});

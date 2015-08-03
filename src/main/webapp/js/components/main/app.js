@@ -66,7 +66,7 @@ var byAdminApp = angular.module('byAdminApp', [
 
 
 //Routing and Session Check for Login
-byAdminApp.run(function($rootScope, $location, SessionIdService,discussCategoryList) {
+byAdminApp.run(function($rootScope, $location, SessionIdService,BYMenu) {
 
     // register listener to watch route changes
     $rootScope.$on("$routeChangeStart", function(event, next, current) {
@@ -86,23 +86,65 @@ byAdminApp.run(function($rootScope, $location, SessionIdService,discussCategoryL
         }
     });
     
+    var mainMenu = null;
+    function createMenuCategoryMap(categories){
+        angular.forEach(categories, function(category, index){
+            $rootScope.menuCategoryMap[category.id] = category;
+            if(category.module === 0){
+                if(!category.parentMenuId){
+                    $rootScope.discussCategoryMap[category.id] = category;
+                } else if(category.parentMenuId){
+                    //If menu does not exist in map
+                    if(!$rootScope.discussCategoryMap[category.id]){
+                        var parentMenu = $rootScope.menuCategoryMap[category.parentMenuId], rootMenu;
+                        $rootScope.discussCategoryMap[parentMenu.id] = parentMenu;  //Add parent in map
+
+                        if(parentMenu.parentMenuId){
+                            rootMenu = $rootScope.menuCategoryMap[parentMenu.parentMenuId];
+                            delete $rootScope.discussCategoryMap[rootMenu.id]; //Delete root from map
+                            for(var i=0; i < rootMenu.children.length; i++){
+                                var menu = rootMenu.children[i];
+                                if(menu.module === 0){
+                                    $rootScope.discussCategoryMap[menu.id] = menu;   //Add parent sibling of same module id in map
+                                }
+                            }
+                        }
+                    }
+                }
+            }else if(category.module === 1){  //Services Menus
+                //If it is child category then adding first ancestor of the category in the map, if the category is of service module
+                if(category.ancestorIds.length > 0){
+                    $rootScope.serviceCategoryMap[category.ancestorIds[0]] = $rootScope.menuCategoryMap[category.ancestorIds[0]];
+                } else{
+                    $rootScope.serviceCategoryMap[category.id] = category;
+                }
+            }else{
+                //yet to decide
+            }
+
+            if(category.children.length > 0){
+            	createMenuCategoryMap(category.children);
+            }
+        });
+    }
+    BYMenu.query({}, function(response){
+    	mainMenu = response;
+
+        $rootScope.menuCategoryMap = {};
+        $rootScope.discussCategoryMap = {};
+        $rootScope.serviceCategoryMap = {};
+
+        createMenuCategoryMap(response);
+
+        console.log($rootScope.discussCategoryMap);
+
+    }, function(error){
+
+    })
+
     
     
-    discussCategoryList.query().$promise.then(
-    	    function(categories){
-    	    	$rootScope.discussCategoryList = categories;
-    	    	$rootScope.discussCategoryListMap = {};
-    	    	$rootScope.discussCategoryNameIdMap = {};
-    	        angular.forEach(categories, function(category, index){
-    	        	$rootScope.discussCategoryListMap[category.id] = category;
-    	        	$rootScope.discussCategoryNameIdMap[category.name.toLowerCase()] = category.id;
-    	        	angular.forEach(category.children, function(subCategory, index){
-	    				$rootScope.discussCategoryListMap[subCategory.id] = subCategory;
-	    				$rootScope.discussCategoryNameIdMap[subCategory.name.toLowerCase()] = subCategory.id;
-	    			});
-    	        });
-    	    }
-    	);
+    
 });
 
 
@@ -590,8 +632,8 @@ adminControllers.controller('LoadTMController', ['$scope', '$route',
 
 
 
-adminControllers.controller('AdminDiscussCreateController', ['$scope', '$http', '$location', '$route', '$routeParams', '$location', 'AdminDiscuss','MenuTag',
-  function($scope, $http, $location, $route, $routeParams, $location, AdminDiscuss,MenuTag) {
+adminControllers.controller('AdminDiscussCreateController', ['$scope', '$http', '$location', '$route', '$routeParams', '$location', 'AdminDiscuss','MenuTag','$rootScope',
+  function($scope, $http, $location, $route, $routeParams, $location, AdminDiscuss,MenuTag,$rootScope) {
 	 if(localStorage.getItem("AdminSessionId") == '') {
 		$location.path('/users/login');
 		return;
@@ -601,13 +643,42 @@ adminControllers.controller('AdminDiscussCreateController', ['$scope', '$http', 
 		 $location.path('/users/login');
 		 return;
 	 }
-	 MenuTag.get(function(res) {
-			$scope.existingTags = res;
-		}, function() {
-			alert("error fetching tags");
-		});
 	 
 	 var segment = $location.path();
+	 
+	 $scope.selectedMenuList = {};
+	 
+	 $scope.selectTag = function(event, category){
+         if(event.target.checked){
+             $scope.selectedMenuList[category.id] = category;
+             if(category.parentMenuId && $scope.selectedMenuList[category.parentMenuId]){
+                 delete $scope.selectedMenuList[category.parentMenuId];
+             }
+         }else{
+             delete $scope.selectedMenuList[category.id];
+         }
+     }
+	 var systemTagList = {};
+	 var getSystemTagList = function(data){
+         function rec(data){
+             angular.forEach(data, function(menu, index){
+                 systemTagList[menu.id] = menu.tags;
+                 if(menu.ancestorIds.length > 0){
+                     for(var j=0; j < menu.ancestorIds.length; j++){
+                         var ancestordata = {};
+                         ancestordata[menu.ancestorIds[j]] =  $rootScope.menuCategoryMap[menu.ancestorIds[j]];
+                         rec(ancestordata);
+                     }
+                 }
+             })
+         }
+
+         rec(data);
+
+         return  $.map(systemTagList, function(value, key){
+             return value;
+         });
+     }
 
 	//P or Q or A
 	 segment = segment.substring(segment.lastIndexOf('/')+1);
@@ -618,10 +689,13 @@ adminControllers.controller('AdminDiscussCreateController', ['$scope', '$http', 
 	 		$scope.currentDiscuss = AdminDiscuss.get({discussId:discussId},function(){
 	 			$scope.currentDiscuss.newArticlePhotoFilename = "";
 	 			$scope.currentDiscuss.newArticlePhotoFilename = JSON.stringify($scope.currentDiscuss.articlePhotoFilename);
-	 			$scope.allTags = $scope.currentDiscuss.systemTags;
-	 			for(var i=0; i<$scope.currentDiscuss.topicId.length; i++){
-	 				BY.editorCategoryList.addCategory($scope.currentDiscuss.topicId[i]);	
-	 			}
+	 			if($scope.currentDiscuss.topicId){
+	 				for(var i=0;i<$scope.currentDiscuss.topicId.length ; i++){
+	 					$scope.selectedMenuId = $scope.currentDiscuss.topicId[i];
+		 	            $scope.selectedMenuList[$scope.selectedMenuId] = $rootScope.menuCategoryMap[$scope.selectedMenuId];
+	 				}
+	 	            
+	 	        }
 	 		});
 	 		$scope.editdiscuss = function () {
 	 			var htmlval = tinyMCE.activeEditor.getContent();
@@ -635,10 +709,12 @@ adminControllers.controller('AdminDiscussCreateController', ['$scope', '$http', 
 				
 
 				$scope.currentDiscuss.text=htmlval;
-				$scope.currentDiscuss.systemTags = $scope.allTags;
 				$scope.currentDiscuss.status = $scope.currentDiscuss.status === true ? 1:0;
 				$scope.currentDiscuss.featured = $scope.currentDiscuss.featured === true ? 1:0;
-				$scope.currentDiscuss.topicId = BY.editorCategoryList.getCategoryList();
+				$scope.currentDiscuss.systemTags = getSystemTagList($scope.selectedMenuList);
+				$scope.currentDiscuss.topicId = $.map($scope.selectedMenuList, function(value, key){
+	                return value.id;
+	            });
 
 				//putting the userId to discuss being created
 
@@ -653,7 +729,6 @@ adminControllers.controller('AdminDiscussCreateController', ['$scope', '$http', 
 	 	//CREATE MODE
 	 	else
 	 	{
-	 		$scope.allTags = [ "" ];
 	 		$scope.currentDiscuss = new AdminDiscuss();
 	 		$scope.currentDiscuss.discussType = segment;
 
@@ -665,7 +740,6 @@ adminControllers.controller('AdminDiscussCreateController', ['$scope', '$http', 
 				}
 
 				$scope.currentDiscuss.text=htmlval;
-				$scope.currentDiscuss.systemTags = $scope.allTags;
 
 				//putting the userId to discuss being created
 				$scope.currentDiscuss.userId = localStorage.getItem("ADMIN_USER_ID");
@@ -673,10 +747,13 @@ adminControllers.controller('AdminDiscussCreateController', ['$scope', '$http', 
 				
 				$scope.currentDiscuss.status = $scope.currentDiscuss.status === true ? 1:0;
 				$scope.currentDiscuss.featured = $scope.currentDiscuss.featured === true ? 1:0;
-				$scope.currentDiscuss.topicId = BY.editorCategoryList.getCategoryList();
 				if($scope.newArticlePhotoFilename){
 					$scope.currentDiscuss.articlePhotoFilename = JSON.parse($scope.newArticlePhotoFilename);
 				}
+				$scope.currentDiscuss.systemTags = getSystemTagList($scope.selectedMenuList);
+				$scope.currentDiscuss.topicId = $.map($scope.selectedMenuList, function(value, key){
+	                return value.id;
+	            });
 				
 
 				//save the discuss
@@ -697,12 +774,6 @@ adminControllers.controller('AdminDiscussCreateController', ['$scope', '$http', 
 				});*/
 				};
 		}//else
-	 	$scope.addTag = function() {
-			$scope.allTags.push("");
-		}
-		$scope.removeTag = function(idx) {
-			$scope.allTags.splice(idx, 1);
-		}
   }]);
 
 
