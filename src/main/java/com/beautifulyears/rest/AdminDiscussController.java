@@ -171,7 +171,7 @@ public class AdminDiscussController {
 
 			return new Discuss(userId, username, discussType, topicIds, title,
 					text, discussStatus, discuss.getAggrReplyCount(),
-					systemTags, discuss.getUserTags(),
+					systemTags,discuss.getShareCount(), discuss.getUserTags(),
 					discuss.getArticlePhotoFilename() == null ? null : discuss
 							.getArticlePhotoFilename(), discuss.isFeatured());
 

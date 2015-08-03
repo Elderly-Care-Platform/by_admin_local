@@ -34,4 +34,5 @@ public class DiscussConstants {
 	public static final int SESSION_STATUS_INACTIVE = 1;
 	public static final int SESSION_STATUS_EXPIRED = 2;
 
+	public static final int DISCUSS_TRUNCATION_LENGTH = 300;
 }

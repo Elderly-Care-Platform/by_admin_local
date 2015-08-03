@@ -6,10 +6,13 @@ import java.util.List;
 import java.util.Map;
 
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import org.jsoup.Jsoup;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.beautifulyears.Util;
+import com.beautifulyears.constants.DiscussConstants;
 import com.beautifulyears.domain.menu.Tag;
 
 //The discuss collection represents Articles, Questions and Posts
@@ -53,8 +56,28 @@ public class Discuss {
 
 	private boolean isFeatured;
 
+	private long shareCount = 0;
+
+	private String shortSynopsis;
+
 	public Discuss() {
 
+	}
+
+	public String getShortSynopsis() {
+		return shortSynopsis;
+	}
+
+	public void setShortSynopsis(String shortSynopsis) {
+		this.shortSynopsis = shortSynopsis;
+	}
+
+	public long getShareCount() {
+		return shareCount;
+	}
+
+	public void setShareCount(long shareCount) {
+		this.shareCount = shareCount;
 	}
 
 	public int getDirectReplyCount() {
@@ -115,7 +138,7 @@ public class Discuss {
 
 	public Discuss(String userId, String username, String discussType,
 			List<String> topicId, String title, String text, int status,
-			int aggrReplyCount,List<Tag> systemTags,List<String> userTags, Map<String, String> articlePhotoFilename, Boolean isFeatured) {
+			int aggrReplyCount,List<Tag> systemTags,Long sharedCount,List<String> userTags, Map<String, String> articlePhotoFilename, Boolean isFeatured) {
 		super();
 		this.userId = userId;
 		this.username = username;
@@ -123,11 +146,17 @@ public class Discuss {
 		this.title = title;
 		this.topicId = topicId;
 		this.text = text;
+		org.jsoup.nodes.Document doc = Jsoup.parse(this.text);
+		String domText = doc.text();
+		if(domText.length() > DiscussConstants.DISCUSS_TRUNCATION_LENGTH){
+			this.setShortSynopsis(Util.truncateText(domText));
+		}
 		this.status = status;
 		this.aggrReplyCount = aggrReplyCount;
 		this.articlePhotoFilename = articlePhotoFilename;
 		this.isFeatured = isFeatured;
 		this.systemTags = systemTags;
+		this.shareCount = sharedCount;
 		this.userTags = userTags;
 	}
 

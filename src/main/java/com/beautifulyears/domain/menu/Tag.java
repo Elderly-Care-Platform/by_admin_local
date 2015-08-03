@@ -58,5 +58,15 @@ public class Tag {
 	public void setDescription(String description) {
 		this.description = description;
 	}
+	
+	@Override
+	public boolean equals(Object object) {
+		boolean isEqual = false;
+
+		if (object != null && object instanceof Tag) {
+			isEqual = (this.getId().equals(((Tag) object).getId()));
+		}
+		return isEqual;
+	}
 
 }
