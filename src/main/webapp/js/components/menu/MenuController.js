@@ -8,6 +8,7 @@ adminControllers.controller('MenuController', [
 					|| localStorage.getItem("ADMIN_USER_ROLE") == 'USER'
 					|| localStorage.getItem("ADMIN_USER_ROLE") == ''
 					|| localStorage.getItem("ADMIN_USER_ROLE") == 'EDITOR') {
+				$location.path('/users/login');
 				return;
 			}
 
@@ -39,7 +40,8 @@ adminControllers.controller('TagCreateController', [
 					location.href = "#/menu";
 				}, function(e) {
 					$scope.error = true;
-					$scope.errorMessage = e.data.localizedMessage || e.data.message;
+					$scope.errorMessage = e.data.localizedMessage
+							|| e.data.message;
 				})
 
 			}
@@ -123,12 +125,16 @@ adminControllers
 									$scope.error = true;
 									$scope.errorMessage = "please entter a display name";
 								} else {
-									menuResource.$save(function() {
-										location.href = "#/menu/viewMenu";
-									}, function(e) {
-										$scope.error = true;
-										$scope.errorMessage = e.data.localizedMessage || e.data.message;
-									});
+									menuResource
+											.$save(
+													function() {
+														location.href = "#/menu/viewMenu";
+													},
+													function(e) {
+														$scope.error = true;
+														$scope.errorMessage = e.data.localizedMessage
+																|| e.data.message;
+													});
 								}
 
 								function resetObjeccts() {
@@ -169,7 +175,7 @@ adminControllers.controller('MenuViewController', [
 
 			function createSubMenu(container, menu) {
 				for (var i = 0; i < menu.length; i++) {
-					if(menu[i] && menu[i].id){
+					if (menu[i] && menu[i].id) {
 						var mainLi = document.createElement("li");
 						var liDiv = document.createElement("div");
 						mainLi.appendChild(liDiv);
@@ -178,7 +184,8 @@ adminControllers.controller('MenuViewController', [
 						liDiv.appendChild(icon);
 						liDiv.appendChild(title);
 						title.href = "#/menu/editMenu/" + menu[i].id;
-						title.innerText = menu[i].orderIdx + " -> " +menu[i].displayMenuName;
+						title.innerText = menu[i].orderIdx + " -> "
+								+ menu[i].displayMenuName;
 						container.appendChild(mainLi);
 						if (menu[i].children.length > 0) {
 							var subMenu = document.createElement("ul");
@@ -186,7 +193,7 @@ adminControllers.controller('MenuViewController', [
 							createSubMenu(subMenu, menu[i].children);
 						}
 					}
-					
+
 				}
 			}
 
@@ -197,10 +204,12 @@ adminControllers.controller('MenuViewController', [
 					}
 				});
 
-				$('.tree li.parent > div > i').click(function() {
-					$(this).parent().parent().toggleClass('active');
-					$(this).parent().parent().children('ul').slideToggle('fast');
-				});
+				$('.tree li.parent > div > i').click(
+						function() {
+							$(this).parent().parent().toggleClass('active');
+							$(this).parent().parent().children('ul')
+									.slideToggle('fast');
+						});
 
 				$('#all').click(function() {
 
@@ -279,8 +288,8 @@ adminControllers
 										console.log(e);
 										alert("error");
 									});
-								} 
-								
+								}
+
 							}
 
 							$scope.editMenu = function() {
@@ -317,13 +326,17 @@ adminControllers
 									$scope.error = true;
 									$scope.errorMessage = "please entter a display name";
 								} else {
-									menuResource.$save(function() {
-										location.href = "#/menu/viewMenu";
-									}, function(e) {
-										console.log(e);
-										$scope.error = true;
-										$scope.errorMessage = e.data.localizedMessage || e.data.message;
-									});
+									menuResource
+											.$save(
+													function() {
+														location.href = "#/menu/viewMenu";
+													},
+													function(e) {
+														console.log(e);
+														$scope.error = true;
+														$scope.errorMessage = e.data.localizedMessage
+																|| e.data.message;
+													});
 								}
 
 								function resetObjeccts() {

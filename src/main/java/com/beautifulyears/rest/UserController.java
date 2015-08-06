@@ -35,13 +35,13 @@ import com.beautifulyears.repository.UserRepository;
 
 @Controller
 @RequestMapping("/users")
-public class AdminController {
-	private static final Logger logger = Logger.getLogger(AdminController.class);
+public class UserController {
+	private static final Logger logger = Logger.getLogger(UserController.class);
 	private UserRepository userRepository;
 	private MongoTemplate mongoTemplate;
 
 	@Autowired
-	public AdminController(UserRepository userRepository,
+	public UserController(UserRepository userRepository,
 			MongoTemplate mongoTemplate) {
 		this.userRepository = userRepository;
 		this.mongoTemplate = mongoTemplate;
@@ -57,42 +57,28 @@ public class AdminController {
 				.and("password").is(loginRequest.getPassword()).and("isActive")
 				.is("Active"));
 
-		// admin login
-		if (loginRequest.getEmail().equals("admin")
-				&& loginRequest.getPassword().equals("password")) {
+		logger.debug("Trying to login normal user...");
+		boolean exists = mongoTemplate.exists(q, User.class);
+		if (!exists) {
+			System.out.println("No such user exist");
+			LoginResponse response = new LoginResponse();
+			response.setSessionId(null);
+			response.setStatus("Incorrect combination of username and password");
+			response.setId("");
+			response.setUserName("");
+			response.setUserRoleId("");
+			return response;
+		} else {
+			User user = mongoTemplate.findOne(q, User.class);
+			logger.debug("User exists :: userid = " + user.getId()
+					+ " :: username = " + user.getUserName());
 			LoginResponse response = new LoginResponse();
 			response.setSessionId(UUID.randomUUID().toString());
-			response.setStatus("OK admin");
-			response.setId("admin");
-			response.setUserName("admin");
-			response.setUserRoleId(UserRolePermissions.SUPER_USER);
+			response.setStatus("OK other user");
+			response.setId(user.getId());
+			response.setUserName(user.getUserName());
+			response.setUserRoleId(user.getUserRoleId());
 			return response;
-		}
-		// normal user login
-		else {
-			logger.debug("Trying to login normal user...");
-			boolean exists = mongoTemplate.exists(q, User.class);
-			if (!exists) {
-				System.out.println("No such user exist");
-				LoginResponse response = new LoginResponse();
-				response.setSessionId(null);
-				response.setStatus("Incorrect combination of username and password");
-				response.setId("");
-				response.setUserName("");
-				response.setUserRoleId("");
-				return response;
-			} else {
-				User user = mongoTemplate.findOne(q, User.class);
-				logger.debug("User exists :: userid = " + user.getId()
-						+ " :: username = " + user.getUserName());
-				LoginResponse response = new LoginResponse();
-				response.setSessionId(UUID.randomUUID().toString());
-				response.setStatus("OK other user");
-				response.setId(user.getId());
-				response.setUserName(user.getUserName());
-				response.setUserRoleId(user.getUserRoleId());
-				return response;
-			}
 		}
 	}
 
@@ -116,31 +102,34 @@ public class AdminController {
 	@RequestMapping(method = RequestMethod.GET, value = "/list/all", produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public List<User> allUsers() {
-		return userRepository.findAll(new Sort(Sort.Direction.DESC,"createdAt"));
+		return userRepository
+				.findAll(new Sort(Sort.Direction.DESC, "createdAt"));
 	}
 
 	// create user - registration
 	@RequestMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
-	public ResponseEntity<String> submitUser(@RequestBody User user) throws Exception{
+	public ResponseEntity<String> submitUser(@RequestBody User user)
+			throws Exception {
 		if (user == null || user.getId() == null || user.getId().equals("")) {
 			logger.debug("NEW USER");
 			try {
 				Query q = new Query();
 				q.addCriteria(Criteria.where("email").is(user.getEmail()));
-				if(userRepository.exists(q.toString()))
-				{
+				if (userRepository.exists(q.toString())) {
 					ResponseEntity<String> responseEntity = new ResponseEntity<String>(
 							"Email already exists!", HttpStatus.CREATED);
 					throw new Exception("Email already exists!");
 				}
 				User userWithExtractedInformation = decorateWithInformation(user);
 				userRepository.save(userWithExtractedInformation);
-				ResponseEntity<String> responseEntity = new ResponseEntity<String>(HttpStatus.CREATED);
+				ResponseEntity<String> responseEntity = new ResponseEntity<String>(
+						HttpStatus.CREATED);
 				return responseEntity;
 			} catch (Exception e) {
 				e.printStackTrace();
-				ResponseEntity<String> responseEntity = new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
+				ResponseEntity<String> responseEntity = new ResponseEntity<String>(
+						HttpStatus.INTERNAL_SERVER_ERROR);
 				throw e;
 			}
 
