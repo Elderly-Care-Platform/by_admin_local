@@ -444,7 +444,6 @@ adminControllers.controller('AdminDiscussCreateController', ['$scope', '$http', 
 
 	 			$scope.currentDiscuss.$save(function () {
 					toastr.success('Edited successfully');
-					BY.editorCategoryList.resetCategoryList();
 					var location = $scope.currentDiscuss.discussType;
 					$location.path('/discuss/' + location);
 	 			});
@@ -483,7 +482,6 @@ adminControllers.controller('AdminDiscussCreateController', ['$scope', '$http', 
 				//save the discuss
 				$scope.currentDiscuss.$save(function () {
 					toastr.success('Created successfully');
-					BY.editorCategoryList.resetCategoryList();
 					var location = $scope.currentDiscuss.discussType;
 					$location.path('/discuss/' + location);
 				});

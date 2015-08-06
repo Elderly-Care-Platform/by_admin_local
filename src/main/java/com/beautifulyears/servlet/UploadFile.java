@@ -4,7 +4,7 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -37,6 +37,10 @@ public class UploadFile extends HttpServlet {
 	public void init() {
 		System.out.println("CONTEXT PATH ===== "
 				+ getServletContext().getContextPath());
+		System.out.println(getServletContext().getInitParameter("imageUploadPath"));
+		if(null != getServletContext().getInitParameter("imageUploadPath")){
+			uploadDir = getServletContext().getInitParameter("imageUploadPath");
+		}
 		// uploadDir = "/home/ubuntu/uploads";
 //		uploadDir = "c:/uploads";
 
@@ -46,7 +50,7 @@ public class UploadFile extends HttpServlet {
 			HttpServletResponse response) throws ServletException, IOException {
 		logger.debug("request to upload the file arrived");
 		boolean isMultipart = ServletFileUpload.isMultipartContent(request);
-
+		
 		response.setContentType("application/json");
 
 		if (isMultipart) {
@@ -56,8 +60,10 @@ public class UploadFile extends HttpServlet {
 			ServletFileUpload upload = new ServletFileUpload(factory);
 			try {
 				List<FileItem> multiparts = upload.parseRequest(request);
-//				PrintWriter out = response.getWriter();
+				List<String> resImageArray= new ArrayList<String>();
+				StringBuffer resImage = new StringBuffer("");
 				for (FileItem item : multiparts) {
+					resImage = new StringBuffer("");
 					if (!item.isFormField()) {
 						UUID fname = UUID.randomUUID();
 						String name = new File(item.getName()).getName();
@@ -88,36 +94,42 @@ public class UploadFile extends HttpServlet {
 											+ extension));
 						}
 
-						StringBuffer res = new StringBuffer("");
+						
 						if(null != request.getParameter("type")
 								&& "editor".equals(request.getParameter("type"))){
 //							res.append("\"original\":");
-							res.append("/uploaded_files/" + fname + "."
+							resImage.append("/uploaded_files/" + fname + "."
 									+ extension);
 						}else if (null != request.getParameter("transcoding")
 								&& true == Boolean.valueOf(request
 										.getParameter("transcoding"))) {
-							res.append("{");
-							res.append("\"original\":");
-							res.append("\"/uploaded_files/" + fname + "."
+							resImage.append("{");
+							resImage.append("\"original\":");
+							resImage.append("\"/uploaded_files/" + fname + "."
 									+ extension);
-							res.append("\",");
-							res.append("\"titleImage\":");
-							res.append("\"/uploaded_files/" + fname + "_"
+							resImage.append("\",");
+							resImage.append("\"titleImage\":");
+							resImage.append("\"/uploaded_files/" + fname + "_"
 									+ TITLE_IMG_WIDTH + "_" + TITLE_IMG_HEIGHT
 									+ "." + extension + "\",");
-							res.append("\"thumbnailImage\":");
-							res.append("\"/uploaded_files/" + fname + "_"
+							resImage.append("\"thumbnailImage\":");
+							resImage.append("\"/uploaded_files/" + fname + "_"
 									+ THUMBNAIL_IMG_WIDTH + "_"
 									+ THUMBNAIL_IMG_HEIGHT + "." + extension
 									+ "\"");
-							res.append("}");
+							resImage.append("}");
 						}
-
-						
-						response.getWriter().write(res.toString());
 					}
+					resImageArray.add(resImage.toString());
 				}
+				if(null != request.getParameter("multi")
+						&& true == Boolean.valueOf(request
+								.getParameter("multi"))){
+					response.getWriter().write(resImageArray.toString());
+				}else{
+					response.getWriter().write(resImage.toString());
+				}
+				
 			} catch (Exception e) {
 				e.printStackTrace();
 				logger.error("upload upload failes");
@@ -131,22 +143,45 @@ public class UploadFile extends HttpServlet {
 		BufferedImage image = ImageIO.read(originalImage);
 		int imageWidth = image.getWidth(null);
 		int imageHeight = image.getHeight(null);
-		int newHeight = maxHeight < imageHeight ? maxHeight : imageHeight;
-		int newWidth = maxWidth < imageWidth ? maxWidth : imageWidth;
-		double thumbRatio = (double) maxWidth / (double) maxHeight;
+		int newHeight = 0;
+		int newWidth = 0;
+		
+			double aspectRatio = (double) imageWidth / (double) imageHeight;
+			if(imageWidth > maxWidth && imageHeight > maxHeight){
+				//both height and width are bigger
+				if((imageWidth - maxWidth) > (imageHeight - maxHeight) ){
+					newWidth = maxWidth;
+					newHeight = (int) (maxHeight / aspectRatio);
+				}else{
+					newHeight = maxHeight;
+					newWidth = (int)(maxHeight * aspectRatio);
+				}
+			}else if(imageWidth > maxWidth){
+				//only width is bigger
+				newWidth = maxWidth;
+				newHeight = (int) (maxHeight / aspectRatio);
+			}else  if(imageHeight > maxHeight){
+				//only height is bigger
+				newHeight = maxHeight;
+				newWidth = (int)(maxWidth * aspectRatio);
+			}else{
+				//both are smaller then max
+				newHeight = imageHeight;
+				newWidth = imageWidth;
+			}
 
-		double aspectRatio = (double) imageWidth / (double) imageHeight;
+		
 
-		if (thumbRatio < aspectRatio) {
-			newHeight = (int) (maxWidth / aspectRatio);
-		} else {
-			newWidth = (int) (maxHeight * aspectRatio);
-		}
+//		if (thumbRatio < aspectRatio) {
+//			newHeight = (int) (newHeight / aspectRatio);
+//		} else {
+//			newWidth = (int) (newHeight * aspectRatio);
+//		}
 
 		BufferedImage resizedImage = new BufferedImage(newWidth, newHeight,
-				image.getType());
+				BufferedImage.TYPE_INT_RGB);
 		Graphics2D g = resizedImage.createGraphics();
-
+		
 		g.drawImage(image, 0, 0, newWidth, newHeight, null);
 
 		g.dispose();
