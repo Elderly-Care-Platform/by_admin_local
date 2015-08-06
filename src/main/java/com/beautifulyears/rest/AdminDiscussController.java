@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.jsoup.Jsoup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -20,6 +21,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.beautifulyears.Util;
+import com.beautifulyears.constants.DiscussConstants;
 import com.beautifulyears.domain.Discuss;
 import com.beautifulyears.domain.menu.Tag;
 import com.beautifulyears.repository.DiscussRepository;
@@ -72,6 +75,11 @@ public class AdminDiscussController {
 			newDiscuss.setSystemTags(discuss.getSystemTags());
 			newDiscuss.setLastModifiedAt(new Date());
 			newDiscuss.setText(discuss.getText());
+			org.jsoup.nodes.Document doc = Jsoup.parse(discuss.getText());
+			String domText = doc.text();
+			if(domText.length() > DiscussConstants.DISCUSS_TRUNCATION_LENGTH){
+				newDiscuss.setShortSynopsis(Util.truncateText(domText));
+			}
 			newDiscuss.setTopicId(discuss.getTopicId());
 			discussRepository.save(newDiscuss);
 			ResponseEntity<Void> responseEntity = new ResponseEntity<>(
