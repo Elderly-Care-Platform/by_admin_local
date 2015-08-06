@@ -10,7 +10,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import com.beautifulyears.constants.DiscussConstants;
 
-@Document(collection = "session")
+@Document(collection = "admin_session")
 public class Session {
 	
 	@Id

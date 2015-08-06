@@ -13,7 +13,7 @@ import com.mongodb.Mongo;
 import com.mongodb.WriteConcern;
 
 @Configuration
-@ComponentScan
+@ComponentScan("com.beautifulyears")
 @EnableMongoRepositories(basePackageClasses = {DiscussRepository.class})
 public class ApplicationConfig {
 
@@ -27,16 +27,5 @@ public class ApplicationConfig {
         mongoTemplate.setWriteConcern(WriteConcern.SAFE);
         return mongoTemplate;
     }
-    
-    public static void main(String[] args) {
-    	try
-    	{
-    		new ApplicationConfig().mongoTemplate();
-    	}
-    	catch(Exception e)
-    	{
-    		e.printStackTrace();
-    	}
-	}
 
 }

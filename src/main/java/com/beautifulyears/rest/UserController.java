@@ -4,6 +4,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -20,11 +23,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.beautifulyears.constants.DiscussConstants;
 import com.beautifulyears.domain.LoginRequest;
 import com.beautifulyears.domain.LoginResponse;
+import com.beautifulyears.domain.Session;
 import com.beautifulyears.domain.User;
 import com.beautifulyears.domain.UserRolePermissions;
 import com.beautifulyears.repository.UserRepository;
+import com.beautifulyears.util.LoggerUtil;
+import com.beautifulyears.util.Util;
 
 /**
  * /** The REST based service for managing "users"
@@ -49,37 +56,49 @@ public class UserController {
 
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	public @ResponseBody LoginResponse login(
-			@RequestBody LoginRequest loginRequest) {
-		logger.debug("login request email = " + loginRequest.getEmail());
+			@RequestBody LoginRequest loginRequest,
+			HttpServletRequest req, HttpServletResponse res) {
+		LoggerUtil.logEntry();
+		Session session = null;
+		
+		try {
+			if (!Util.isEmpty(loginRequest.getEmail())
+					&& !Util.isEmpty(loginRequest.getPassword())) {
+				Query q = new Query();
+				q.addCriteria(Criteria.where("email").is(loginRequest.getEmail())
+						.and("password").is(loginRequest.getPassword()).and("isActive")
+						.is("Active"));
 
-		Query q = new Query();
-		q.addCriteria(Criteria.where("email").is(loginRequest.getEmail())
-				.and("password").is(loginRequest.getPassword()).and("isActive")
-				.is("Active"));
+				User user = mongoTemplate.findOne(q, User.class);
+				if (null == user) {
+					logger.debug("User login failed with user email : "
+							+ loginRequest.getEmail());
+					session = killSession(req, res);
+					return getBlankUser("UserName or password can't be left blank");
+				} else {
+					logger.debug("User logged in success for user email = "
+							+ loginRequest.getEmail());
+					session = createSession(req, res, user);
+					logger.debug("User exists :: userid = " + user.getId()
+							+ " :: username = " + user.getUserName());
+					LoginResponse response = new LoginResponse();
+					response.setSessionId(UUID.randomUUID().toString());
+					response.setStatus("OK other user");
+					response.setId(user.getId());
+					response.setUserName(user.getUserName());
+					response.setUserRoleId(user.getUserRoleId());
+					return response;
+				}
+			} else {
+				System.out.println("No such user exist");
+				return getBlankUser("UserName or password can't be left blank");
+			}
 
-		logger.debug("Trying to login normal user...");
-		boolean exists = mongoTemplate.exists(q, User.class);
-		if (!exists) {
+		} catch (Exception e) {
 			System.out.println("No such user exist");
-			LoginResponse response = new LoginResponse();
-			response.setSessionId(null);
-			response.setStatus("Incorrect combination of username and password");
-			response.setId("");
-			response.setUserName("");
-			response.setUserRoleId("");
-			return response;
-		} else {
-			User user = mongoTemplate.findOne(q, User.class);
-			logger.debug("User exists :: userid = " + user.getId()
-					+ " :: username = " + user.getUserName());
-			LoginResponse response = new LoginResponse();
-			response.setSessionId(UUID.randomUUID().toString());
-			response.setStatus("OK other user");
-			response.setId(user.getId());
-			response.setUserName(user.getUserName());
-			response.setUserRoleId(user.getUserRoleId());
-			return response;
+			return getBlankUser("UserName or password can't be left blank");
 		}
+
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/logout/{sessionId}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -220,6 +239,38 @@ public class UserController {
 			throw new UserNotFoundException(userId);
 		}
 		return user;
+	}
+	
+	private Session createSession(HttpServletRequest req,
+			HttpServletResponse res, User user) {
+		LoggerUtil.logEntry();
+		Session session = new Session(user, req);
+		mongoTemplate.save(session);
+		req.getSession().setAttribute("session", session);
+		req.getSession().setAttribute("user", user);
+		return session;
+	}
+
+	private Session killSession(HttpServletRequest req, HttpServletResponse res) {
+		LoggerUtil.logEntry();
+		Session session = (Session) req.getSession().getAttribute("session");
+		if (null != session) {
+			session.setStatus(DiscussConstants.SESSION_STATUS_INACTIVE);
+			mongoTemplate.save(session);
+			req.getSession().invalidate();
+		}
+		return null;
+	}
+	
+	private	LoginResponse getBlankUser(String msg){
+		System.out.println("No such user exist");
+		LoginResponse response = new LoginResponse();
+		response.setSessionId(null);
+		response.setStatus(msg);
+		response.setId("");
+		response.setUserName("");
+		response.setUserRoleId("");
+		return response;
 	}
 
 }
