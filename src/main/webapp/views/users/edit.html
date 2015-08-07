@@ -48,7 +48,10 @@
 			<p ng-show="userForm.isActive.$invalid && !userForm.isActive.$pristine" class="help-block">User State is required.</p>
 		</div>
 
-
+ 		<h2>
+			<a class="btn btn-primary pull-right" href="#/userProfile/{{user.id}}"><i
+				class="icon-edit icon-white"></i> View User Profile</a>
+		</h2>
         <button type="submit" class="btn btn-primary" ng-disabled="!userForm.$valid">Submit</button>
 
     </form>

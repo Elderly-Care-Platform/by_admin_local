@@ -39,6 +39,8 @@ public class BasicProfileInfo {
 	private UserAddress primaryUserAddress = new UserAddress();
 
 	private List<UserAddress> otherAddresses = new ArrayList<UserAddress>();
+	
+	private String shortDescription;
 
 	public UserAddress getPrimaryUserAddress() {
 		return primaryUserAddress;
@@ -120,6 +122,14 @@ public class BasicProfileInfo {
 		this.photoGalleryURLs = photoGalleryURLs;
 	}
 
+	public String getShortDescription() {
+		return shortDescription;
+	}
+
+	public void setShortDescription(String shortDescription) {
+		this.shortDescription = shortDescription;
+	}
+
 	@Override
 	public String toString() {
 		return "BasicProfileInfo [firstName=" + firstName + ", profileImage="
@@ -127,8 +137,11 @@ public class BasicProfileInfo {
 				+ ", secondaryEmails=" + secondaryEmails + ", primaryPhoneNo="
 				+ primaryPhoneNo + ", secondaryPhoneNos=" + secondaryPhoneNos
 				+ ", description=" + description + ", photoGalleryURLs="
-				+ photoGalleryURLs + ", userAddress=" + primaryUserAddress
-				+ "]";
+				+ photoGalleryURLs + ", primaryUserAddress="
+				+ primaryUserAddress + ", otherAddresses=" + otherAddresses
+				+ ", shortDescription=" + shortDescription + "]";
 	}
+
+	
 
 }
