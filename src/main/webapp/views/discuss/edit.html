@@ -12,13 +12,13 @@
 		
 
 		<table style="width: 900px;">
-			<tr ng-if="currentDiscuss.discussType == 'A'">
+			<tr ng-if="currentDiscuss.discussType == 'P'">
 				<td><label class="control-label" for="title"><strong>Title</strong></label>
 				</td>
 				<td><input type="text" ng-model="currentDiscuss.title" id="title" required /></td>
 			</tr>
 
-			<tr ng-if="currentDiscuss.discussType == 'A'">
+			<tr ng-if="currentDiscuss.discussType == 'P'">
 				<td><label class="control-label" for="title"><strong>Title Photo</strong></label></td>
 				<td><form id="UploadImage12" action="UploadFile" method="post" enctype="multipart/form-data">
 						<label class="myLabel" ng-style="{'background-image': 'url({{ currentDiscuss.articlePhotoFilename.original }})'}">

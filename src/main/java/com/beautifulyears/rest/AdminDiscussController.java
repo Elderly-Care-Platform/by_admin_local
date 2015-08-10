@@ -26,6 +26,7 @@ import com.beautifulyears.constants.DiscussConstants;
 import com.beautifulyears.domain.Discuss;
 import com.beautifulyears.domain.menu.Tag;
 import com.beautifulyears.repository.DiscussRepository;
+import com.beautifulyears.util.LoggerUtil;
 
 /**
  * The REST based service for managing "discuss"
@@ -53,7 +54,7 @@ public class AdminDiscussController {
 
 	@RequestMapping(consumes = { "application/json" })
 	@ResponseBody
-	public ResponseEntity<Void> submitDiscuss(@RequestBody Discuss discuss) {
+	public ResponseEntity<Void> submitDiscuss(@RequestBody Discuss discuss) throws Exception {
 
 		if (discuss.getId() == null
 				|| discuss.getId().equals("")) {
@@ -75,6 +76,8 @@ public class AdminDiscussController {
 			newDiscuss.setSystemTags(discuss.getSystemTags());
 			newDiscuss.setLastModifiedAt(new Date());
 			newDiscuss.setText(discuss.getText());
+			newDiscuss.setContentType(discuss.getContentType());
+			newDiscuss.setLinkInfo(discuss.getLinkInfo());
 			org.jsoup.nodes.Document doc = Jsoup.parse(discuss.getText());
 			String domText = doc.text();
 			if(domText.length() > DiscussConstants.DISCUSS_TRUNCATION_LENGTH){
@@ -154,39 +157,41 @@ public class AdminDiscussController {
 		return responseEntity;
 	}
 
-	private Discuss setDiscussBean(Discuss discuss) {
-
+	private Discuss setDiscussBean(Discuss discuss) throws Exception {
+		LoggerUtil.logEntry();
+		Discuss newDiscuss = null;
 		try {
-			String userId = discuss.getUserId();
-			String username = discuss.getUsername();
+
 			String discussType = discuss.getDiscussType();
 			String title = "";
-			if (discussType.equalsIgnoreCase("A")) {
+			if (discussType.equalsIgnoreCase("P")) {
 				title = discuss.getTitle();
 			}
 			String text = discuss.getText();
 			int discussStatus = discuss.getStatus();
-			List<String> topicIds = discuss.getTopicId();
-//			int aggrReplyCount = 0;
-//			int aggrLikeCount = 0;
-			
-//			List<String> systemTags = topicRepository.getTopicNames(topicIds);
+			List<String> topicId = discuss.getTopicId();
 			List<Tag> systemTags = new ArrayList<Tag>();
+			// List<String> systemTags = new ArrayList<String>();
+			// if (null != topicId && topicId.size() > 0) {
+			// systemTags = topicRepository.getTopicNames(topicId);
+			// }
 			for (Tag tag : discuss.getSystemTags()) {
 				Tag newTag = mongoTemplate.findById(tag.getId(), Tag.class);
 				systemTags.add(newTag);
 			}
 
-			return new Discuss(userId, username, discussType, topicIds, title,
-					text, discussStatus, discuss.getAggrReplyCount(),
-					systemTags,discuss.getShareCount(), discuss.getUserTags(),
-					discuss.getArticlePhotoFilename() == null ? null : discuss
-							.getArticlePhotoFilename(), discuss.isFeatured());
-
+			int aggrReplyCount = 0;
+			newDiscuss = new Discuss(discuss.getUserId(),
+					discuss.getUsername(), discussType, topicId, title, text,
+					discussStatus, aggrReplyCount, systemTags,
+					discuss.getShareCount(), discuss.getUserTags(),
+					discuss.getDiscussType().equals("P") ? discuss
+							.getArticlePhotoFilename() : null, discuss.isFeatured(),
+					discuss.getContentType(), discuss.getLinkInfo());
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
 		}
-
+		return newDiscuss;
 	}
 }

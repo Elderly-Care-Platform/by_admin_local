@@ -13,7 +13,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import com.beautifulyears.constants.DiscussConstants;
 import com.beautifulyears.domain.menu.Tag;
-import com.beautifulyears.util.Util;
 
 //The discuss collection represents Articles, Questions and Posts
 @Document(collection = "discuss")
@@ -60,8 +59,56 @@ public class Discuss {
 
 	private String shortSynopsis;
 
+	private int contentType;
+
+	private LinkInfo linkInfo;
+
 	public Discuss() {
 
+	}
+	
+	public Discuss(String userId, String username, String discussType,
+			List<String> topicId, String title, String text, int status,
+			int aggrReplyCount, List<Tag> systemTags, Long sharedCount,
+			List<String> userTags, Map<String, String> articlePhotoFilename,
+			Boolean isFeatured,int contentType,LinkInfo linkInfo) {
+		super();
+		this.userId = userId;
+		this.username = username;
+		this.discussType = discussType;
+		this.title = title;
+		this.topicId = topicId;
+		this.text = text;
+		org.jsoup.nodes.Document doc = Jsoup.parse(this.text);
+		String domText = doc.text();
+		if (domText.length() > DiscussConstants.DISCUSS_TRUNCATION_LENGTH) {
+			this.setShortSynopsis(com.beautifulyears.Util.truncateText(domText));
+		}
+		this.status = status;
+		this.aggrReplyCount = aggrReplyCount;
+		this.articlePhotoFilename = articlePhotoFilename;
+		this.isFeatured = isFeatured;
+		this.systemTags = systemTags;
+		this.shareCount = sharedCount;
+		this.userTags = userTags;
+		this.contentType = contentType;
+		this.linkInfo = linkInfo;
+	}
+
+	public int getContentType() {
+		return contentType;
+	}
+
+	public void setContentType(int contentType) {
+		this.contentType = contentType;
+	}
+
+	public LinkInfo getLinkInfo() {
+		return linkInfo;
+	}
+
+	public void setLinkInfo(LinkInfo linkInfo) {
+		this.linkInfo = linkInfo;
 	}
 
 	public String getShortSynopsis() {
@@ -134,30 +181,6 @@ public class Discuss {
 
 	public void setTopicId(List<String> topicId) {
 		this.topicId = topicId;
-	}
-
-	public Discuss(String userId, String username, String discussType,
-			List<String> topicId, String title, String text, int status,
-			int aggrReplyCount,List<Tag> systemTags,Long sharedCount,List<String> userTags, Map<String, String> articlePhotoFilename, Boolean isFeatured) {
-		super();
-		this.userId = userId;
-		this.username = username;
-		this.discussType = discussType;
-		this.title = title;
-		this.topicId = topicId;
-		this.text = text;
-		org.jsoup.nodes.Document doc = Jsoup.parse(this.text);
-		String domText = doc.text();
-		if(domText.length() > DiscussConstants.DISCUSS_TRUNCATION_LENGTH){
-			this.setShortSynopsis(com.beautifulyears.Util.truncateText(domText));
-		}
-		this.status = status;
-		this.aggrReplyCount = aggrReplyCount;
-		this.articlePhotoFilename = articlePhotoFilename;
-		this.isFeatured = isFeatured;
-		this.systemTags = systemTags;
-		this.shareCount = sharedCount;
-		this.userTags = userTags;
 	}
 
 	public String getTitle() {

@@ -87,6 +87,17 @@
                         for (var i = 0; i < records.length; i++) {
                             records[i].id1= records[i].id;
                             records[i].id2= records[i].id;
+                            if(!records[i].title){
+                            	var ret = records[i].text;
+                            	if (records[i].text.length > 60) {
+                            	    var breakpoint = 30 + ret.substr(60).indexOf(" ");
+                            	    ret = ret.substr(0, breakpoint) + "...";
+                            	  }else{
+                            		  ret = records[i].text;
+                            	  }
+                            	ret = ret || "...";
+                            	records[i].title = ret;
+                            }
                             records[i].title= records[i].title + "#" + records[i].id;
                             records[i].text= records[i].text + "#" + records[i].id;
                             records[i].comments =  records[i].aggrReplyCount+ "#" + records[i].id;
@@ -97,7 +108,7 @@
                     }
 			});
 
-			if(dis_type == 'A')
+			if(dis_type == 'P')
 			{
 				$("#jqxgrid").jqxGrid(
 				{
