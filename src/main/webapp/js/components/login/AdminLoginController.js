@@ -19,14 +19,8 @@ adminControllers.controller('AdminLoginController', ['$scope', '$route', '$rootS
    				$rootScope.bc_username = login.userName;
    				$rootScope.bc_userId = login.id;
 
-   				if(login.userName == 'admin')
-   				{
-					$rootScope.bc_userRoleId = 'SUPER_USER';
-				}
-				else
-				{
-   					$rootScope.bc_userRoleId = login.userRoleId;
-				}
+				$rootScope.bc_userRoleId = login.userRoleId;
+				$rootScope.$apply();
 
 
 				var destination = 'users/login';

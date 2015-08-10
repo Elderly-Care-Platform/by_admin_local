@@ -22,7 +22,7 @@ adminControllers.controller('UserProfileController', [ '$scope',
 				$scope.profile.status = $scope.profile.status === true ? 1:0;
 				$http.put("api/v1/userProfile/"+userId,$scope.profile).success(function(res){
 					toastr.success('User profile submitted successfully');
-					$location.path('/users/all');
+					$location.path('/userProfile');
 				}).error(function(){
 					$scope.error = true;
 					$scope.errorMessage = "Error occured in saving the current user profile.";
