@@ -1,0 +1,68 @@
+<script type="text/javascript">
+        $(document).ready(function () {
+           //var url = "http://52.74.82.29:80/byadmin/api/v1/users/list/all";
+           var url = "/byadmin/api/v1/users/list/all";
+            // prepare the data
+            var source =
+            {
+                datatype: "json",
+                datafields: [
+                        { name: 'userName', type: 'string' },
+                        { name: 'email', type: 'string' },
+                        { name: 'createdAt', type: 'date' },
+						{ name: 'id1', type: 'string' },
+						{ name: 'id', type: 'string' }
+                    ],
+                url: url,
+                root: 'data',
+				pager: function (pagenum, pagesize, oldpagenum) {
+                    // callback called when a page or page size is changed.
+                }
+            };
+            
+            var namerenderer = function (row, column, value) {
+				if (value.indexOf('#') != -1) {
+							   title = value.substring(0, value.indexOf('#'));
+							   link = value.substring(value.indexOf('#')+1);
+			   }
+			   return '<div style="text-align: center; margin-top: 5px;"><a href="#/userProfile/'+ link +'">' + title + '</a></div>'
+		    }
+
+			var dataAdapter = new $.jqx.dataAdapter(source, {
+				beforeLoadComplete: function (records) {
+                        for (var i = 0; i < records.length; i++) {
+                        	records[i].userName= records[i].userName + "#" + records[i].id;
+                        };
+                        return records;
+                    }
+			});
+            $("#jqxgrid").jqxGrid(
+            {
+                width: 1050,
+                source: dataAdapter,
+                sortable: true,
+				filterable: true,
+				showfilterrow: true,
+                pageable: true,
+                autorowheight: true,
+                autoheight: true,
+                altrows: true,
+                columnsresize: true,
+                columns: [
+                  { text: 'User Name', datafield: 'userName',cellsrenderer:namerenderer, width: 350, cellsalign:'center', align:'center' },
+                  { text: 'Date Created', datafield: 'createdAt', cellsformat: 'dd.MM.yyyy HH:mm:ss', width: 250, cellsalign:'center', align:'center' },
+                  { text: 'Email', datafield: 'email', width: 450, cellsalign:'center', align:'center' },
+                ]
+            });
+
+        });
+    </script>
+
+<h2>
+	Users <a class="btn btn-primary pull-right" href="#/users/new"><i
+		class="icon-plus-sign icon-white"></i> Create New User</a>
+</h2>
+
+<div id='jqxWidget' style="font-size: 13px; font-family: Verdana; float: left;">
+        <div id="jqxgrid"></div>
+</div>
