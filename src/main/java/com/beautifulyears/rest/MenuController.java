@@ -129,6 +129,7 @@ public class MenuController {
 			oldmenu.setModule(menu.getModule());
 			oldmenu.setParentMenuId(menu.getParentMenuId());
 			oldmenu.setTags(menu.getTags());
+			oldmenu.setFilterName(menu.getFilterName());
 			oldmenu.setSlug(getSlugFromTags(oldmenu.getTags()));
 
 			if (oldmenu.getParentMenuId() != null) {
