@@ -21,7 +21,7 @@ public class Discuss {
 
 	@Id
 	private String id;
-
+	
 	private String title;
 
 	private Map<String, String> articlePhotoFilename;

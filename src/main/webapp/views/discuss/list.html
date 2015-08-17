@@ -20,7 +20,8 @@
                         { name: 'aggrReplyCount', type: 'string' },
                         { name: 'id2', type: 'string' },
                         { name: 'id1', type: 'string' },
-						{ name: 'id', type: 'string' }
+						{ name: 'id', type: 'string' },
+						{ name: 'linkInfo', type: 'json' }
                     ],
                 url: url,
                 root: 'data',
@@ -95,7 +96,15 @@
                             	  }else{
                             		  ret = records[i].text;
                             	  }
+                            	
                             	ret = ret || "...";
+                            	if(ret === "..." && records[i].linkInfo && records[i].linkInfo.title){
+                            		ret = "LINK: " + records[i].linkInfo.title
+                            	}else if(ret === "..." && records[i].linkInfo && records[i].linkInfo.description){
+                            		ret = records[i].linkInfo.description;
+                            		var breakpoint = 30 + ret.substr(60).indexOf(" ");
+                            	    ret = "LINK: " + ret.substr(0, breakpoint) + "...";
+                            	}
                             	records[i].title = ret;
                             }
                             records[i].title= records[i].title + "#" + records[i].id;

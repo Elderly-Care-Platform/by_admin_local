@@ -17,6 +17,10 @@
 				</td>
 				<td><input type="text" ng-model="currentDiscuss.title" id="title" required /></td>
 			</tr>
+			<tr ng-if="currentDiscuss.discussType == 'P' && currentDiscuss.linkInfo != undefined">
+				<td  colspan="2"><div ng-include="'views/discuss/common/ShareLinkEditor.html'" ng-if="currentDiscuss.linkInfo" ng-init="linkInfo=currentDiscuss.linkInfo"></div></td>
+			</tr>
+			
 
 			<tr ng-if="currentDiscuss.discussType == 'P'">
 				<td><label class="control-label" for="title"><strong>Title Photo</strong></label></td>

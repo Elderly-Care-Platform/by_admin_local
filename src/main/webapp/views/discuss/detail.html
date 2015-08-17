@@ -3,6 +3,7 @@
 <hr>
 <div>
 <img alt="title image" class="articleTitleImage" src="{{discuss.articlePhotoFilename.original}}" ng-if="discuss.discussType == 'A'">
+<div ng-include="'views/discuss/common/ShareLinkEditor.html'" ng-if="discuss.linkInfo" ng-init="linkInfo=discuss.linkInfo"></div>
 <p class="lead">
 	<span ng-bind-html="discuss.text"></span>
 </p>
