@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.beautifulyears.constants.DiscussConstants;
+import com.beautifulyears.domain.BySession;
 import com.beautifulyears.domain.Discuss;
 import com.beautifulyears.domain.DiscussReply;
 import com.beautifulyears.domain.LoginRequest;
@@ -62,17 +63,18 @@ public class UserController {
 
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	public @ResponseBody LoginResponse login(
-			@RequestBody LoginRequest loginRequest,
-			HttpServletRequest req, HttpServletResponse res) {
+			@RequestBody LoginRequest loginRequest, HttpServletRequest req,
+			HttpServletResponse res) {
 		LoggerUtil.logEntry();
 		Session session = null;
-		
+
 		try {
 			if (!Util.isEmpty(loginRequest.getEmail())
 					&& !Util.isEmpty(loginRequest.getPassword())) {
 				Query q = new Query();
-				q.addCriteria(Criteria.where("email").is(loginRequest.getEmail())
-						.and("password").is(loginRequest.getPassword()).and("isActive")
+				q.addCriteria(Criteria.where("email")
+						.is(loginRequest.getEmail()).and("password")
+						.is(loginRequest.getPassword()).and("isActive")
 						.is("Active"));
 
 				User user = mongoTemplate.findOne(q, User.class);
@@ -134,17 +136,16 @@ public class UserController {
 	// create user - registration
 	@RequestMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
-	public Object submitUser(@RequestBody User user,HttpServletRequest req , HttpServletResponse res)
-			throws Exception {
+	public Object submitUser(@RequestBody User user, HttpServletRequest req,
+			HttpServletResponse res) throws Exception {
 		if (user == null || user.getId() == null || user.getId().equals("")) {
 			logger.debug("NEW USER");
 			try {
 				Query q = new Query();
 				q.addCriteria(Criteria.where("email").is(user.getEmail()));
 				if (userRepository.exists(q.toString())) {
-					ResponseEntity<String> responseEntity = new ResponseEntity<String>(
-							"Email already exists!", HttpStatus.CREATED);
-					return new ResponseEntity<>("Email already exists!", HttpStatus.BAD_REQUEST);
+					return new ResponseEntity<>("Email already exists!",
+							HttpStatus.BAD_REQUEST);
 				}
 				User userWithExtractedInformation = decorateWithInformation(user);
 				userRepository.save(userWithExtractedInformation);
@@ -160,33 +161,41 @@ public class UserController {
 			logger.debug("EDIT USER");
 			boolean isUserNameChanged = false;
 			User newUser = getUser(user.getId());
-			if(!newUser.getUserName().equals(user.getUserName())){
+			if (!newUser.getUserName().equals(user.getUserName())) {
 				isUserNameChanged = true;
-				logger.debug("trying changing the user name from "+newUser.getUserName()+" to "+user.getUserName());
+				logger.debug("trying changing the user name from "
+						+ newUser.getUserName() + " to " + user.getUserName());
 			}
-			newUser.setPassword(user.getPassword());
+			if (null != newUser && user.getPassword() != null) {
+				if (!user.getPassword().equals(newUser.getPassword())) {
+					inValidateAllSessions(user.getId());
+				}
+				newUser.setPassword(user.getPassword());
+			}
 			newUser.setSocialSignOnId(user.getSocialSignOnId());
 			newUser.setSocialSignOnPlatform(user.getSocialSignOnPlatform());
 			newUser.setPasswordCode(user.getPasswordCode());
 			newUser.setPasswordCodeExpiry(user.getPasswordCodeExpiry());
 			newUser.setUserRoleId(user.getUserRoleId());
 			newUser.setUserName(user.getUserName());
-			
+
 			newUser.setActive(user.isActive());
-			if(!newUser.getEmail().equals(user.getEmail())){
+			if (!newUser.getEmail().equals(user.getEmail())) {
 				Query q = new Query();
 				q.addCriteria(Criteria.where("email").is(user.getEmail()));
 				User userWithEmail = mongoTemplate.findOne(q, User.class);
-				if(userWithEmail != null){
+				if (userWithEmail != null) {
 					throw new BYException(BYErrorCodes.USER_ALREADY_EXIST);
-				}else{
+				} else {
 					newUser.setEmail(user.getEmail());
 				}
 			}
 			userRepository.save(newUser);
-			if(isUserNameChanged){
-				UserNameHandler userNameHandler = new UserNameHandler(mongoTemplate);
-				userNameHandler.setUserParams(newUser.getId(), newUser.getUserName());
+			if (isUserNameChanged) {
+				UserNameHandler userNameHandler = new UserNameHandler(
+						mongoTemplate);
+				userNameHandler.setUserParams(newUser.getId(),
+						newUser.getUserName());
 				new Thread(userNameHandler).start();
 			}
 			ResponseEntity<String> responseEntity = new ResponseEntity<>(
@@ -265,7 +274,7 @@ public class UserController {
 		}
 		return user;
 	}
-	
+
 	private Session createSession(HttpServletRequest req,
 			HttpServletResponse res, User user) {
 		LoggerUtil.logEntry();
@@ -286,8 +295,8 @@ public class UserController {
 		}
 		return null;
 	}
-	
-	private	LoginResponse getBlankUser(String msg){
+
+	private LoginResponse getBlankUser(String msg) {
 		System.out.println("No such user exist");
 		LoginResponse response = new LoginResponse();
 		response.setSessionId(null);
@@ -296,6 +305,17 @@ public class UserController {
 		response.setUserName("");
 		response.setUserRoleId("");
 		return response;
+	}
+	
+	private void inValidateAllSessions(String userId) {
+		Query q = new Query();
+		q.addCriteria(Criteria
+				.where("userId").is(userId));
+		List<BySession> sessionList = mongoTemplate.find(q, BySession.class);
+		for (BySession session : sessionList) {
+			session.setStatus(DiscussConstants.SESSION_STATUS_INACTIVE);
+			mongoTemplate.save(session);
+		}
 	}
 
 }
