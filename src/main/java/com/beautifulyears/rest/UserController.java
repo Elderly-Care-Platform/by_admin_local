@@ -24,13 +24,19 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.beautifulyears.constants.DiscussConstants;
+import com.beautifulyears.domain.Discuss;
+import com.beautifulyears.domain.DiscussReply;
 import com.beautifulyears.domain.LoginRequest;
 import com.beautifulyears.domain.LoginResponse;
 import com.beautifulyears.domain.Session;
 import com.beautifulyears.domain.User;
+import com.beautifulyears.domain.UserRating;
 import com.beautifulyears.domain.UserRolePermissions;
+import com.beautifulyears.exceptions.BYErrorCodes;
+import com.beautifulyears.exceptions.BYException;
 import com.beautifulyears.repository.UserRepository;
 import com.beautifulyears.util.LoggerUtil;
+import com.beautifulyears.util.UserNameHandler;
 import com.beautifulyears.util.Util;
 
 /**
@@ -128,7 +134,7 @@ public class UserController {
 	// create user - registration
 	@RequestMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
-	public ResponseEntity<String> submitUser(@RequestBody User user)
+	public Object submitUser(@RequestBody User user,HttpServletRequest req , HttpServletResponse res)
 			throws Exception {
 		if (user == null || user.getId() == null || user.getId().equals("")) {
 			logger.debug("NEW USER");
@@ -138,7 +144,7 @@ public class UserController {
 				if (userRepository.exists(q.toString())) {
 					ResponseEntity<String> responseEntity = new ResponseEntity<String>(
 							"Email already exists!", HttpStatus.CREATED);
-					throw new Exception("Email already exists!");
+					return new ResponseEntity<>("Email already exists!", HttpStatus.BAD_REQUEST);
 				}
 				User userWithExtractedInformation = decorateWithInformation(user);
 				userRepository.save(userWithExtractedInformation);
@@ -147,14 +153,17 @@ public class UserController {
 				return responseEntity;
 			} catch (Exception e) {
 				e.printStackTrace();
-				ResponseEntity<String> responseEntity = new ResponseEntity<String>(
-						HttpStatus.INTERNAL_SERVER_ERROR);
 				throw e;
 			}
 
 		} else {
 			logger.debug("EDIT USER");
+			boolean isUserNameChanged = false;
 			User newUser = getUser(user.getId());
+			if(!newUser.getUserName().equals(user.getUserName())){
+				isUserNameChanged = true;
+				logger.debug("trying changing the user name from "+newUser.getUserName()+" to "+user.getUserName());
+			}
 			newUser.setPassword(user.getPassword());
 			newUser.setSocialSignOnId(user.getSocialSignOnId());
 			newUser.setSocialSignOnPlatform(user.getSocialSignOnPlatform());
@@ -162,8 +171,24 @@ public class UserController {
 			newUser.setPasswordCodeExpiry(user.getPasswordCodeExpiry());
 			newUser.setUserRoleId(user.getUserRoleId());
 			newUser.setUserName(user.getUserName());
+			
 			newUser.setActive(user.isActive());
+			if(!newUser.getEmail().equals(user.getEmail())){
+				Query q = new Query();
+				q.addCriteria(Criteria.where("email").is(user.getEmail()));
+				User userWithEmail = mongoTemplate.findOne(q, User.class);
+				if(userWithEmail != null){
+					throw new BYException(BYErrorCodes.USER_ALREADY_EXIST);
+				}else{
+					newUser.setEmail(user.getEmail());
+				}
+			}
 			userRepository.save(newUser);
+			if(isUserNameChanged){
+				UserNameHandler userNameHandler = new UserNameHandler(mongoTemplate);
+				userNameHandler.setUserParams(newUser.getId(), newUser.getUserName());
+				new Thread(userNameHandler).start();
+			}
 			ResponseEntity<String> responseEntity = new ResponseEntity<>(
 					HttpStatus.CREATED);
 			return responseEntity;

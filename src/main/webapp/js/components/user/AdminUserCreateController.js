@@ -15,6 +15,10 @@ adminControllers.controller('AdminUserCreateController', ['$scope', '$routeParam
 	 			$scope.user.$save(function (user, headers) {
 	 				toastr.success("Edited User");
 	 				$location.path('/users/all');
+	 			},function(error){
+	 				if(error && error.data && error.data.error && error.data.error.errorCode){
+	 					$scope.error = error.data.error.errorMsg;
+	 				}
 	 			});
 	 		};
 	 	}
