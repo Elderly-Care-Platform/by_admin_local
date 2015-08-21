@@ -1,6 +1,10 @@
 @CHARSET "ISO-8859-1";
 
-
+.by_link_left
+{
+	width:50%;
+	float:left;
+}
 .by-card-shareInfo {
 	border: 1px solid #DEDEDE;
 	/*background-color: #dcdcdc;*/
