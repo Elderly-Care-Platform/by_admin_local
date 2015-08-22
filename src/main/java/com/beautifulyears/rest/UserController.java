@@ -25,13 +25,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.beautifulyears.constants.DiscussConstants;
 import com.beautifulyears.domain.BySession;
-import com.beautifulyears.domain.Discuss;
-import com.beautifulyears.domain.DiscussReply;
 import com.beautifulyears.domain.LoginRequest;
 import com.beautifulyears.domain.LoginResponse;
 import com.beautifulyears.domain.Session;
 import com.beautifulyears.domain.User;
-import com.beautifulyears.domain.UserRating;
 import com.beautifulyears.domain.UserRolePermissions;
 import com.beautifulyears.exceptions.BYErrorCodes;
 import com.beautifulyears.exceptions.BYException;
@@ -66,7 +63,6 @@ public class UserController {
 			@RequestBody LoginRequest loginRequest, HttpServletRequest req,
 			HttpServletResponse res) {
 		LoggerUtil.logEntry();
-		Session session = null;
 
 		try {
 			if (!Util.isEmpty(loginRequest.getEmail())
@@ -81,12 +77,12 @@ public class UserController {
 				if (null == user) {
 					logger.debug("User login failed with user email : "
 							+ loginRequest.getEmail());
-					session = killSession(req, res);
+					killSession(req, res);
 					return getBlankUser("UserName or password can't be left blank");
 				} else {
 					logger.debug("User logged in success for user email = "
 							+ loginRequest.getEmail());
-					session = createSession(req, res, user);
+					createSession(req, res, user);
 					logger.debug("User exists :: userid = " + user.getId()
 							+ " :: username = " + user.getUserName());
 					LoginResponse response = new LoginResponse();

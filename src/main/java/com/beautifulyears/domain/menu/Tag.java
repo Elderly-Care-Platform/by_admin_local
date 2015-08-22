@@ -3,10 +3,11 @@
  */
 package com.beautifulyears.domain.menu;
 
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
  * @author Nitin
@@ -17,7 +18,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Tag {
 	
 	public final static int TAG_TYPE_SYSTEM = 0;
-	public final static int TAG_TYPE_USER = 1;
+	public final static int TAG_TYPE_USER = 1;	
 	
 	@Id
 	private String id;

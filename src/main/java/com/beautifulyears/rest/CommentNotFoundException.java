@@ -6,7 +6,12 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ResponseStatus(HttpStatus.NOT_FOUND)
 public class CommentNotFoundException extends RuntimeException {
 
-    public CommentNotFoundException(String commentId) {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	public CommentNotFoundException(String commentId) {
         super(String.format("Comment with id %s not found", commentId));
     }
 }

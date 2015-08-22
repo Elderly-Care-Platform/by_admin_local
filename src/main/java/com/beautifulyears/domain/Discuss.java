@@ -5,7 +5,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.jsoup.Jsoup;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
@@ -13,6 +12,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import com.beautifulyears.constants.DiscussConstants;
 import com.beautifulyears.domain.menu.Tag;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 //The discuss collection represents Articles, Questions and Posts
 @Document(collection = "discuss")

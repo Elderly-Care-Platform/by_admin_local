@@ -1,7 +1,5 @@
 package com.beautifulyears.rest;
 
-import java.util.Date;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -19,7 +17,6 @@ import com.beautifulyears.domain.User;
 import com.beautifulyears.domain.UserProfile;
 import com.beautifulyears.repository.UserProfileRepository;
 import com.beautifulyears.util.LoggerUtil;
-import com.beautifulyears.util.Util;
 
 /**
  * The REST based service for managing "user_profile"

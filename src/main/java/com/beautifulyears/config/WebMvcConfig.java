@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
-import org.springframework.web.servlet.view.json.MappingJacksonJsonView;
+import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
 import com.beautifulyears.interceptors.LoggerInterceptor;
 import com.beautifulyears.interceptors.SessionInterceptor;
@@ -24,8 +24,8 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
     private SessionInterceptor sessionInterceptor;
 
     @Bean
-    public MappingJacksonJsonView jsonView() {
-        MappingJacksonJsonView jsonView = new MappingJacksonJsonView();
+    public MappingJackson2JsonView jsonView() {
+        MappingJackson2JsonView jsonView = new MappingJackson2JsonView();
         jsonView.setPrefixJson(true);
         return jsonView;
     }
