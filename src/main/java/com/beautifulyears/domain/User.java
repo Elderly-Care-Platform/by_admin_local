@@ -23,7 +23,7 @@ public class User {
 	// Unique
 	String email;
 	private final Date createdAt = new Date();
-	private final String verificationCode = UUID.randomUUID().toString();
+	private String verificationCode = UUID.randomUUID().toString();
 	Date verificationCodeExpiry = setCodeExpiryDate(new Date(), 15);
 	String socialSignOnId;
 	String socialSignOnPlatform;
@@ -75,7 +75,7 @@ public class User {
 		this.userName = userName;
 		this.password = password;
 		this.email = email.toLowerCase();
-		// this.verificationCode = verificationCode;
+		this.verificationCode = verificationCode;
 		this.verificationCodeExpiry = verificationCodeExpiry;
 		this.socialSignOnId = socialSignOnId;
 		this.socialSignOnPlatform = socialSignOnPlatform;
@@ -124,6 +124,11 @@ public class User {
 
 	public String getVerificationCode() {
 		return verificationCode;
+	}
+	
+
+	public void setVerificationCode(String verificationCode) {
+		this.verificationCode = verificationCode;
 	}
 
 	public Date getVerificationCodeExpiry() {
@@ -190,6 +195,7 @@ public class User {
 				+ ", isActive=" + isActive + ", permissions=" + permissions
 				+ "]";
 	}
+
 	
 	
 }

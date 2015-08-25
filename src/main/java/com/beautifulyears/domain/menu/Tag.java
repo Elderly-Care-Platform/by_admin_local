@@ -18,7 +18,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public class Tag {
 	
 	public final static int TAG_TYPE_SYSTEM = 0;
-	public final static int TAG_TYPE_USER = 1;	
+	public final static int TAG_TYPE_USER = 1;
 	
 	@Id
 	private String id;

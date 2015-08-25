@@ -7,11 +7,13 @@ import java.util.Map;
 
 import org.jsoup.Jsoup;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.TextIndexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import com.beautifulyears.constants.DiscussConstants;
 import com.beautifulyears.domain.menu.Tag;
+import com.beautifulyears.util.Util;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 //The discuss collection represents Articles, Questions and Posts
@@ -21,17 +23,17 @@ public class Discuss {
 
 	@Id
 	private String id;
-	
+	@TextIndexed
 	private String title;
 
 	private Map<String, String> articlePhotoFilename;
 
 	private String userId;
-
+	@TextIndexed
 	private String username;
 
 	private String discussType; // Q, P and A (Question, Post and Article)
-
+	@TextIndexed
 	private String text;
 
 	private int status; // published, unpublished
@@ -61,17 +63,18 @@ public class Discuss {
 
 	private int contentType;
 
+	@TextIndexed
 	private LinkInfo linkInfo;
 
 	public Discuss() {
 
 	}
-	
+
 	public Discuss(String userId, String username, String discussType,
 			List<String> topicId, String title, String text, int status,
 			int aggrReplyCount, List<Tag> systemTags, Long sharedCount,
 			List<String> userTags, Map<String, String> articlePhotoFilename,
-			Boolean isFeatured,int contentType,LinkInfo linkInfo) {
+			Boolean isFeatured, int contentType, LinkInfo linkInfo) {
 		super();
 		this.userId = userId;
 		this.username = username;

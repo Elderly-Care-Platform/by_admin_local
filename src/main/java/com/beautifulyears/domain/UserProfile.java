@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
+import org.springframework.data.mongodb.core.index.TextIndexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -35,12 +36,15 @@ public class UserProfile {
 	private List<Integer> userTypes = new ArrayList<Integer>();
 
 	// contains all common user profile information.
+	@TextIndexed
 	private BasicProfileInfo basicProfileInfo = new BasicProfileInfo();
 
+	@TextIndexed
 	// contains information applicable to an individual
 	private IndividualProfileInfo individualInfo = new IndividualProfileInfo();
 
 	// contains information about service provider
+	@TextIndexed
 	private ServiceProviderInfo serviceProviderInfo = new ServiceProviderInfo();
 
 	private String tags;
