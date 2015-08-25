@@ -71,6 +71,7 @@ public class AdminDiscussController {
 			newDiscuss.setTitle(discuss.getTitle());
 			newDiscuss.setStatus(discuss.getStatus());
 			newDiscuss.setFeatured(discuss.isFeatured());
+			newDiscuss.setPromotion(discuss.isPromotion());
 			newDiscuss.setArticlePhotoFilename(discuss
 					.getArticlePhotoFilename());
 			newDiscuss.setSystemTags(discuss.getSystemTags());
@@ -186,7 +187,7 @@ public class AdminDiscussController {
 					discussStatus, aggrReplyCount, systemTags,
 					discuss.getShareCount(), discuss.getUserTags(),
 					discuss.getDiscussType().equals("P") ? discuss
-							.getArticlePhotoFilename() : null, discuss.isFeatured(),
+							.getArticlePhotoFilename() : null, discuss.isFeatured(),discuss.isPromotion(),
 					discuss.getContentType(), discuss.getLinkInfo());
 		} catch (Exception e) {
 			e.printStackTrace();

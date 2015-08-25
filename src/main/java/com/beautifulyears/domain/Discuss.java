@@ -57,6 +57,8 @@ public class Discuss {
 
 	private boolean isFeatured;
 
+	private boolean isPromotion;
+
 	private long shareCount = 0;
 
 	private String shortSynopsis;
@@ -74,7 +76,7 @@ public class Discuss {
 			List<String> topicId, String title, String text, int status,
 			int aggrReplyCount, List<Tag> systemTags, Long sharedCount,
 			List<String> userTags, Map<String, String> articlePhotoFilename,
-			Boolean isFeatured, int contentType, LinkInfo linkInfo) {
+			Boolean isFeatured,Boolean isPromotion, int contentType, LinkInfo linkInfo) {
 		super();
 		this.userId = userId;
 		this.username = username;
@@ -91,11 +93,20 @@ public class Discuss {
 		this.aggrReplyCount = aggrReplyCount;
 		this.articlePhotoFilename = articlePhotoFilename;
 		this.isFeatured = isFeatured;
+		this.isPromotion = isPromotion;
 		this.systemTags = systemTags;
 		this.shareCount = sharedCount;
 		this.userTags = userTags;
 		this.contentType = contentType;
 		this.linkInfo = linkInfo;
+	}
+
+	public boolean isPromotion() {
+		return isPromotion;
+	}
+
+	public void setPromotion(boolean isPromotion) {
+		this.isPromotion = isPromotion;
 	}
 
 	public int getContentType() {

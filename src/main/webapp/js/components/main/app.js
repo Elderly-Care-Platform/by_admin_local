@@ -435,6 +435,7 @@ adminControllers.controller('AdminDiscussCreateController', ['$scope', '$http', 
 				$scope.currentDiscuss.text=htmlval;
 				$scope.currentDiscuss.status = $scope.currentDiscuss.status === true ? 1:0;
 				$scope.currentDiscuss.featured = $scope.currentDiscuss.featured === true ? 1:0;
+				$scope.currentDiscuss.promotion = $scope.currentDiscuss.promotion === true ? 1:0;
 				$scope.currentDiscuss.systemTags = getSystemTagList($scope.selectedMenuList);
 				$scope.currentDiscuss.topicId = $.map($scope.selectedMenuList, function(value, key){
 	                return value.id;
@@ -470,6 +471,7 @@ adminControllers.controller('AdminDiscussCreateController', ['$scope', '$http', 
 				
 				$scope.currentDiscuss.status = $scope.currentDiscuss.status === true ? 1:0;
 				$scope.currentDiscuss.featured = $scope.currentDiscuss.featured === true ? 1:0;
+				$scope.currentDiscuss.promotion = $scope.currentDiscuss.promotion === true ? 1:0;
 				if($scope.newArticlePhotoFilename){
 					$scope.currentDiscuss.articlePhotoFilename = JSON.parse($scope.newArticlePhotoFilename);
 				}

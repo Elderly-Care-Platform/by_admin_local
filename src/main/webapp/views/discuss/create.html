@@ -43,6 +43,13 @@
 					style="vertical-align: top;"></td>
 			</tr>
 			<tr>
+				<td><label class="control-label" for="title"><strong>Promotion</strong></label>
+				</td>
+				<td><input type="checkbox" ng-model="currentDiscuss.promotion"
+					name="promotion" ng-checked="currentDiscuss.promotion" id="promotion"
+					style="vertical-align: top;"></td>
+			</tr>
+			<tr>
 				<td colspan="2"><label class="control-label" for="text"><strong>Text</strong></label>
 					<div class="controls byEditor">
 						<textarea ui:tinymce id="text" ng-model="currentDiscuss.text"></textarea>
