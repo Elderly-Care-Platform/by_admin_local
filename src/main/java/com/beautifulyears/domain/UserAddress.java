@@ -1,5 +1,7 @@
 package com.beautifulyears.domain;
 
+import org.springframework.data.mongodb.core.index.TextIndexed;
+
 
 /** The UserAddress class specifies address information of all types of users including 
 *  individual and institutions. 
@@ -11,8 +13,11 @@ public class UserAddress {
 
 	
 	private String streetAddress; 
-	private String city;		
+	@TextIndexed
+	private String city;	
+	@TextIndexed
 	private String zip; 
+	@TextIndexed
 	private String locality;
 	private String country;
 	

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.data.mongodb.core.index.TextIndexed;
+
 import com.beautifulyears.domain.UserAddress;
 
 /**
@@ -18,6 +20,7 @@ public class BasicProfileInfo {
 
 	// corresponds to company Name in institutions and user first name for
 	// individuals. name in
+	@TextIndexed
 	private String firstName;
 
 	// in case of individuals it is the profile or it is the company logo.
@@ -32,6 +35,7 @@ public class BasicProfileInfo {
 	private List<String> secondaryPhoneNos = new ArrayList<String>();
 
 	// personal story or professional services description
+	@TextIndexed
 	private String description;
 
 	private List<Map<String, String>> photoGalleryURLs = new ArrayList<Map<String, String>>();

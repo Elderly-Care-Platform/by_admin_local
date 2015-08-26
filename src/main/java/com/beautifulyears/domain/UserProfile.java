@@ -6,7 +6,6 @@ import java.util.List;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
-import org.springframework.data.mongodb.core.index.TextIndexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -25,26 +24,22 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @Document(collection = "user_profile")
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UserProfile {
-
 	@Id
 	private String id;
 
 	// primary user ID from User.java
 	private String userId;
-
+	
 	// @see @UserTypes.java
 	private List<Integer> userTypes = new ArrayList<Integer>();
 
 	// contains all common user profile information.
-	@TextIndexed
 	private BasicProfileInfo basicProfileInfo = new BasicProfileInfo();
 
-	@TextIndexed
 	// contains information applicable to an individual
 	private IndividualProfileInfo individualInfo = new IndividualProfileInfo();
 
 	// contains information about service provider
-	@TextIndexed
 	private ServiceProviderInfo serviceProviderInfo = new ServiceProviderInfo();
 
 	private String tags;
