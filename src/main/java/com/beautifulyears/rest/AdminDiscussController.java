@@ -115,6 +115,22 @@ public class AdminDiscussController {
 		}
 
 	}
+	
+	@RequestMapping(method = RequestMethod.GET, value = "/list/announceMents", produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public List<Discuss> showDiscussAnnouncements() {
+		try {
+			Query q = new Query();
+			q.addCriteria(Criteria.where("isPromotion").is(true));
+			q.with(new Sort(Sort.Direction.DESC, "createdAt"));
+			List<Discuss> list = mongoTemplate.find(q, Discuss.class);
+			return list;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ArrayList<Discuss>();
+		}
+
+	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/show/{discussId}", produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody

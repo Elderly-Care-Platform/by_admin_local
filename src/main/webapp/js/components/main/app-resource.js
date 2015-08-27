@@ -115,6 +115,11 @@ var discussByFilterQuestion_admin = adminServices.factory(
 			return $resource('/byadmin/api/v1/discuss/list/Q', {}, {})
 		});
 
+var AdminAnnouncements = adminServices.factory(
+		'AdminAnnouncements', function($resource) {
+			return $resource('/byadmin/api/v1/discuss/list/announceMents', {}, {})
+		});
+
 var discussByFilterArticle_admin = adminServices.factory('AdminArticleDiscuss',
 		function($resource) {
 			return $resource('/byadmin/api/v1/discuss/list/A', {}, {})

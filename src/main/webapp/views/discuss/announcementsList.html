@@ -1,0 +1,213 @@
+<script type="text/javascript">
+        $(document).ready(function () {
+        	var this_url = window.location.href;
+        	var dis_type = this_url.substring(this_url.lastIndexOf('/')+1).trim();
+            //var url = 'http://52.74.82.29:80/byadmin/api/v1/discuss/list/' + dis_type;
+            var url = '/byadmin/api/v1/discuss/list/announceMents';
+
+            // prepare the data
+            var source = '';
+
+            source = {
+                datatype: "json",
+                datafields: [
+                		{ name: 'text', type: 'string' },
+						{ name: 'title', type: 'string' },
+						{ name: 'username', type: 'string' },
+                        { name: 'createdAt', type: 'date' },
+                        { name: 'status', type: 'string' },
+                        { name: 'featured', type: 'string' },
+                        { name: 'promotion', type: 'boolean' },
+                        { name: 'aggrReplyCount', type: 'string' },
+                        { name: 'id2', type: 'string' },
+                        { name: 'id1', type: 'string' },
+						{ name: 'id', type: 'string' },
+						{ name: 'linkInfo', type: 'json' }
+                    ],
+                url: url,
+                root: 'data',
+				pager: function (pagenum, pagesize, oldpagenum) {
+                    // callback called when a page or page size is changed.
+                }
+            };
+
+
+
+
+			var titlerenderer = function (row, column, value) {
+				if (value.indexOf('#') != -1) {
+							   title = value.substring(0, value.indexOf('#'));
+							   link = value.substring(value.indexOf('#')+1);
+			   }
+			   return '<div style="text-align: center; margin-top: 5px;"><a href="#/discuss/'+ link +'">' + title + '</a></div>'
+		    }
+
+
+		    var blurbrenderer = function (row, column, value) {
+				if (value.indexOf('#') != -1) {
+							   text = value.substring(0, value.indexOf('#')).substring(0,100);
+							   link = value.substring(value.indexOf('#')+1);
+			   }
+			   return '<div style="text-align: center; margin-top: 5px;"><a href="#/discuss/'+ link +'">' + text + '</a></div>'
+		    }
+
+
+			var statusrenderer = function (row, column, value) {
+				if(value == '0' || value == '') return '<div style="text-align: center; margin-top: 5px;" height="26" width="26">Published</div>';
+				else return '<div style="text-align: center; margin-top: 5px;" height="26" width="26">Withdrawn</div>';
+			}
+
+			var featuredrenderer = function (row, column, value) {
+				if(value == '1') return '<div style="text-align: center; margin-top: 5px;" height="26" width="26">Yes</div>';
+				else return '<div style="text-align: center; margin-top: 5px;" height="26" width="26">No</div>';
+			}
+			
+			var promotionrenderer = function (row, column, value) {
+				if(value == '1') return '<div style="text-align: center; margin-top: 5px;" height="26" width="26">Yes</div>';
+				else return '<div style="text-align: center; margin-top: 5px;" height="26" width="26">No</div>';
+			}
+
+			var commentsrenderer = function (row, column, value) {
+				if(value != undefined){
+					var count = parseInt(value.substring(0, value.indexOf('#')));
+					var id = value.substring(value.indexOf('#')+1);
+				}
+				if(count > 0){
+					return '<div style="text-align: center; margin-top: 5px;"><a href="#/comment/'+ id  + '/' + null + '">Answers/Comments</a></div>'
+				}else{
+					return "";
+				}
+				
+				
+			}
+
+			var editrenderer = function (row, column, value) {
+                return '<div style="text-align: center; margin-top: 5px;"><a href="#/discuss/editAnnouncements/'+ value +'"><img src="../../../byadmin/img/edit.png" alt="edit" height="26" width="26"></a></div>'
+			}
+
+			var deleterenderer = function (row, column, value) {
+            	return '<div style="text-align: center; margin-top: 5px;"><a href="#/discuss/delete/'+ value +'"><img src="../../../byadmin/img/delete.png" alt="delete" height="26" width="26"></a></div>'
+			}
+
+			var dataAdapter = new $.jqx.dataAdapter(source, {
+				beforeLoadComplete: function (records) {
+                        for (var i = 0; i < records.length; i++) {
+                            records[i].id1= records[i].id;
+                            records[i].id2= records[i].id;
+                            if(!records[i].title){
+                            	var ret = records[i].text;
+                            	if (records[i].text.length > 60) {
+                            	    var breakpoint = 30 + ret.substr(60).indexOf(" ");
+                            	    ret = ret.substr(0, breakpoint) + "...";
+                            	  }else{
+                            		  ret = records[i].text;
+                            	  }
+                            	
+                            	ret = ret || "...";
+                            	if(ret === "..." && records[i].linkInfo && records[i].linkInfo.title){
+                            		ret = "LINK: " + records[i].linkInfo.title
+                            	}else if(ret === "..." && records[i].linkInfo && records[i].linkInfo.description){
+                            		ret = records[i].linkInfo.description;
+                            		var breakpoint = 30 + ret.substr(60).indexOf(" ");
+                            	    ret = "LINK: " + ret.substr(0, breakpoint) + "...";
+                            	}
+                            	records[i].title = ret;
+                            }
+                            records[i].title= records[i].title + "#" + records[i].id;
+                            records[i].text= records[i].text + "#" + records[i].id;
+                            records[i].comments =  records[i].aggrReplyCount+ "#" + records[i].id;
+
+
+                        };
+                        return records;
+                    }
+			});
+
+			if(dis_type == 'P')
+			{
+				$("#jqxgrid").jqxGrid(
+				{
+					width: 1150,
+					source: dataAdapter,
+					sortable: true,
+					filterable: true,
+					showfilterrow: true,
+					pageable: true,
+					autorowheight: true,
+					autoheight: true,
+					altrows: true,
+					columnsresize: true,
+					columns: [
+					  { text: 'Title', datafield: 'title', cellsrenderer:titlerenderer, width: 200, cellsalign:'center', align:'center' },
+					  { text: 'Created By', datafield: 'username', width: 150, cellsalign:'center', align:'center' },
+					  { text: 'Date Created', datafield: 'createdAt', cellsformat: 'dd.MM.yyyy  HH:mm:ss', width: 150, cellsalign:'center', align:'center' },
+					  { text: 'Status', datafield: 'status', cellsrenderer:statusrenderer, width: 150, cellsalign:'center', align:'center' },
+					  { text: 'Featured', datafield: 'featured', cellsrenderer:featuredrenderer, width: 100, cellsalign:'center', align:'center' },
+					  { text: 'Promotion', datafield: 'promotion', cellsrenderer:promotionrenderer, width: 100, cellsalign:'center', align:'center' },
+					  { text: 'Comments', datafield: 'comments', cellsrenderer:commentsrenderer, width: 150, cellsalign:'center', align:'center' },
+					  { text: 'Edit', datafield: 'id', cellsrenderer: editrenderer, minwidth: 100, cellsalign:'center', align:'center' },
+					  { text: 'Delete', datafield: 'id1', cellsrenderer: deleterenderer, minwidth: 100, cellsalign:'center', align:'center' }
+
+					]
+				});
+            }
+            else
+            {
+            	$("#jqxgrid").jqxGrid(
+            	{
+            	    width: 1150,
+					source: dataAdapter,
+					sortable: true,
+					filterable: true,
+					showfilterrow: true,
+					pageable: true,
+					autorowheight: true,
+					autoheight: true,
+					altrows: true,
+					columnsresize: true,
+					columns: [
+					  { text: 'Title', datafield: 'text', cellsrenderer:blurbrenderer, width: 200, cellsalign:'center', align:'center' },
+					  { text: 'Created By', datafield: 'username', width: 150, cellsalign:'center', align:'center' },
+					  { text: 'Date Created', datafield: 'createdAt', cellsformat: 'dd.MM.yyyy  HH:mm:ss', width: 150, cellsalign:'center', align:'center' },
+					  { text: 'Status', datafield: 'status', cellsrenderer:statusrenderer, width: 150, cellsalign:'center', align:'center' },
+					  { text: 'Featured', datafield: 'featured', cellsrenderer:featuredrenderer, width: 100, cellsalign:'center', align:'center' },
+					  { text: 'Promotion', datafield: 'promotion', cellsrenderer:promotionrenderer, width: 100, cellsalign:'center', align:'center' },
+					  { text: 'Answers/Comments', datafield: 'comments', cellsrenderer:commentsrenderer, width: 150, cellsalign:'center', align:'center' },
+					  { text: 'Edit', datafield: 'id', cellsrenderer: editrenderer, minwidth: 100, cellsalign:'center', align:'center' },
+					  { text: 'Delete', datafield: 'id1', cellsrenderer: deleterenderer, minwidth: 100, cellsalign:'center', align:'center' }
+					]
+            	});
+            }
+
+        });
+    </script>
+
+
+
+<h2>
+	Announcements <a class="btn btn-primary pull-right" href="#/discuss/new/Announcement"><i
+		class="icon-plus-sign icon-white"></i> Create New Announcement</a>
+</h2>
+
+<!--
+<table class="table table-striped">
+	<th>Title</th>
+	<th>Date Created</th>
+	<th>Status</th>
+	<th>Edit</th>
+	<th>Delete</th>
+	<tr ng-repeat="discuss in discuss">
+		<td><a href="#/discuss/{{discuss.id}}">{{discuss.title}}</a></td>
+		<td>{{discuss.createdAt  | date:'yyyy-MM-dd HH:mm:ss'}}</td>
+		<td> {{discuss.status == 0 && 'Un-published' || 'Published'}}</td>
+
+		<td><a href="#/discuss/showedit/{{discuss.id}}"><img src="../../../byadmin/img/edit.png" alt="edit" height="26" width="26"></a></td>
+		<td><a href="#/discuss/delete/{{discuss.id}}"><img src="../../../byadmin/img/delete.png" alt="delete" height="26" width="26"></a></td>
+	</tr>
+</table>
+-->
+
+
+<div id='jqxWidget' style="font-size: 13px; font-family: Verdana; float: left;">
+        <div id="jqxgrid"></div>
+</div>

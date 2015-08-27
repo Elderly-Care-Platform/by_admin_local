@@ -63,6 +63,9 @@
 	
 	<script src="js/components/menu/MenuController.js"></script>	
 	
+	<script src="js/components/discuss/AdminListAnnouncementController.js"></script>	
+	<script src="js/components/discuss/AnnouncementCreateController.js"></script>	
+	
 	
 	<script src="js/components/user/AdminUserListController.js"></script>	
 	<script src="js/components/user/AdminUserDeleteController.js"></script>	
@@ -141,7 +144,9 @@
                     <li ng-hide="{{root.bc_userRoleId == 'USER'}}">
 						<a href="#/discuss/F">Feedback</a>
                     </li>
-
+					<li ng-hide="{{root.bc_userRoleId == 'USER'}}">
+						<a href="#/discuss/Announcements">Announcements</a>
+                    </li>
                     <li ng-hide="{{root.bc_userRoleId == 'USER'}}">
                         <a href="#/users/all">Users</a>
                     </li>
