@@ -5,7 +5,15 @@
       margin-bottom: 70px;
 }
 
-
+.container
+{
+	margin-left:50px;
+	margin-right:none;
+}
+#jqxgrid, .jqx-clear
+{
+	width:1200px !important;
+}
 .tnymcePopUpwrapper
 {
 	width: 100%;
