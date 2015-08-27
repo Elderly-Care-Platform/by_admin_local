@@ -143,7 +143,7 @@
 					  { text: 'Date Created', datafield: 'createdAt', cellsformat: 'dd.MM.yyyy  HH:mm:ss', width: 150, cellsalign:'center', align:'center' },
 					  { text: 'Status', datafield: 'status', cellsrenderer:statusrenderer, width: 150, cellsalign:'center', align:'center' },
 					  { text: 'Featured', datafield: 'featured', cellsrenderer:featuredrenderer, width: 100, cellsalign:'center', align:'center' },
-					  { text: 'Promotion', datafield: 'promotion', cellsrenderer:promotionrenderer, width: 100, cellsalign:'center', align:'center' },
+					  { text: 'Announcement', datafield: 'promotion', cellsrenderer:promotionrenderer, width: 100, cellsalign:'center', align:'center' },
 					  { text: 'Comments', datafield: 'comments', cellsrenderer:commentsrenderer, width: 150, cellsalign:'center', align:'center' },
 					  { text: 'Edit', datafield: 'id', cellsrenderer: editrenderer, minwidth: 100, cellsalign:'center', align:'center' },
 					  { text: 'Delete', datafield: 'id1', cellsrenderer: deleterenderer, minwidth: 100, cellsalign:'center', align:'center' }
@@ -154,29 +154,30 @@
             else
             {
             	$("#jqxgrid").jqxGrid(
-            	{
-            	    width: 1150,
-					source: dataAdapter,
-					sortable: true,
-					filterable: true,
-					showfilterrow: true,
-					pageable: true,
-					autorowheight: true,
-					autoheight: true,
-					altrows: true,
-					columnsresize: true,
-					columns: [
-					  { text: 'Title', datafield: 'text', cellsrenderer:blurbrenderer, width: 200, cellsalign:'center', align:'center' },
-					  { text: 'Created By', datafield: 'username', width: 150, cellsalign:'center', align:'center' },
-					  { text: 'Date Created', datafield: 'createdAt', cellsformat: 'dd.MM.yyyy  HH:mm:ss', width: 150, cellsalign:'center', align:'center' },
-					  { text: 'Status', datafield: 'status', cellsrenderer:statusrenderer, width: 150, cellsalign:'center', align:'center' },
-					  { text: 'Featured', datafield: 'featured', cellsrenderer:featuredrenderer, width: 100, cellsalign:'center', align:'center' },
-					  { text: 'Promotion', datafield: 'promotion', cellsrenderer:promotionrenderer, width: 100, cellsalign:'center', align:'center' },
-					  { text: 'Answers/Comments', datafield: 'comments', cellsrenderer:commentsrenderer, width: 150, cellsalign:'center', align:'center' },
-					  { text: 'Edit', datafield: 'id', cellsrenderer: editrenderer, minwidth: 100, cellsalign:'center', align:'center' },
-					  { text: 'Delete', datafield: 'id1', cellsrenderer: deleterenderer, minwidth: 100, cellsalign:'center', align:'center' }
-					]
-            	});
+        				{
+        					width: 1150,
+        					source: dataAdapter,
+        					sortable: true,
+        					filterable: true,
+        					showfilterrow: true,
+        					pageable: true,
+        					autorowheight: true,
+        					autoheight: true,
+        					altrows: true,
+        					columnsresize: true,
+        					columns: [
+        					  { text: 'Title', datafield: 'title', cellsrenderer:titlerenderer, width: 200, cellsalign:'center', align:'center' },
+        					  { text: 'Created By', datafield: 'username', width: 150, cellsalign:'center', align:'center' },
+        					  { text: 'Date Created', datafield: 'createdAt', cellsformat: 'dd.MM.yyyy  HH:mm:ss', width: 150, cellsalign:'center', align:'center' },
+        					  { text: 'Status', datafield: 'status', cellsrenderer:statusrenderer, width: 150, cellsalign:'center', align:'center' },
+        					  { text: 'Featured', datafield: 'featured', cellsrenderer:featuredrenderer, width: 100, cellsalign:'center', align:'center' },
+        					  { text: 'Announcement', datafield: 'promotion', cellsrenderer:promotionrenderer, width: 100, cellsalign:'center', align:'center' },
+        					  { text: 'Comments', datafield: 'comments', cellsrenderer:commentsrenderer, width: 150, cellsalign:'center', align:'center' },
+        					  { text: 'Edit', datafield: 'id', cellsrenderer: editrenderer, minwidth: 100, cellsalign:'center', align:'center' },
+        					  { text: 'Delete', datafield: 'id1', cellsrenderer: deleterenderer, minwidth: 100, cellsalign:'center', align:'center' }
+
+        					]
+        				});
             }
 
         });
