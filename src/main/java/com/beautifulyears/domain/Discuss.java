@@ -13,7 +13,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import com.beautifulyears.constants.DiscussConstants;
 import com.beautifulyears.domain.menu.Tag;
-import com.beautifulyears.util.Util;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 //The discuss collection represents Articles, Questions and Posts
