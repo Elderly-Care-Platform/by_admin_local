@@ -13,6 +13,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import com.beautifulyears.constants.DiscussConstants;
 import com.beautifulyears.domain.menu.Tag;
+import com.beautifulyears.util.Util;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 //The discuss collection represents Articles, Questions and Posts
@@ -36,6 +37,9 @@ public class Discuss {
 	private String text;
 
 	private int status; // published, unpublished
+	
+	@DBRef
+	private UserProfile userProfile;
 
 	@DBRef
 	private List<Tag> systemTags = new ArrayList<Tag>();
@@ -75,7 +79,7 @@ public class Discuss {
 			List<String> topicId, String title, String text, int status,
 			int aggrReplyCount, List<Tag> systemTags, Long sharedCount,
 			List<String> userTags, Map<String, String> articlePhotoFilename,
-			Boolean isFeatured,Boolean isPromotion, int contentType, LinkInfo linkInfo) {
+			Boolean isFeatured,Boolean isPromotion, int contentType, LinkInfo linkInfo,UserProfile profile) {
 		super();
 		this.userId = userId;
 		this.username = username;
@@ -98,6 +102,17 @@ public class Discuss {
 		this.userTags = userTags;
 		this.contentType = contentType;
 		this.linkInfo = linkInfo;
+		this.userProfile = profile;
+	}
+	
+	
+
+	public UserProfile getUserProfile() {
+		return userProfile;
+	}
+
+	public void setUserProfile(UserProfile userProfile) {
+		this.userProfile = userProfile;
 	}
 
 	public boolean isPromotion() {

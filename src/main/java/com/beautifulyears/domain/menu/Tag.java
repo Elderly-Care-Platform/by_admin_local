@@ -16,17 +16,16 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @Document(collection = "tag")
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Tag {
-	
+
 	public final static int TAG_TYPE_SYSTEM = 0;
 	public final static int TAG_TYPE_USER = 1;
-	
+
 	@Id
 	private String id;
 	private int type = TAG_TYPE_SYSTEM;
 	@Indexed(unique = true)
 	private String name;
 	private String description;
-	
 
 	public String getId() {
 		return id;
@@ -35,7 +34,7 @@ public class Tag {
 	public void setId(String id) {
 		this.id = id;
 	}
-	
+
 	public int getType() {
 		return type;
 	}
@@ -59,7 +58,7 @@ public class Tag {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	
+
 	@Override
 	public boolean equals(Object object) {
 		boolean isEqual = false;
@@ -68,6 +67,12 @@ public class Tag {
 			isEqual = (this.getId().equals(((Tag) object).getId()));
 		}
 		return isEqual;
+	}
+
+	@Override
+	public int hashCode() {
+		assert false : "hashCode not designed";
+		return 42;
 	}
 
 }

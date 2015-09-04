@@ -1,17 +1,25 @@
 package com.beautifulyears.domain;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import com.beautifulyears.constants.UserRolePermissions;
 
 @Document(collection = "users")
-public class User {
+public class User implements Serializable{
+
+	/**
+	 * 
+	 */
+	@Transient
+	private static final long serialVersionUID = 1L;
 
 	@Id
 	private String id;
@@ -24,7 +32,7 @@ public class User {
 	String email;
 	private final Date createdAt = new Date();
 	private String verificationCode = UUID.randomUUID().toString();
-	Date verificationCodeExpiry = setCodeExpiryDate(new Date(), 15);
+	Date verificationCodeExpiry = this.setCodeExpiryDate(new Date(), 15);
 	String socialSignOnId;
 	String socialSignOnPlatform;
 	String passwordCode;
@@ -49,8 +57,8 @@ public class User {
 		this.permissions = permissions;
 	}
 
-	private Date setCodeExpiryDate(Date now, int daysToExpire) {
-		now.setTime(now.getTime() + daysToExpire * 1000 * 60 * 60 * 24);
+	private Date setCodeExpiryDate(Date now, long daysToExpire) {
+		now.setTime(now.getTime() + daysToExpire * 1000L * 60 * 60 * 24);
 		return now;
 	}
 

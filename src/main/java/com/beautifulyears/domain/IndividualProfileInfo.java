@@ -36,7 +36,7 @@ public class IndividualProfileInfo {
 
 	private String maritalStatus;
 
-	private List<String> language;
+	private List<Language> spokenLanguage;
 
 	@TextIndexed
 	@DBRef
@@ -132,12 +132,12 @@ public class IndividualProfileInfo {
 		this.maritalStatus = maritalStatus;
 	}
 
-	public List<String> getLanguage() {
-		return language;
+	public List<Language> getLanguage() {
+		return spokenLanguage;
 	}
 
-	public void setLanguage(List<String> language) {
-		this.language = language;
+	public void setLanguage(List<Language> spokenLanguage) {
+		this.spokenLanguage = spokenLanguage;
 	}
 
 	public List<Menu> getHobbies() {
@@ -180,7 +180,7 @@ public class IndividualProfileInfo {
 				+ occupation + ", emotionalIssues=" + emotionalIssues
 				+ ", medicalIssues=" + medicalIssues + ", otherIssues="
 				+ otherIssues + ", maritalStatus=" + maritalStatus
-				+ ", language=" + language + ", hobbies=" + hobbies
+				+ ", language=" + spokenLanguage + ", hobbies=" + hobbies
 				+ ", otherHobbies=" + otherHobbies + ", interests=" + interests
 				+ ", otherInterests=" + otherInterests + ", getSalutation()="
 				+ getSalutation() + ", getLastName()=" + getLastName()
