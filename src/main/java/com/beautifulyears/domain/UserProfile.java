@@ -29,7 +29,7 @@ public class UserProfile {
 
 	// primary user ID from User.java
 	private String userId;
-	
+
 	// @see @UserTypes.java
 	private List<Integer> userTypes = new ArrayList<Integer>();
 
@@ -41,6 +41,9 @@ public class UserProfile {
 
 	// contains information about service provider
 	private ServiceProviderInfo serviceProviderInfo = new ServiceProviderInfo();
+
+	@DBRef
+	private List<HousingFacility> facilities = new ArrayList<HousingFacility>();
 
 	private String tags;
 
@@ -216,15 +219,28 @@ public class UserProfile {
 		this.ratedBy = ratedBy;
 	}
 
+	public List<HousingFacility> getFacilities() {
+		return facilities;
+	}
+
+	public void setFacilities(List<HousingFacility> facilities) {
+		this.facilities = facilities;
+	}
+
 	@Override
 	public String toString() {
 		return "UserProfile [id=" + id + ", userId=" + userId + ", userTypes="
 				+ userTypes + ", basicProfileInfo=" + basicProfileInfo
 				+ ", individualInfo=" + individualInfo
-				+ ", serviceProviderInfo=" + serviceProviderInfo + ", tags="
-				+ tags + ", isFeatured=" + isFeatured + ", systemTags="
+				+ ", serviceProviderInfo=" + serviceProviderInfo
+				+ ", facilities=" + facilities + ", tags=" + tags
+				+ ", isFeatured=" + isFeatured + ", createdAt=" + createdAt
+				+ ", lastModifiedAt=" + lastModifiedAt + ", systemTags="
 				+ systemTags + ", userTags=" + userTags + ", status=" + status
-				+ ", reviewedBy=" + reviewedBy + ", ratedBy=" + ratedBy + "]";
+				+ ", reviewedBy=" + reviewedBy + ", ratedBy=" + ratedBy
+				+ ", aggrRatingPercentage=" + aggrRatingPercentage
+				+ ", isReviewedByUser=" + isReviewedByUser + ", isRatedByUser="
+				+ isRatedByUser + "]";
 	}
 
 }

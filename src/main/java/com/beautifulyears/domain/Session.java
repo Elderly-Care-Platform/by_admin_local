@@ -1,18 +1,22 @@
 package com.beautifulyears.domain;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import com.beautifulyears.constants.DiscussConstants;
 
 @Document(collection = "admin_session")
-public class Session {
-	
+public class Session implements Serializable {
+
+	@Transient
+	private static final long serialVersionUID = 1L;
 	@Id
 	private String sessionId = UUID.randomUUID().toString();
 	private String userId;
@@ -21,69 +25,49 @@ public class Session {
 	private Date createdAt = new Date();
 	private int status = DiscussConstants.SESSION_STATUS_ACTIVE;
 	private String ipAddress;
-	
-	
 
 	public Session() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-
-
-	public Session(User user,HttpServletRequest req) {
-		if(null != user){
+	public Session(User user, HttpServletRequest req) {
+		if (null != user) {
 			this.setUserId(user.getId());
 			this.setUserEmail(user.getEmail());
 			this.setUserName(user.getUserName());
 		}
-		String ipAddress = req.getHeader("X-FORWARDED-FOR");  
-		   if (ipAddress == null) {  
-			   ipAddress = req.getRemoteAddr();  
-		   }
-		this.setIpAddress(ipAddress);   
-		
+		String ipAddress = req.getHeader("X-FORWARDED-FOR");
+		if (ipAddress == null) {
+			ipAddress = req.getRemoteAddr();
+		}
+		this.setIpAddress(ipAddress);
+
 	}
-	
-	
-	
-	
 
 	public String getIpAddress() {
 		return ipAddress;
 	}
 
-
-
 	public void setIpAddress(String ipAddress) {
 		this.ipAddress = ipAddress;
 	}
-
-
 
 	public String getUserName() {
 		return userName;
 	}
 
-
-
 	public void setUserName(String userName) {
 		this.userName = userName;
 	}
-
-
 
 	public String getUserEmail() {
 		return userEmail;
 	}
 
-
-
 	public void setUserEmail(String userEmail) {
 		this.userEmail = userEmail;
 	}
-
-
 
 	public String getUserId() {
 		return userId;

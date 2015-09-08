@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.TextIndexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -25,6 +26,7 @@ public class Menu {
 	private List<Tag> tags = new ArrayList<Tag>();
 	private Integer module;
 	private String linkedMenuId;
+	@TextIndexed
 	private String displayMenuName;
 	private List<String> ancestorIds = new ArrayList<String>();
 	private String parentMenuId;
@@ -131,6 +133,11 @@ public class Menu {
 			isEqual = (this.getId().equals(((Menu) object).getId()));
 		}
 		return isEqual;
+	}
+
+	@Override
+	public int hashCode() {
+		return 33;
 	}
 
 }

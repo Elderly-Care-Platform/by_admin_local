@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.beautifulyears.Util;
 import com.beautifulyears.constants.DiscussConstants;
 import com.beautifulyears.domain.Discuss;
+import com.beautifulyears.domain.UserProfile;
 import com.beautifulyears.domain.menu.Tag;
 import com.beautifulyears.repository.DiscussRepository;
 import com.beautifulyears.util.LoggerUtil;
@@ -40,24 +41,24 @@ public class AdminDiscussController {
 	private static final Logger logger = Logger
 			.getLogger(AdminDiscussController.class);
 	private DiscussRepository discussRepository;
-//	private TopicRepository topicRepository;
+	// private TopicRepository topicRepository;
 	private MongoTemplate mongoTemplate;
 
 	@Autowired
 	public AdminDiscussController(DiscussRepository discussRepository,
-//			TopicRepository topicRepository,
+	// TopicRepository topicRepository,
 			MongoTemplate mongoTemplate) {
 		this.discussRepository = discussRepository;
-//		this.topicRepository = topicRepository;
+		// this.topicRepository = topicRepository;
 		this.mongoTemplate = mongoTemplate;
 	}
 
 	@RequestMapping(consumes = { "application/json" })
 	@ResponseBody
-	public ResponseEntity<Void> submitDiscuss(@RequestBody Discuss discuss) throws Exception {
+	public ResponseEntity<Void> submitDiscuss(@RequestBody Discuss discuss)
+			throws Exception {
 
-		if (discuss.getId() == null
-				|| discuss.getId().equals("")) {
+		if (discuss.getId() == null || discuss.getId().equals("")) {
 			logger.debug("NEW DISCUSS");
 			Discuss discussWithExtractedInformation = setDiscussBean(discuss);
 			discussRepository.save(discussWithExtractedInformation);
@@ -81,7 +82,7 @@ public class AdminDiscussController {
 			newDiscuss.setLinkInfo(discuss.getLinkInfo());
 			org.jsoup.nodes.Document doc = Jsoup.parse(discuss.getText());
 			String domText = doc.text();
-			if(domText.length() > DiscussConstants.DISCUSS_TRUNCATION_LENGTH){
+			if (domText.length() > DiscussConstants.DISCUSS_TRUNCATION_LENGTH) {
 				newDiscuss.setShortSynopsis(Util.truncateText(domText));
 			}
 			newDiscuss.setTopicId(discuss.getTopicId());
@@ -115,7 +116,7 @@ public class AdminDiscussController {
 		}
 
 	}
-	
+
 	@RequestMapping(method = RequestMethod.GET, value = "/list/announceMents", produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public List<Discuss> showDiscussAnnouncements() {
@@ -197,14 +198,20 @@ public class AdminDiscussController {
 				systemTags.add(newTag);
 			}
 
+			Query query = new Query();
+			query.addCriteria(Criteria.where("userId").is(discuss.getUserId()));
+			UserProfile profile = mongoTemplate.findOne(query,
+					UserProfile.class);
+
 			int aggrReplyCount = 0;
 			newDiscuss = new Discuss(discuss.getUserId(),
 					discuss.getUsername(), discussType, topicId, title, text,
 					discussStatus, aggrReplyCount, systemTags,
 					discuss.getShareCount(), discuss.getUserTags(),
 					discuss.getDiscussType().equals("P") ? discuss
-							.getArticlePhotoFilename() : null, discuss.isFeatured(),discuss.isPromotion(),
-					discuss.getContentType(), discuss.getLinkInfo());
+							.getArticlePhotoFilename() : null,
+					discuss.isFeatured(), discuss.isPromotion(),
+					discuss.getContentType(), discuss.getLinkInfo(), profile);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
