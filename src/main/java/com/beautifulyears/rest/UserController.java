@@ -29,6 +29,7 @@ import com.beautifulyears.domain.LoginRequest;
 import com.beautifulyears.domain.LoginResponse;
 import com.beautifulyears.domain.Session;
 import com.beautifulyears.domain.User;
+import com.beautifulyears.domain.UserProfile;
 import com.beautifulyears.domain.UserRolePermissions;
 import com.beautifulyears.exceptions.BYErrorCodes;
 import com.beautifulyears.exceptions.BYException;
@@ -236,6 +237,11 @@ public class UserController {
 	public ResponseEntity<Void> deleteUser(@PathVariable("userId") String userId) {
 		logger.debug("Inside DELETE user");
 		userRepository.delete(userId);
+		
+		Query q = new Query();
+		q.addCriteria(Criteria.where("userId").is(userId));
+		mongoTemplate.remove(q, UserProfile.class);
+		
 		ResponseEntity<Void> responseEntity = new ResponseEntity<>(
 				HttpStatus.CREATED);
 		return responseEntity;

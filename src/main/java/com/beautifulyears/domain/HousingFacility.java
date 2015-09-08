@@ -4,11 +4,13 @@
 package com.beautifulyears.domain;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
+import org.springframework.data.mongodb.core.index.TextIndexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -27,6 +29,7 @@ public class HousingFacility {
 
 	private String userId;
 
+	@TextIndexed
 	private String name;
 
 	@DBRef
@@ -34,6 +37,7 @@ public class HousingFacility {
 
 	private String tier;
 
+	@TextIndexed
 	private UserAddress primaryAddress = new UserAddress();
 
 	private String primaryPhoneNo;
@@ -46,7 +50,10 @@ public class HousingFacility {
 	private List<Map<String, String>> photoGalleryURLs = new ArrayList<Map<String, String>>();
 
 	private String shortDescription;
+	@TextIndexed
 	private String description;
+
+	private List<String> categoriesId;
 
 	private int status; // Unparroved, verified, etc.
 
@@ -67,6 +74,34 @@ public class HousingFacility {
 	private boolean isFeatured;
 
 	private String website;
+
+	private Date createdAt = new Date();
+
+	private Date lastModifiedAt = new Date();
+
+	public Date getLastModifiedAt() {
+		return lastModifiedAt;
+	}
+
+	public void setLastModifiedAt(Date lastModifiedAt) {
+		this.lastModifiedAt = lastModifiedAt;
+	}
+
+	public Date getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(Date createdAt) {
+		this.createdAt = createdAt;
+	}
+
+	public List<String> getCategoriesId() {
+		return categoriesId;
+	}
+
+	public void setCategoriesId(List<String> categoriesId) {
+		this.categoriesId = categoriesId;
+	}
 
 	public String getWebsite() {
 		return website;
