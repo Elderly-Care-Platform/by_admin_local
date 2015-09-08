@@ -147,3 +147,18 @@ label.myLabel input[type="file"] {
   max-width: 444px;
 }
 }
+.by-editor-view-buttons .col-md-4
+{
+	width:30%;
+	margin-right:3%;
+	float:left;
+}
+.by-editor-view-buttons .col-md-4 img
+{
+	height:33px;
+	width:40px;
+}
+#ShowUploadPhoto
+{
+	display:none;
+}

@@ -1,4 +1,63 @@
 <div class="container-fluid">
+<!--Upload Video Modal popup-->
+	<div id="editorVideoModal" class="modal fade" role="dialog">
+		<div class="modal-dialog">
+			<!-- Modal content-->
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title">Insert Video</h4>
+				</div>
+				<div class="modal-body">
+					<p style="margin-bottom: 2px;">Paste your video embedded code</p>
+					<div class="clearfix"></div>
+					<img src="img/dailymotion.png?versionTimeStamp=%PROJECT_VERSION%" />
+					<img src="img//vimeo.png?versionTimeStamp=%PROJECT_VERSION%" />
+					<img src="img/metacafe.png?versionTimeStamp=%PROJECT_VERSION%" />
+					<img src="img/youtube.png?versionTimeStamp=%PROJECT_VERSION%" />
+					<div class="clearfix" style="height: 10px;"></div>
+					<textarea rows="" cols="" ></textarea>
+				</div>
+				<div class="modal-footer">
+					<button type="submit"
+						class="btn btn-sm btn-success comment-submit by_share_btn_submit"
+						data-dismiss="modal" >Submit</button>
+					<button type="button"
+						class="btn btn-sm btn-success comment-submit by_btn_cancel"
+						data-dismiss="modal">Cancel</button>
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+	<!--Upload Share link Modal popup-->
+	<div id="editorLinkModal" class="modal fade" role="dialog">
+		<div class="modal-dialog">
+			<!-- Modal content-->
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title">Insert Link</h4>
+				</div>
+				<div class="modal-body">
+					<p>Paste link you would like to share</p>
+					<textarea rows="" cols="" ></textarea>
+				</div>
+				<div class="modal-footer">
+					<button type="submit"
+						class="btn btn-sm btn-success comment-submit by_share_btn_submit"
+						data-dismiss="modal" >Submit</button>
+					<button type="button"
+						class="btn btn-sm btn-success comment-submit by_btn_cancel"
+						data-dismiss="modal">Cancel</button>
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+	
 	<div id="wrapper" class="row-fluid">
 		<h3 class='menu'>Create {{currentDiscuss.discussType == 'A' &&
 			'Article' ||currentDiscuss.discussType == 'Q' && 'Question' ||
@@ -49,8 +108,51 @@
 					name="promotion" ng-checked="currentDiscuss.promotion" id="promotion"
 					style="vertical-align: top;"></td>
 			</tr>
+			<tr ng-if="currentDiscuss.discussType == 'P'">
+				<td colspan="2">
+				<Br/>
+				<label class="control-label" for="title"><strong>Please enter a title of your post</strong></label>
+				</td>
+			</tr>
+			<tr ng-if="currentDiscuss.discussType == 'P'">				
+				<td  colspan="2">
+					<input type="text"  style="width:98.5%;" />
+				</td>
+			</tr>
+
+			<tr ng-if="currentDiscuss.discussType == 'P'">
+				<td><br/>
+					<div class="by-editor-view-buttons">
+						<div class="col-md-4 by_editor_post_divider">
+							<label class="showUploadPhotoFile"> <img
+								src="img/photo.png" width="100%" /> <span>Upload your photo</span>
+							</label>
+							<input type="file" id="ShowUploadPhoto"/>
+						</div>
+						<div
+							class="col-md-4 by_editor_post_divider">
+							<label data-toggle="modal" data-target="#editorLinkModal"> <img
+								src="img/link.png" width="100%" /> <span>Share a link</span>
+							</label>
+						</div>
+						<div
+							class="col-md-4 by_editor_post_divider">
+							<label data-toggle="modal" data-target="#editorVideoModal"> <img
+								src="img/video.png" width="100%" /> <span>Share a video</span>
+							</label>
+						</div>
+						<div class="clearfix" style="height: 20px;"></div>
+					</div>
+				</td>
+			</tr>
+
 			<tr>
-				<td colspan="2"><label class="control-label" for="text"><strong>Text</strong></label>
+				<td colspan="2">
+					
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2"><br/><label class="control-label" for="text"><strong>Text</strong></label>
 					<div class="controls byEditor">
 						<textarea ui:tinymce id="text" ng-model="currentDiscuss.text"></textarea>
 					</div></td>
@@ -120,6 +222,12 @@
 
 
 		<script type="text/javascript">
+		$(window).load(function(){
+			$(".showUploadPhotoFile").click(function(){
+				$("#ShowUploadPhoto").click();
+			});
+		});
+			
 			$("#UploadImage12").bind('submit', function(e) {
 				var postData = new FormData(jQuery('#UploadImage12')[0]);
 				$.ajax({
