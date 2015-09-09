@@ -79,6 +79,11 @@
 	
 	<script src="js/components/profile/UserProfileController.js"></script>	
 	<script src="js/components/profile/UserProfileListController.js"></script>	
+	
+	<script src="js/components/housing/HousingListController.js"></script>	
+	<script src="js/components/housing/HousingController.js"></script>	
+	
+	
 
 
     <title>BeautifulYears - Admin Module</title>
@@ -132,6 +137,9 @@
                         <a href="#/menu">Menu</a>
                     </li>
 					<li ng-hide="{{root.bc_userRoleId == 'USER'}}">
+                        <a href="#/housings">Housings</a>
+                    </li>
+                    <li ng-hide="{{root.bc_userRoleId == 'USER'}}">
                         <a href="#/userProfile">Profiles</a>
                     </li>
                     <li ng-hide="{{root.bc_userRoleId == 'USER'}}">

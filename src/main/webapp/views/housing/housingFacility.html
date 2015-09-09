@@ -1,0 +1,38 @@
+<div class="container-fluid">
+	<div id="wrapper" class="row-fluid">
+		<h3 class='menu'>User Profile</h3>
+		<div class="alert alert-error" ng-show="error">{{errorMessage}}</div>
+		<table style="width: 900px;">
+			<tr>
+				<td><label class="control-label"><strong>UserID</strong></label>
+				</td>
+				<td><label class="control-label" ng-bind="housing.id"></label></td>
+			</tr>
+			<tr>
+				<td><label class="control-label" for="title"><strong>Withdraw</strong></label>
+				</td>
+				<td><input type="checkbox" ng-model="housing.status"
+					name="status" ng-checked="housing.status" id="status"
+					style="vertical-align: top;"></td>
+			</tr>
+
+			<tr>
+				<td><label class="control-label" for="title"><strong>Featured</strong></label>
+				</td>
+				<td><input type="checkbox" ng-model="housing.featured"
+					name="featured" ng-checked="housing.featured" id="featured"
+					style="vertical-align: top;"></td>
+			</tr>
+			<tr>
+				<td><label class="control-label"><strong>Name</strong></label></td>
+				<td><label class="control-label"
+					ng-bind="housing.name"></label></td>
+			</tr>
+			<tr ng-show="!error">
+				<td colspan="2" style="text-align: right;">
+					<button type="submit" class="btn btn-primary" ng-click="editUserProfile()">Submit</button>
+				</td>
+			</tr>
+		</table>
+	</div>
+</div>
