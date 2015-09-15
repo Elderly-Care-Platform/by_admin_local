@@ -13,6 +13,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import com.beautifulyears.constants.DiscussConstants;
 import com.beautifulyears.domain.menu.Tag;
+import com.beautifulyears.util.Util;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 //The discuss collection represents Articles, Questions and Posts
@@ -89,7 +90,7 @@ public class Discuss {
 		org.jsoup.nodes.Document doc = Jsoup.parse(this.text);
 		String domText = doc.text();
 		if (domText.length() > DiscussConstants.DISCUSS_TRUNCATION_LENGTH) {
-			this.setShortSynopsis(com.beautifulyears.Util.truncateText(domText));
+			this.setShortSynopsis(Util.truncateText(domText));
 		}
 		this.status = status;
 		this.aggrReplyCount = aggrReplyCount;

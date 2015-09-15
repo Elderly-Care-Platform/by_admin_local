@@ -222,3 +222,14 @@ adminServices.factory('BYMenu', function($resource) {
         }, isArray: true}
     })
 });
+
+
+var activitiesList = adminServices.factory('ActivitiesList', function($resource) {
+	return $resource('/byadmin/api/v1/activityLog/page', {}, {
+		
+		get : {
+			method : 'GET',
+			params : {}
+		}
+	})
+});

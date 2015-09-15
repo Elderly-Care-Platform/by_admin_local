@@ -1,0 +1,25 @@
+.unreadActivityLog{
+	background-color: rgba(230, 245, 233, 0.51);
+}
+
+.markingLink{
+	cursor: pointer;
+}
+
+a{
+	cursor: pointer;
+}
+
+.pagination
+{
+	float:right;
+	margin-top:0px;
+}
+.pagination li{
+	padding: 5px 1px;
+	display:inline-block;
+	float:left;
+}
+.pagination li a{
+	padding: 0px 9px;
+}

@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.beautifulyears.constants.ActivityLogConstants;
 import com.beautifulyears.constants.DiscussConstants;
 import com.beautifulyears.domain.BySession;
 import com.beautifulyears.domain.LoginRequest;
@@ -37,6 +38,8 @@ import com.beautifulyears.repository.UserRepository;
 import com.beautifulyears.util.LoggerUtil;
 import com.beautifulyears.util.UserNameHandler;
 import com.beautifulyears.util.Util;
+import com.beautifulyears.util.activityLogHandler.ActivityLogHandler;
+import com.beautifulyears.util.activityLogHandler.UserActivityLogHandler;
 
 /**
  * /** The REST based service for managing "users"
@@ -51,12 +54,14 @@ public class UserController {
 	private static final Logger logger = Logger.getLogger(UserController.class);
 	private UserRepository userRepository;
 	private MongoTemplate mongoTemplate;
+	ActivityLogHandler<User> logHandler;
 
 	@Autowired
 	public UserController(UserRepository userRepository,
 			MongoTemplate mongoTemplate) {
 		this.userRepository = userRepository;
 		this.mongoTemplate = mongoTemplate;
+		logHandler = new UserActivityLogHandler(mongoTemplate);
 	}
 
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
@@ -145,7 +150,10 @@ public class UserController {
 							HttpStatus.BAD_REQUEST);
 				}
 				User userWithExtractedInformation = decorateWithInformation(user);
-				userRepository.save(userWithExtractedInformation);
+				userWithExtractedInformation = userRepository
+						.save(userWithExtractedInformation);
+				logHandler.addLog(userWithExtractedInformation,
+						ActivityLogConstants.CRUD_TYPE_CREATE, req);
 				ResponseEntity<String> responseEntity = new ResponseEntity<String>(
 						HttpStatus.CREATED);
 				return responseEntity;
@@ -187,7 +195,9 @@ public class UserController {
 					newUser.setEmail(user.getEmail());
 				}
 			}
-			userRepository.save(newUser);
+			newUser = userRepository.save(newUser);
+			logHandler.addLog(newUser, ActivityLogConstants.CRUD_TYPE_UPDATE,
+					req);
 			if (isUserNameChanged) {
 				UserNameHandler userNameHandler = new UserNameHandler(
 						mongoTemplate);
@@ -234,14 +244,16 @@ public class UserController {
 
 	@RequestMapping(method = RequestMethod.DELETE, value = "/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
-	public ResponseEntity<Void> deleteUser(@PathVariable("userId") String userId) {
+	public ResponseEntity<Void> deleteUser(
+			@PathVariable("userId") String userId, HttpServletRequest req) {
 		logger.debug("Inside DELETE user");
 		userRepository.delete(userId);
-		
+
 		Query q = new Query();
 		q.addCriteria(Criteria.where("userId").is(userId));
-		mongoTemplate.remove(q, UserProfile.class);
-		
+		User user = mongoTemplate.findOne(q, User.class);
+		mongoTemplate.remove(user);
+		logHandler.addLog(user, ActivityLogConstants.CRUD_TYPE_DELETE, req);
 		ResponseEntity<Void> responseEntity = new ResponseEntity<>(
 				HttpStatus.CREATED);
 		return responseEntity;
@@ -308,11 +320,10 @@ public class UserController {
 		response.setUserRoleId("");
 		return response;
 	}
-	
+
 	private void inValidateAllSessions(String userId) {
 		Query q = new Query();
-		q.addCriteria(Criteria
-				.where("userId").is(userId));
+		q.addCriteria(Criteria.where("userId").is(userId));
 		List<BySession> sessionList = mongoTemplate.find(q, BySession.class);
 		for (BySession session : sessionList) {
 			session.setStatus(DiscussConstants.SESSION_STATUS_INACTIVE);

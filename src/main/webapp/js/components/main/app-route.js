@@ -1,3 +1,4 @@
+
 byAdminApp.config(['$routeProvider',
   function($routeProvider) {
     $routeProvider
@@ -40,6 +41,8 @@ byAdminApp.config(['$routeProvider',
       
       .when('/housings', {templateUrl: 'views/housing/housingList.html', controller: 'HousingListController'})
       .when('/housings/:housingId', {templateUrl: 'views/housing/housingFacility.html', controller: 'HousingController'})
+      
+      .when('/activityLogs', {templateUrl: 'views/activityLogs/activityLogsList.html', controller: 'ActivityLogsListController'})
       ;
     //?????$routeProvider.otherwise({redirectTo: '/users/login'});
   }]);

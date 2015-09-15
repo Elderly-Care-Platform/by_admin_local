@@ -1,0 +1,15 @@
+<div class="col-md-12">
+<ul class="pagination" ng-init="initPageArray()">
+    <!--<li ng-click="firstPageSet()"><a>First</a></li>-->
+    <li ng-click="previousPageSet(selectedPageNo-1)" ng-class="{disabled:prevDisabled}"><a>&lt;</a></li>
+    <li ng-repeat="page in pageArray track by $index"
+        ng-class="{true:'active'}[page===selectedPageNo]"
+        ng-click="selectPage(page)">
+        <a>{{page+1}}</a>
+    </li>
+    <li>... of &nbsp;{{contentPagination.noOfPages}}</li>
+    <li ng-click="nextPageSet(selectedPageNo+1)" ng-class="{disabled:nextDisabled}"><a>&gt;</a></li>
+    <!--<li ng-click="lastPageSet()" ng-class="{disable:lastDisabled}"><a>Last</a></li>-->
+    <div class="clearfix"></div>
+</ul>
+</div>

@@ -6,13 +6,13 @@
 		<div class="alert alert-error" ng-show="error">{{errorMessage}}</div>
 
 		<table style="width: 900px;">
-			<tr ng-show="currentDiscuss.discussType == 'A'">
+			<tr ng-show="currentDiscuss.discussType == 'P'">
 				<td><label class="control-label" for="title"><strong>Title</strong></label>
 				</td>
 				<td><input type="text" ng-model="currentDiscuss.title"
 					id="currentDiscuss.title" required /></td>
 			</tr>
-			<tr ng-show="currentDiscuss.discussType == 'A'">
+			<tr ng-show="currentDiscuss.discussType == 'P'">
 				<td><label class="control-label" for="title"><strong>Title
 							Photo</strong></label></td>
 				<td>

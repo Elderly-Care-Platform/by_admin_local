@@ -1,5 +1,5 @@
 var adminServices = angular.module("adminServices", ["ngResource"]);
-var adminControllers = angular.module("adminControllers", ['ui.bootstrap']);
+var adminControllers = angular.module("adminControllers", ['ui.bootstrap',"jqwidgets"]);
 
 var discuss = adminServices.factory('SessionIdService', function() {
     var sessionID = '';
@@ -16,8 +16,6 @@ var discuss = adminServices.factory('SessionIdService', function() {
 					alert("No local storage");
 				}
 			}
-
-            console.log("Get sessionId => " + sessionID);
 
             return sessionID;
         },
@@ -113,8 +111,6 @@ byAdminApp.run(function($rootScope, $location, SessionIdService,BYMenu) {
         $rootScope.serviceCategoryMap = {};
 
         createMenuCategoryMap(response);
-
-        console.log($rootScope.discussCategoryMap);
 
     }, function(error){
 
