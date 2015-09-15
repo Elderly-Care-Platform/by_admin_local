@@ -21,8 +21,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.beautifulyears.domain.HousingFacility;
-import com.beautifulyears.domain.User;
-import com.beautifulyears.domain.UserProfile;
 import com.beautifulyears.repository.HousingRepository;
 import com.beautifulyears.util.LoggerUtil;
 
@@ -34,18 +32,16 @@ import com.beautifulyears.util.LoggerUtil;
 @Controller
 @RequestMapping("/housing")
 public class HousingController {
-	private static Logger logger = Logger
-			.getLogger(HousingController.class);
+	private static Logger logger = Logger.getLogger(HousingController.class);
 	private HousingRepository housingRepository;
-	private MongoTemplate mongoTemplate;
 
 	// private static final Logger logger =
 	// Logger.getLogger(HousingController.class);
 
 	@Autowired
-	public HousingController(HousingRepository housingRepository,MongoTemplate mongoTemplate) {
+	public HousingController(HousingRepository housingRepository,
+			MongoTemplate mongoTemplate) {
 		this.housingRepository = housingRepository;
-		this.mongoTemplate = mongoTemplate;
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/list/all", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -54,7 +50,7 @@ public class HousingController {
 		return housingRepository.findAll(new Sort(Sort.Direction.DESC,
 				"createdAt"));
 	}
-	
+
 	@RequestMapping(method = { RequestMethod.GET }, value = { "/{housingId}" }, produces = { "application/json" })
 	@ResponseBody
 	public Object getHousingbyID(
@@ -74,7 +70,7 @@ public class HousingController {
 		}
 		return housingFacility;
 	}
-	
+
 	/* @PathVariable(value = "userId") String userId */
 	@RequestMapping(method = { RequestMethod.PUT }, value = { "/{housingId}" }, consumes = { "application/json" })
 	@ResponseBody
@@ -86,17 +82,17 @@ public class HousingController {
 		HousingFacility facility = null;
 		try {
 			if ((housingFacility != null) && (housingId != null)) {
-						facility = housingRepository.findById(housingId);
+				facility = housingRepository.findById(housingId);
 
-						if (facility != null) {
-							facility.setStatus(housingFacility.getStatus());
-							facility.setFeatured(housingFacility.isFeatured());
-							housingRepository.save(facility);
-							logger.info("User Profile update with details: "
-									+ facility.toString());
-						}
-						
+				if (facility != null) {
+					facility.setStatus(housingFacility.getStatus());
+					facility.setFeatured(housingFacility.isFeatured());
+					housingRepository.save(facility);
+					logger.info("User Profile update with details: "
+							+ facility.toString());
 				}
+
+			}
 		} catch (Exception e) {
 			logger.error("error ");
 		}

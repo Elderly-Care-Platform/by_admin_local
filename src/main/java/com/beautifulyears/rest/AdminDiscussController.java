@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,13 +23,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.beautifulyears.Util;
+import com.beautifulyears.constants.ActivityLogConstants;
 import com.beautifulyears.constants.DiscussConstants;
 import com.beautifulyears.domain.Discuss;
 import com.beautifulyears.domain.UserProfile;
 import com.beautifulyears.domain.menu.Tag;
 import com.beautifulyears.repository.DiscussRepository;
 import com.beautifulyears.util.LoggerUtil;
+import com.beautifulyears.util.Util;
+import com.beautifulyears.util.activityLogHandler.ActivityLogHandler;
+import com.beautifulyears.util.activityLogHandler.DiscussActivityLogHandler;
 
 /**
  * The REST based service for managing "discuss"
@@ -41,7 +46,7 @@ public class AdminDiscussController {
 	private static final Logger logger = Logger
 			.getLogger(AdminDiscussController.class);
 	private DiscussRepository discussRepository;
-	// private TopicRepository topicRepository;
+	ActivityLogHandler<Discuss> logHandler;
 	private MongoTemplate mongoTemplate;
 
 	@Autowired
@@ -51,17 +56,21 @@ public class AdminDiscussController {
 		this.discussRepository = discussRepository;
 		// this.topicRepository = topicRepository;
 		this.mongoTemplate = mongoTemplate;
+		logHandler = new DiscussActivityLogHandler(mongoTemplate);
 	}
 
 	@RequestMapping(consumes = { "application/json" })
 	@ResponseBody
-	public ResponseEntity<Void> submitDiscuss(@RequestBody Discuss discuss)
-			throws Exception {
+	public ResponseEntity<Void> submitDiscuss(@RequestBody Discuss discuss,
+			HttpServletRequest request) throws Exception {
 
 		if (discuss.getId() == null || discuss.getId().equals("")) {
 			logger.debug("NEW DISCUSS");
 			Discuss discussWithExtractedInformation = setDiscussBean(discuss);
-			discussRepository.save(discussWithExtractedInformation);
+			discussWithExtractedInformation = discussRepository
+					.save(discussWithExtractedInformation);
+			logHandler.addLog(discussWithExtractedInformation,
+					ActivityLogConstants.CRUD_TYPE_CREATE, request);
 			ResponseEntity<Void> responseEntity = new ResponseEntity<>(
 					HttpStatus.CREATED);
 			return responseEntity;
@@ -87,7 +96,9 @@ public class AdminDiscussController {
 				newDiscuss.setShortSynopsis(Util.truncateText(domText));
 			}
 			newDiscuss.setTopicId(discuss.getTopicId());
-			discussRepository.save(newDiscuss);
+			newDiscuss = discussRepository.save(newDiscuss);
+			logHandler.addLog(newDiscuss,
+					ActivityLogConstants.CRUD_TYPE_UPDATE, request);
 			ResponseEntity<Void> responseEntity = new ResponseEntity<>(
 					HttpStatus.CREATED);
 			return responseEntity;
@@ -168,11 +179,18 @@ public class AdminDiscussController {
 	@RequestMapping(method = RequestMethod.DELETE, value = "/{discussId}", produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public ResponseEntity<Void> deletePost(
-			@PathVariable("discussId") String discussId) {
-		System.out.println("Inside DELETE");
-		discussRepository.delete(discussId);
+			@PathVariable("discussId") String discussId,
+			HttpServletRequest request) {
 		ResponseEntity<Void> responseEntity = new ResponseEntity<>(
-				HttpStatus.CREATED);
+				HttpStatus.NO_CONTENT);
+		Discuss discuss = discussRepository.findOne(discussId);
+		if (null != discuss) {
+			System.out.println("Inside DELETE");
+			discussRepository.delete(discussId);
+			logHandler.addLog(discuss, ActivityLogConstants.CRUD_TYPE_DELETE,
+					request);
+			responseEntity = new ResponseEntity<>(HttpStatus.ACCEPTED);
+		}
 		return responseEntity;
 	}
 
