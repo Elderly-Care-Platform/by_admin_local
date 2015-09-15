@@ -39,6 +39,26 @@ public class UserProfileController {
 		this.userProfileRepository = userProfileRepository;
 		this.mongoTemplate = mongoTemplate;
 	}
+	
+	@RequestMapping(method = { RequestMethod.GET }, value = { "/getByProfileId/{profileId}" }, produces = { "application/json" })
+	@ResponseBody
+	public Object getUserProfilebyProfileID(
+			@PathVariable(value = "profileId") String profileId,
+			HttpServletRequest req, HttpServletResponse res) throws Exception {
+		LoggerUtil.logEntry();
+		UserProfile userProfile = null;
+		try {
+			if (profileId != null) {
+				userProfile = this.userProfileRepository.findById(profileId);
+			} else {
+				logger.error("invalid parameter");
+			}
+
+		} catch (Exception e) {
+			logger.error("invalid parameter");
+		}
+		return userProfile;
+	}
 
 	@RequestMapping(method = { RequestMethod.GET }, value = { "/{userId}" }, produces = { "application/json" })
 	@ResponseBody

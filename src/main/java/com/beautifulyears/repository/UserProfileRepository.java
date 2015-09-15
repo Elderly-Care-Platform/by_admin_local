@@ -14,6 +14,7 @@ import com.beautifulyears.domain.UserProfile;
 public interface UserProfileRepository extends PagingAndSortingRepository<UserProfile, String>{
 
 	UserProfile findByUserId(String UserId);
+	UserProfile findById(String id);
 	
 	 @Query("{'userTypes':{$in:?0}}" )
 	 public Page<UserProfile> getServiceProvidersByCriteria(Object[] userTypes, Pageable page);

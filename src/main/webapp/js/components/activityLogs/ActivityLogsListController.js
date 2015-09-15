@@ -1,11 +1,15 @@
-adminControllers.controller('ActivityLogsListController', [ '$scope',
-		'$routeParams', '$location', '$http','ActivitiesList',
-		function($scope, $routeParams, $location, $http,ActivitiesList) {
+adminControllers.controller('ActivityLogsListController', [
+		'$scope',
+		'$routeParams',
+		'$location',
+		'$http',
+		'ActivitiesList',
+		function($scope, $routeParams, $location, $http, ActivitiesList) {
 			if (localStorage.getItem("ADMIN_USER_ROLE") !== 'SUPER_USER') {
 				$location.path('/users/login');
 				return;
 			}
-			
+
 			$scope.host = location.host;
 
 			$scope.crudTypes = {
@@ -34,8 +38,6 @@ adminControllers.controller('ActivityLogsListController', [ '$scope',
 				'16' : "Like on question",
 				'17' : "Like on review"
 			};
-			
-			
 
 			$scope.markAsRead = function(isRead, idx) {
 				$http.post("/byadmin/api/v1/activityLog/markAsRead", {
@@ -48,21 +50,43 @@ adminControllers.controller('ActivityLogsListController', [ '$scope',
 			}
 
 			var url = "/byadmin/api/v1/activityLog/page";
-			
-			
-			
-			$scope.postsByUser = function (page, size) {
-	            var params = {p:page, s:size};
-	            ActivitiesList.get(params,function(res) {
+
+			$scope.openProfile = function(profileId) {
+				$http.get("api/v1/userProfile/getByProfileId/" + profileId)
+						.success(function(response) {
+							if (response != null && response !== "") {
+								var userId = response.userId;
+								 $('#linkToOpen').remove();
+								    var link = document.createElement('a');
+								    link.target = '_blank';
+								    link.href = "http://"+$scope.host+"/#!/profile/0/"+userId;
+								    link.id = 'linkToOpen';
+
+								    document.body.appendChild(link);
+								    $('#linkToOpen')[0].click();
+								    $('#linkToOpen')[0].remove();
+							}
+						}, function(err) {
+							console.log("error fetching profile");
+						});
+			}
+
+			$scope.postsByUser = function(page, size) {
+				var params = {
+					p : page,
+					s : size
+				};
+				ActivitiesList.get(params, function(res) {
 					$scope.logs = res.content;
 					$scope.postsPagination = {};
-	                $scope.postsPagination.totalPosts = res.total;
-	                $scope.postsPagination.noOfPages = Math.ceil(res.total/res.size);
-	                $scope.postsPagination.currentPage = res.number;
-	                $scope.postsPagination.pageSize = res.size;
+					$scope.postsPagination.totalPosts = res.total;
+					$scope.postsPagination.noOfPages = Math.ceil(res.total
+							/ res.size);
+					$scope.postsPagination.currentPage = res.number;
+					$scope.postsPagination.pageSize = res.size;
 				});
-	        };
-	        
-	        $scope.postsByUser(0,10);
+			};
+
+			$scope.postsByUser(0, 10);
 
 		} ]);

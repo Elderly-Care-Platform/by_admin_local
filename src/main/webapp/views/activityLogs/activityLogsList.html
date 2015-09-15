@@ -17,7 +17,8 @@
 				<td>{{actionType[log.activityType]}}</td>
 				<td>{{crudTypes[log.crudType]}}</td>
 				<td ng-if="[3, 4, 6, 7, 8, 9, 10, 12, 13, 16].indexOf(log.activityType) != -1"><a  target="_blank" href = "http://{{host}}/#!/discuss/{{log.entityId}}">{{log.titleToDisplay}}</a></td>
-				<td ng-if="[1,2,11,14,15,17].indexOf(log.activityType) != -1"><a  target="_blank" href = "http://{{host}}/#!/profile/0/{{log.entityId}}">{{log.titleToDisplay}}</a></td>
+				<td ng-if="[1,2].indexOf(log.activityType) != -1"><a  target="_blank" href = "http://{{host}}/#!/profile/0/{{log.entityId}}">{{log.titleToDisplay}}</a></td>
+				<td ng-if="[11,14,15,17].indexOf(log.activityType) != -1"><a  target="_blank" ng-click = "openProfile(log.entityId)">{{log.titleToDisplay}}</a></td>
 				<td>{{log.currentUserEmailId}}</td>
 				<td>{{log.activityTime | date:'medium'}}</td>
 				<td ng-if="log.read == true"><a class="markingLink"
