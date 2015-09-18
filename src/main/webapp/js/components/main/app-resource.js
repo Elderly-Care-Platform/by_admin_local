@@ -25,9 +25,9 @@ var user_admin = adminServices.factory('AdminUser', function($resource) {
 			}
 		},
 		update : {
-			method : 'PUT',
+			method : 'POST',
 			params : {
-				userId : '@id'
+				userId : 'new'
 			}
 		},
 		get : {
@@ -72,7 +72,10 @@ var userEdit_admin = adminServices.factory('AdminUserEdit',
 var userByFilter_admin = adminServices.factory('AdminUserList', function(
 		$resource) {
 	return $resource('/byadmin/api/v1/users/list/all', {}, {
-
+		query : {
+			method : 'GET',
+			isArray: false
+		}
 	})
 });
 
@@ -86,9 +89,9 @@ var discuss_admin = adminServices.factory('AdminDiscuss', function($resource) {
 			}
 		},
 		update : {
-			method : 'PUT',
+			method : 'POST',
 			params : {
-				discussId : '@id'
+				discussId : 'new'
 			}
 		},
 		get : {
@@ -102,33 +105,61 @@ var discuss_admin = adminServices.factory('AdminDiscuss', function($resource) {
 
 var discussByFilterPost_admin = adminServices.factory('AdminPostDiscuss',
 		function($resource) {
-			return $resource('/byadmin/api/v1/discuss/list/P', {}, {})
+			return $resource('/byadmin/api/v1/discuss/list/P', {}, {
+				query : {
+					method : 'GET',
+					isArray: false
+				}
+			})
 		});
 
 var discussByFilterFeedback_admin = adminServices.factory(
 		'AdminFeedbackDiscuss', function($resource) {
-			return $resource('/byadmin/api/v1/discuss/list/F', {}, {})
+			return $resource('/byadmin/api/v1/discuss/list/F', {}, {
+				query : {
+					method : 'GET',
+					isArray: false
+				}
+			})
 		});
 
 var discussByFilterQuestion_admin = adminServices.factory(
 		'AdminQuestionDiscuss', function($resource) {
-			return $resource('/byadmin/api/v1/discuss/list/Q', {}, {})
+			return $resource('/byadmin/api/v1/discuss/list/Q', {}, {
+				query : {
+					method : 'GET',
+					isArray: false
+				}
+			})
 		});
 
 var AdminAnnouncements = adminServices.factory(
 		'AdminAnnouncements', function($resource) {
-			return $resource('/byadmin/api/v1/discuss/list/announceMents', {}, {})
+			return $resource('/byadmin/api/v1/discuss/list/announceMents', {}, {
+				query : {
+					method : 'GET',
+					isArray: false
+				}
+			})
 		});
 
 var discussByFilterArticle_admin = adminServices.factory('AdminArticleDiscuss',
 		function($resource) {
-			return $resource('/byadmin/api/v1/discuss/list/A', {}, {})
+			return $resource('/byadmin/api/v1/discuss/list/A', {}, {
+				query : {
+					method : 'GET',
+					isArray: false
+				}
+			})
 		});
 
 var discussByFilter_admin = adminServices.factory('AdminDiscussList', function(
 		$resource) {
 	return $resource('/byadmin/api/v1/discuss/list/all', {}, {
-
+		query : {
+			method : 'GET',
+			isArray: false
+		}
 	})
 });
 
@@ -152,7 +183,7 @@ var discuss_admin = adminServices.factory('AdminComment', function($resource) {
 			}
 		},
 		update : {
-			method : 'PUT',
+			method : 'POST',
 			params : {
 				commentId : '@id'
 			}
@@ -190,7 +221,7 @@ adminServices.factory('MenuTag', function($resource) {
 	return $resource('/byadmin/api/v1/menu/tag', {}, {
 		'get' : {
 			method : 'GET',
-			isArray : true
+			isArray : false
 		},
 		'save' : {
 			method : 'POST'
@@ -219,7 +250,7 @@ adminServices.factory('BYMenu', function($resource) {
             response: function(response) {
                 return response.data;
             }
-        }, isArray: true}
+        }, isArray: false}
     })
 });
 

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.beautifulyears.domain.User;
 import com.beautifulyears.domain.UserProfile;
 import com.beautifulyears.repository.UserProfileRepository;
+import com.beautifulyears.rest.response.BYGenericResponseHandler;
 import com.beautifulyears.util.LoggerUtil;
 
 /**
@@ -57,7 +58,7 @@ public class UserProfileController {
 		} catch (Exception e) {
 			logger.error("invalid parameter");
 		}
-		return userProfile;
+		return BYGenericResponseHandler.getResponse(userProfile);
 	}
 
 	@RequestMapping(method = { RequestMethod.GET }, value = { "/{userId}" }, produces = { "application/json" })
@@ -77,7 +78,7 @@ public class UserProfileController {
 		} catch (Exception e) {
 			logger.error("invalid parameter");
 		}
-		return userProfile;
+		return BYGenericResponseHandler.getResponse(userProfile);
 	}
 
 	/* @PathVariable(value = "userId") String userId */
@@ -116,6 +117,6 @@ public class UserProfileController {
 			logger.error("error ");
 		}
 
-		return profile;
+		return BYGenericResponseHandler.getResponse(profile);
 	}
 }

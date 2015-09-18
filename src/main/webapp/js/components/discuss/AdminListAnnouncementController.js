@@ -8,5 +8,6 @@ function($scope, $location, $rootScope, $location, AdminAnnouncements) {
 		 {
 			 return;
 	 }
+	$rootScope.bc_discussType = 'Announcements';
 	$location.path('/discuss/Announcements');
 }]);

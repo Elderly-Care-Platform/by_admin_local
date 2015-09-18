@@ -44,7 +44,7 @@ adminControllers.controller('ActivityLogsListController', [
 					"read" : isRead,
 					"id" : $scope.logs[idx].id
 				}).success(function(res) {
-					$scope.logs[idx] = res;
+					$scope.logs[idx] = res.data;
 				})
 
 			}
@@ -54,6 +54,7 @@ adminControllers.controller('ActivityLogsListController', [
 			$scope.openProfile = function(profileId) {
 				$http.get("api/v1/userProfile/getByProfileId/" + profileId)
 						.success(function(response) {
+							response = response.data;
 							if (response != null && response !== "") {
 								var userId = response.userId;
 								 $('#linkToOpen').remove();
@@ -66,8 +67,13 @@ adminControllers.controller('ActivityLogsListController', [
 								    $('#linkToOpen')[0].click();
 								    $('#linkToOpen')[0].remove();
 							}
-						}, function(err) {
+						}, function(errorResponse) {
 							console.log("error fetching profile");
+							if(errorResponse.data && errorResponse.data.error && errorResponse.data.error.errorCode === 3002){
+								$location.path('/users/login');
+								 return;
+					        }
+							
 						});
 			}
 
@@ -77,6 +83,7 @@ adminControllers.controller('ActivityLogsListController', [
 					s : size
 				};
 				ActivitiesList.get(params, function(res) {
+					res = res.data;
 					$scope.logs = res.content;
 					$scope.postsPagination = {};
 					$scope.postsPagination.totalPosts = res.total;
@@ -84,6 +91,11 @@ adminControllers.controller('ActivityLogsListController', [
 							/ res.size);
 					$scope.postsPagination.currentPage = res.number;
 					$scope.postsPagination.pageSize = res.size;
+				},function(errorResponse){
+					if(errorResponse.data && errorResponse.data.error && errorResponse.data.error.errorCode === 3002){
+						$location.path('/users/login');
+						 return;
+			        }
 				});
 			};
 

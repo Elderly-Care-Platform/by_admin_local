@@ -7,14 +7,18 @@ adminControllers.controller('UserProfileController', [ '$scope',
 			$scope.profile.userId = userId;
 			$http.get("api/v1/userProfile/"+userId).success(
 					function(response) {
+						response = response.data;
 						if(response != null && response !== ""){
 							$scope.profile = response;
 						}else{
 							$scope.error = true;
 							$scope.errorMessage = "No user profile found for the selected user";
 						}
-					}, function(err) {
-						alert("error fetching profile");
+					}, function(errorResponse) {
+						if(errorResponse.data && errorResponse.data.error && errorResponse.data.error.errorCode === 3002){
+							$location.path('/users/login');
+							 return;
+				        }
 					});
 			
 			$scope.editUserProfile = function(){
@@ -23,7 +27,11 @@ adminControllers.controller('UserProfileController', [ '$scope',
 				$http.put("api/v1/userProfile/"+userId,$scope.profile).success(function(res){
 					toastr.success('User profile submitted successfully');
 					$location.path('/userProfile');
-				}).error(function(){
+				}).error(function(errorResponse){
+					if(errorResponse.data && errorResponse.data.error && errorResponse.data.error.errorCode === 3002){
+						$location.path('/users/login');
+						 return;
+			        }
 					$scope.error = true;
 					$scope.errorMessage = "Error occured in saving the current user profile.";
 				})

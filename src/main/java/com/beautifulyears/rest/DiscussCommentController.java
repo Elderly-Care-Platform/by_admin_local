@@ -8,9 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.beautifulyears.domain.DiscussReply;
 import com.beautifulyears.repository.DiscussCommentRepository;
+import com.beautifulyears.rest.response.BYGenericResponseHandler;
 import com.beautifulyears.util.Util;
 
 /**
@@ -46,18 +45,18 @@ public class DiscussCommentController {
 
 	@RequestMapping(method = RequestMethod.GET, value = "/{commentId}", produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
-	public DiscussReply getComment(@PathVariable("commentId") String commentId) {
+	public Object getComment(@PathVariable("commentId") String commentId) {
 		DiscussReply comment = discussCommentRepository.findOne(commentId);
 		if (comment == null) {
 			throw new DiscussNotFoundException(commentId);
 		}
 
-		return comment;
+		return BYGenericResponseHandler.getResponse(comment);
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/{discussId}/{parentReplyId}", produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
-	public List<DiscussReply> allDiscussComment(
+	public Object allDiscussComment(
 			@PathVariable("discussId") String discussId,
 			@PathVariable("parentReplyId") String parentReplyId)
 			throws Exception {
@@ -82,24 +81,21 @@ public class DiscussCommentController {
 		} else {
 			throw new Exception();
 		}
-		return result;
+		return BYGenericResponseHandler.getResponse(result);
 	}
 
 	// Editing a comment
-	@RequestMapping(consumes = { "application/json" })
+	@RequestMapping(value = "/{commentId}", consumes = { "application/json" })
 	@ResponseBody
-	public ResponseEntity<Void> submitComment(@RequestBody DiscussReply comment) {
+	public Object submitComment(@RequestBody DiscussReply comment) {
 
 		logger.debug("EDIT COMMENT");
-		DiscussReply newComment = getComment(comment.getId());
+		DiscussReply newComment = discussCommentRepository.findOne(comment.getId());
 
 		newComment.setStatus(comment.getStatus());
 
 		discussCommentRepository.save(newComment);
-		ResponseEntity<Void> responseEntity = new ResponseEntity<>(
-				HttpStatus.CREATED);
-		System.out.println("responseEntity = " + responseEntity);
-		return responseEntity;
+		return BYGenericResponseHandler.getResponse(null);
 
 	}
 }

@@ -10,16 +10,42 @@ adminControllers.controller('AdminUserCreateController', ['$scope', '$routeParam
      var userId = $routeParams.userId;
      	if(userId != null )
 	 	{
-	 		$scope.user = AdminUser.get({userId: userId});
+	 		AdminUser.get({userId: userId},function(res){
+	 			$scope.user = res.data;
+	 		},function(errorResponse){
+	 			if(errorResponse.data && errorResponse.data.error && errorResponse.data.error.errorCode === 3002){
+ 					$location.path('/users/login');
+ 					 return;
+ 		        }
+	 		});
+	 		
+	 		
+	 		
 	 		$scope.edituser = function () {
-	 			$scope.user.$save(function (user, headers) {
-	 				toastr.success("Edited User");
+	 			AdminUser.update($scope.user,function(res){
+		 			toastr.success("Edited User");
 	 				$location.path('/users/all');
-	 			},function(error){
-	 				if(error && error.data && error.data.error && error.data.error.errorCode){
+		 		},function(errorResponse){
+		 			if(errorResponse.data && errorResponse.data.error && errorResponse.data.error.errorCode === 3002){
+	 					$location.path('/users/login');
+	 					 return;
+	 		        }
+		 			if(error && error.data && error.data.error && error.data.error.errorCode){
 	 					$scope.error = error.data.error.errorMsg;
 	 				}
-	 			});
+		 		});
+//	 			$scope.user.$save(function (user, headers) {
+//	 				toastr.success("Edited User");
+//	 				$location.path('/users/all');
+//	 			},function(error){
+//	 				if(error.data && error.data.error && error.data.error.errorCode === 3002){
+//	 					$location.path('/users/login');
+//	 					 return;
+//	 		        }
+//	 				if(error && error.data && error.data.error && error.data.error.errorCode){
+//	 					$scope.error = error.data.error.errorMsg;
+//	 				}
+//	 			});
 	 		};
 	 	}
 	 	else
@@ -28,17 +54,39 @@ adminControllers.controller('AdminUserCreateController', ['$scope', '$routeParam
 
 			$scope.register = function () {
 				if($scope.userForm.$invalid) return;
-				$scope.user.$save(function (user, headers)
-				{
-
+//				$scope.user.$save(function (user, headers)
+//				{
+//
+//					$scope.message = "User registered successfully";
+//					$scope.error = '';
+//					$scope.submitted = true;
+//					$location.path('/users/all');
+//
+//				}, function (error) {
+//					// failure
+//					console.log("$save failed " + JSON.stringify(error));
+//					$scope.error = 'Error in registering.Check your inputs and try again. Make sure that the Email is unique to the system.';
+//					$scope.message = '';
+//					$scope.submitted = false;
+//					$scope.userName = '';
+//					$scope.email = '';
+//					$scope.password = '';
+//					$scope.userRoleId = '';
+//
+//					$location.path('/users/new');
+//
+//				});
+				AdminUser.update($scope.user,function(res){
 					$scope.message = "User registered successfully";
 					$scope.error = '';
 					$scope.submitted = true;
 					$location.path('/users/all');
-
-				}, function (error) {
-					// failure
-					console.log("$save failed " + JSON.stringify(error));
+		 		},function(errorResponse){
+		 			if(errorResponse.data && errorResponse.data.error && errorResponse.data.error.errorCode === 3002){
+	 					$location.path('/users/login');
+	 					 return;
+	 		        }
+		 			console.log("$save failed " + JSON.stringify(error));
 					$scope.error = 'Error in registering.Check your inputs and try again. Make sure that the Email is unique to the system.';
 					$scope.message = '';
 					$scope.submitted = false;
@@ -48,8 +96,7 @@ adminControllers.controller('AdminUserCreateController', ['$scope', '$routeParam
 					$scope.userRoleId = '';
 
 					$location.path('/users/new');
-
-				});
+		 		});
 
 			};
 		}

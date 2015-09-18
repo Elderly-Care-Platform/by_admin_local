@@ -19,7 +19,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.beautifulyears.domain.ActivityLog;
+import com.beautifulyears.domain.User;
+import com.beautifulyears.rest.response.BYGenericResponseHandler;
 import com.beautifulyears.rest.response.PageImpl;
+import com.beautifulyears.util.Util;
 
 @Controller
 @RequestMapping({ "/activityLog" })
@@ -40,6 +43,8 @@ public class ActivityLogController {
 			@RequestParam(value = "p", required = false, defaultValue = "0") int pageIndex,
 			@RequestParam(value = "s", required = false, defaultValue = "10") int pageSize,
 			HttpServletRequest request) throws Exception {
+		@SuppressWarnings("unused")
+		User currentUser = Util.getSessionUser(request);
 		Direction sortDirection = Direction.DESC;
 		if (dir != 0) {
 			sortDirection = Direction.ASC;
@@ -54,7 +59,7 @@ public class ActivityLogController {
 		long total = this.mongoTemplate.count(query, ActivityLog.class);
 		PageImpl<ActivityLog> storyPage = new PageImpl<ActivityLog>(logs,
 				pageable, total);
-		return storyPage;
+		return BYGenericResponseHandler.getResponse(storyPage);
 	}
 
 	@RequestMapping(method = { RequestMethod.POST }, value = { "/markAsRead" }, consumes = { "application/json" })
@@ -62,6 +67,8 @@ public class ActivityLogController {
 	public Object markAsRead(
 			@RequestBody ActivityLog activityLog,
 			HttpServletRequest request) throws Exception {
+		@SuppressWarnings("unused")
+		User currentUser = Util.getSessionUser(request);
 		Query q = new Query();
 		q.addCriteria(Criteria.where("id").is(activityLog.getId()));
 		ActivityLog log = mongoTemplate.findOne(q, ActivityLog.class);
@@ -69,7 +76,7 @@ public class ActivityLogController {
 			log.setRead(activityLog.isRead());
 			mongoTemplate.save(log);
 		}
-		return log;
+		return BYGenericResponseHandler.getResponse(log);
 	}
 
 }

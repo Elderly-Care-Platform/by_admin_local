@@ -8,5 +8,12 @@ adminControllers.controller('AdminUserListController', ['$scope', '$location', '
 			return;
 	 	}
 
-	   $scope.users = AdminUserList.query();
+	   AdminUserList.query({},function(res){
+		   $scope.users = res.data;
+	   },function(errorResponse){
+		   if(errorResponse.data && errorResponse.data.error && errorResponse.data.error.errorCode === 3002){
+				$location.path('/users/login');
+				 return;
+	        }
+	   });
 	}]);

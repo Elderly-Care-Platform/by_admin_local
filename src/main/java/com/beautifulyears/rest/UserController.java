@@ -2,7 +2,6 @@ package com.beautifulyears.rest;
 
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -13,9 +12,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,11 +27,11 @@ import com.beautifulyears.domain.LoginRequest;
 import com.beautifulyears.domain.LoginResponse;
 import com.beautifulyears.domain.Session;
 import com.beautifulyears.domain.User;
-import com.beautifulyears.domain.UserProfile;
 import com.beautifulyears.domain.UserRolePermissions;
 import com.beautifulyears.exceptions.BYErrorCodes;
 import com.beautifulyears.exceptions.BYException;
 import com.beautifulyears.repository.UserRepository;
+import com.beautifulyears.rest.response.BYGenericResponseHandler;
 import com.beautifulyears.util.LoggerUtil;
 import com.beautifulyears.util.UserNameHandler;
 import com.beautifulyears.util.Util;
@@ -65,9 +62,8 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
-	public @ResponseBody LoginResponse login(
-			@RequestBody LoginRequest loginRequest, HttpServletRequest req,
-			HttpServletResponse res) {
+	public @ResponseBody Object login(@RequestBody LoginRequest loginRequest,
+			HttpServletRequest req, HttpServletResponse res) {
 		LoggerUtil.logEntry();
 
 		try {
@@ -84,59 +80,78 @@ public class UserController {
 					logger.debug("User login failed with user email : "
 							+ loginRequest.getEmail());
 					killSession(req, res);
-					return getBlankUser("UserName or password can't be left blank");
+					LoginResponse blankUser = getBlankUser("UserName or password can't be left blank");
+					return BYGenericResponseHandler.getResponse(blankUser);
 				} else {
 					logger.debug("User logged in success for user email = "
 							+ loginRequest.getEmail());
-					createSession(req, res, user);
+					Session session = createSession(req, res, user);
 					logger.debug("User exists :: userid = " + user.getId()
 							+ " :: username = " + user.getUserName());
 					LoginResponse response = new LoginResponse();
-					response.setSessionId(UUID.randomUUID().toString());
+					response.setSessionId(session.getSessionId());
 					response.setStatus("OK other user");
-					response.setId(user.getId());
-					response.setUserName(user.getUserName());
+					response.setId(session.getUserId());
+					response.setUserName(session.getUserName());
 					response.setUserRoleId(user.getUserRoleId());
-					return response;
+					return BYGenericResponseHandler.getResponse(response);
 				}
 			} else {
 				System.out.println("No such user exist");
-				return getBlankUser("UserName or password can't be left blank");
+				LoginResponse blankUser = getBlankUser("UserName or password can't be left blank");
+				return BYGenericResponseHandler.getResponse(blankUser);
 			}
 
 		} catch (Exception e) {
 			System.out.println("No such user exist");
-			return getBlankUser("UserName or password can't be left blank");
+			LoginResponse blankUser = getBlankUser("UserName or password can't be left blank");
+			return BYGenericResponseHandler.getResponse(blankUser);
+
 		}
 
 	}
 
-	@RequestMapping(method = RequestMethod.GET, value = "/logout/{sessionId}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody LoginResponse logout(
-			@PathVariable("sessionId") String sessionId) {
+//	@RequestMapping(method = RequestMethod.GET, value = "/logout/{sessionId}", produces = MediaType.APPLICATION_JSON_VALUE)
+//	public @ResponseBody Object logout(
+//			@PathVariable("sessionId") String sessionId) {
+//		try {
+//			LoginResponse response = new LoginResponse();
+//			response.setSessionId(null);
+//			response.setStatus("");
+//			return BYGenericResponseHandler.getResponse(response);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			LoginResponse response = new LoginResponse();
+//			response.setSessionId(null);
+//			response.setStatus("");
+//			return BYGenericResponseHandler.getResponse(response);
+//		}
+//	}
+	
+	@RequestMapping(method = RequestMethod.GET, value = "/logout", produces = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody Object logout(HttpServletRequest req,
+			HttpServletResponse res) throws Exception {
+		LoggerUtil.logEntry();
+		Session session = null;
 		try {
-			LoginResponse response = new LoginResponse();
-			response.setSessionId(null);
-			response.setStatus("");
-			return response;
+			logger.debug("logging out");
+			session = killSession(req, res);
 		} catch (Exception e) {
-			e.printStackTrace();
-			LoginResponse response = new LoginResponse();
-			response.setSessionId(null);
-			response.setStatus("");
-			return response;
+			Util.handleException(e);
 		}
+		return BYGenericResponseHandler.getResponse(session);
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/list/all", produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
-	public List<User> allUsers() {
-		return userRepository
-				.findAll(new Sort(Sort.Direction.DESC, "createdAt"));
+	public Object allUsers() {
+		List<User> userList = userRepository.findAll(new Sort(
+				Sort.Direction.DESC, "createdAt"));
+		return BYGenericResponseHandler.getResponse(userList);
 	}
 
 	// create user - registration
-	@RequestMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/{userId}",consumes = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public Object submitUser(@RequestBody User user, HttpServletRequest req,
 			HttpServletResponse res) throws Exception {
@@ -146,17 +161,14 @@ public class UserController {
 				Query q = new Query();
 				q.addCriteria(Criteria.where("email").is(user.getEmail()));
 				if (userRepository.exists(q.toString())) {
-					return new ResponseEntity<>("Email already exists!",
-							HttpStatus.BAD_REQUEST);
+					throw new BYException(BYErrorCodes.USER_ALREADY_EXIST);
 				}
 				User userWithExtractedInformation = decorateWithInformation(user);
 				userWithExtractedInformation = userRepository
 						.save(userWithExtractedInformation);
 				logHandler.addLog(userWithExtractedInformation,
 						ActivityLogConstants.CRUD_TYPE_CREATE, req);
-				ResponseEntity<String> responseEntity = new ResponseEntity<String>(
-						HttpStatus.CREATED);
-				return responseEntity;
+				return BYGenericResponseHandler.getResponse(null);
 			} catch (Exception e) {
 				e.printStackTrace();
 				throw e;
@@ -165,7 +177,7 @@ public class UserController {
 		} else {
 			logger.debug("EDIT USER");
 			boolean isUserNameChanged = false;
-			User newUser = getUser(user.getId());
+			User newUser = userRepository.findOne(user.getId());
 			if (!newUser.getUserName().equals(user.getUserName())) {
 				isUserNameChanged = true;
 				logger.debug("trying changing the user name from "
@@ -205,9 +217,7 @@ public class UserController {
 						newUser.getUserName());
 				new Thread(userNameHandler).start();
 			}
-			ResponseEntity<String> responseEntity = new ResponseEntity<>(
-					HttpStatus.CREATED);
-			return responseEntity;
+			return BYGenericResponseHandler.getResponse(null);
 		}
 
 	}
@@ -234,6 +244,7 @@ public class UserController {
 					verificationCodeExpiry, socialSignOnId,
 					socialSignOnPlatform, passwordCode, passwordCodeExpiry,
 					userRoleId, "In-Active");
+			
 		} else {
 			return new User(userName, password, email, verificationCode,
 					verificationCodeExpiry, socialSignOnId,
@@ -244,8 +255,9 @@ public class UserController {
 
 	@RequestMapping(method = RequestMethod.DELETE, value = "/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
-	public ResponseEntity<Void> deleteUser(
-			@PathVariable("userId") String userId, HttpServletRequest req) {
+	public Object deleteUser(
+			@PathVariable("userId") String userId, HttpServletRequest req)
+			throws Exception {
 		logger.debug("Inside DELETE user");
 		userRepository.delete(userId);
 
@@ -254,39 +266,38 @@ public class UserController {
 		User user = mongoTemplate.findOne(q, User.class);
 		mongoTemplate.remove(user);
 		logHandler.addLog(user, ActivityLogConstants.CRUD_TYPE_DELETE, req);
-		ResponseEntity<Void> responseEntity = new ResponseEntity<>(
-				HttpStatus.CREATED);
-		return responseEntity;
+		return BYGenericResponseHandler.getResponse(null);
 	}
 
 	@RequestMapping(method = RequestMethod.PUT, value = "/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
-	public User editUser(@PathVariable("userId") String userId) {
+	public Object editUser(@PathVariable("userId") String userId) {
 		User user = userRepository.findOne(userId);
 		if (user == null) {
 			throw new UserNotFoundException(userId);
 		}
-		return user;
+		return BYGenericResponseHandler.getResponse(user);
 	}
 
 	// - getUserByVerificationCode - users/{userId}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/show/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody User showUser(@PathVariable("userId") String userId) {
+	public @ResponseBody Object showUser(@PathVariable("userId") String userId) {
 		User user = userRepository.findOne(userId);
 		if (user == null) {
 			throw new UserNotFoundException(userId);
 		}
-		return user;
+		
+		return BYGenericResponseHandler.getResponse(user);
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody User getUser(@PathVariable("userId") String userId) {
+	public @ResponseBody Object getUser(@PathVariable("userId") String userId) {
 		User user = userRepository.findOne(userId);
 		if (user == null) {
 			throw new UserNotFoundException(userId);
 		}
-		return user;
+		return BYGenericResponseHandler.getResponse(user);
 	}
 
 	private Session createSession(HttpServletRequest req,

@@ -7,5 +7,12 @@ adminControllers.controller('AdminUserEditController', ['$scope', '$routeParams'
 	  				 return;
 	 }
 	var userId = $routeParams.userId;
-    $scope.user = AdminUserShow.get({userId: userId});
+    AdminUserShow.get({userId: userId},function(res){
+    	$scope.user = res.data;
+    },function(errorResponse){
+    	if(errorResponse.data && errorResponse.data.error && errorResponse.data.error.errorCode === 3002){
+			$location.path('/users/login');
+			 return;
+        }
+    });
   }]);
