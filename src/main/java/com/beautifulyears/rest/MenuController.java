@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.beautifulyears.domain.menu.Menu;
 import com.beautifulyears.domain.menu.Tag;
+import com.beautifulyears.rest.response.BYGenericResponseHandler;
 
 @Controller
 @RequestMapping({ "/menu" })
@@ -38,7 +39,7 @@ public class MenuController {
 	@ResponseBody
 	public Object getTags() {
 		List<Tag> menus = this.mongoTemplate.findAll(Tag.class);
-		return menus;
+		return BYGenericResponseHandler.getResponse(menus);
 	}
 
 	@RequestMapping(method = { RequestMethod.POST }, consumes = { "application/json" }, value = { "/tag" })
@@ -58,7 +59,7 @@ public class MenuController {
 			oldTag.setType(tag.getType());
 			oldTag.setDescription(tag.getDescription());
 			mongoTemplate.save(oldTag);
-			return oldTag;
+			return BYGenericResponseHandler.getResponse(oldTag);
 		}catch(DuplicateKeyException e){
 			res.setStatus(404);
 			return new Exception("tag name already exists!");
@@ -90,13 +91,13 @@ public class MenuController {
 			parentMenu.getChildren().remove(oldmenu.getId());
 			mongoTemplate.save(parentMenu);
 		}
-		return null;
+		return BYGenericResponseHandler.getResponse(null);
 	}
 
 	@RequestMapping(method = { RequestMethod.POST }, consumes = { "application/json" }, value = { "" })
 	@ResponseBody
 	public Object addMenu(@RequestBody Menu menu, HttpServletRequest req,
-			HttpServletResponse res) {
+			HttpServletResponse res) throws Exception {
 		Menu oldmenu = null;
 
 		try {
@@ -155,10 +156,10 @@ public class MenuController {
 
 		} catch (Exception e) {
 			res.setStatus(404);
-			return new Exception("internal server error");
+			throw new Exception("internal server error");
 		}
 
-		return oldmenu;
+		return BYGenericResponseHandler.getResponse(oldmenu);
 	}
 
 	private boolean checkOrderIdx(Menu menu) {
@@ -194,7 +195,7 @@ public class MenuController {
 	public Object getMenuById(
 			@RequestParam(value = "id", required = true) String id) {
 		Menu menu = this.mongoTemplate.findById(id, Menu.class);
-		return menu;
+		return BYGenericResponseHandler.getResponse(menu);
 	}
 
 	@RequestMapping(method = { RequestMethod.GET }, produces = { "application/json" }, value = { "getMenu" })
@@ -215,7 +216,7 @@ public class MenuController {
 		}
 
 		List<Menu> menus = this.mongoTemplate.find(q, Menu.class);
-		return menus;
+		return BYGenericResponseHandler.getResponse(menus);
 	}
 
 	private String getSlugFromTags(List<Tag> tags) {

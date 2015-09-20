@@ -4,6 +4,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.beautifulyears.constants.DiscussConstants;
 import com.beautifulyears.domain.User;
+import com.beautifulyears.exceptions.BYErrorCodes;
+import com.beautifulyears.exceptions.BYException;
 
 public class Util {
 
@@ -11,8 +13,14 @@ public class Util {
 		return value == null || value.length() == 0;
 	}
 
-	public static User getSessionUser(HttpServletRequest req) {
-		return (User) req.getSession().getAttribute("user");
+	public static User getSessionUser(HttpServletRequest req) throws Exception {
+		Object user = req.getSession().getAttribute("user");
+		if(null != user){
+			return (User) user;
+		}else{
+			throw new BYException(BYErrorCodes.USER_LOGIN_REQUIRED);
+		}
+		
 	}
 	
 	public static String truncateText(String text){
@@ -29,5 +37,24 @@ public class Util {
 		    }
 		}
 		return text;
+	}
+	
+	public static void handleException(Exception e) throws Exception {
+		if (e instanceof BYException) {
+			throw e;
+		} else {
+			try {
+				StackTraceElement currentStack = Thread.currentThread()
+						.getStackTrace()[2];
+				if (null != currentStack) {
+//					logger.error("Exception occured in " + currentStack.getClassName()
+//							+ "::" + currentStack.getMethodName());
+				}
+			} catch (Exception exception) {
+
+			}
+			throw new BYException(BYErrorCodes.INTERNAL_SERVER_ERROR);
+
+		}
 	}
 }

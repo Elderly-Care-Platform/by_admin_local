@@ -1,13 +1,32 @@
 
 adminControllers.controller('AdminLoginController', ['$scope', '$route', '$rootScope', '$http', '$location', '$rootScope',
    function ($scope, $route, $rootScope, $http, $location, $rootScope) {
+	
+	var element = document.getElementById("login_placeholder");
+	element.innerHTML = "Login";
+    element.href = "#/users/login";
+	
+	$rootScope.sessionId='';
+	$rootScope.bc_discussType = '';
+	$rootScope.bc_username = '';
+	$rootScope.bc_userId = '';
+	$rootScope.bc_userRoleId = '';
 
+	localStorage.setItem("AdminSessionId", "");
+	localStorage.setItem("ADMIN_USER_ID", "");
+	localStorage.setItem("ADMIN_USER_NAME", "");
+	localStorage.setItem("ADMIN_USER_ROLE", "");
+
+	$http.defaults.headers.common.sess = "";
+	
        $scope.user = {};
        $scope.user.email = '';
        $scope.user.password = '';
        $scope.loginUser = function(user) {
            $scope.resetError();
+           $http.defaults.headers.common.sess = localStorage.getItem("AdminSessionId");
            $http.post('/byadmin/api/v1/users/login', user).success(function(login) {
+        	   login = login.data;
 			if(login.sessionId===null) {
 			       $scope.setError(login.status);
    					return;
@@ -20,9 +39,6 @@ adminControllers.controller('AdminLoginController', ['$scope', '$route', '$rootS
    				$rootScope.bc_userId = login.id;
 
 				$rootScope.bc_userRoleId = login.userRoleId;
-				$rootScope.$apply();
-
-
 				var destination = 'users/login';
 
 				if ("localStorage" in window)

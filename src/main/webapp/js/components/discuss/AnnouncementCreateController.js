@@ -53,7 +53,8 @@ adminControllers.controller('AnnouncementCreateController', ['$scope', '$http', 
 		//EDIT MODE
 	 	if(discussId != null )
 	 	{
-	 		$scope.currentDiscuss = AdminDiscuss.get({discussId:discussId},function(){
+	 		AdminDiscuss.get({discussId:discussId},function(res){
+	 			$scope.currentDiscuss = res.data;
 	 			$scope.currentDiscuss.newArticlePhotoFilename = "";
 	 			$scope.currentDiscuss.newArticlePhotoFilename = JSON.stringify($scope.currentDiscuss.articlePhotoFilename);
 	 			if($scope.currentDiscuss.topicId){
@@ -63,6 +64,10 @@ adminControllers.controller('AnnouncementCreateController', ['$scope', '$http', 
 	 				}
 	 	            
 	 	        }
+	 		},function(errorResponse){
+	 			if(errorResponse.data && errorResponse.data.error && errorResponse.data.error.errorCode === 3002){
+	 				$location.path('/users/login');
+                }
 	 		});
 	 		$scope.editdiscuss = function () {
 	 			var htmlval = tinyMCE.activeEditor.getContent();
@@ -85,11 +90,25 @@ adminControllers.controller('AnnouncementCreateController', ['$scope', '$http', 
 	            });
 
 				//putting the userId to discuss being created
-
-	 			$scope.currentDiscuss.$save(function () {
+				AdminDiscuss.update($scope.currentDiscuss,function () {
 					toastr.success('Edited successfully');
 					$location.path('/discuss/Announcements');
+	 			},
+	 			function(errorResponse){
+	 				if(errorResponse.data && errorResponse.data.error && errorResponse.data.error.errorCode === 3002){
+	 					$location.path('/users/login');
+	 					 return;
+	 		        }
 	 			});
+				
+//	 			$scope.currentDiscuss.$save(function () {
+//					toastr.success('Edited successfully');
+//					$location.path('/discuss/Announcements');
+//	 			},function(errorResponse){
+//		 			if(errorResponse.data && errorResponse.data.error && errorResponse.data.error.errorCode === 3002){
+//		 				$location.path('/users/login');
+//	                }
+//		 		});
 	 		};
 	 	}
 	 	//CREATE MODE
@@ -125,10 +144,26 @@ adminControllers.controller('AnnouncementCreateController', ['$scope', '$http', 
 				
 
 				//save the discuss
-				$scope.currentDiscuss.$save(function () {
+				
+				AdminDiscuss.update($scope.currentDiscuss,function () {
 					toastr.success('Created successfully');
 					$location.path('/discuss/Announcements');
-				});
+	 			},
+	 			function(errorResponse){
+	 				if(errorResponse.data && errorResponse.data.error && errorResponse.data.error.errorCode === 3002){
+	 					$location.path('/users/login');
+	 					 return;
+	 		        }
+	 			});
+				
+//				$scope.currentDiscuss.$save(function () {
+//					toastr.success('Created successfully');
+//					$location.path('/discuss/Announcements');
+//				},function(errorResponse){
+//		 			if(errorResponse.data && errorResponse.data.error && errorResponse.data.error.errorCode === 3002){
+//		 				$location.path('/users/login');
+//	                }
+//		 		});
 
 
 				/*

@@ -38,10 +38,14 @@ adminControllers.controller('TagCreateController', [
 				tagResource.description = $scope.newTag.description;
 				tagResource.$save(function() {
 					location.href = "#/menu";
-				}, function(e) {
+				}, function(errorResponse) {
+					if(errorResponse.data && errorResponse.data.error && errorResponse.data.error.errorCode === 3002){
+						$location.path('/users/login');
+						 return;
+			        }
 					$scope.error = true;
-					$scope.errorMessage = e.data.localizedMessage
-							|| e.data.message;
+					$scope.errorMessage = errorResponse.data.localizedMessage
+							|| errorResponse.data.message;
 				})
 
 			}
@@ -62,15 +66,23 @@ adminControllers
 								AdminUser, Menu, MenuTag) {
 
 							MenuTag.get(function(res) {
-								$scope.existingTags = res;
-							}, function() {
+								$scope.existingTags = res.data;
+							}, function(errorResponse) {
+								if(errorResponse.data && errorResponse.data.error && errorResponse.data.error.errorCode === 3002){
+									$location.path('/users/login');
+									 return;
+						        }
 								alert("error fetching tags");
 							});
 
 							$http.get("api/v1/menu/getMenu").success(
 									function(response) {
-										$scope.existingMenus = response;
-									}, function(err) {
+										$scope.existingMenus = response.data;
+									}, function(errorResponse) {
+										if(errorResponse.data && errorResponse.data.error && errorResponse.data.error.errorCode === 3002){
+											$location.path('/users/login');
+											 return;
+								        }
 										alert("error fetching menus");
 									});
 
@@ -130,10 +142,14 @@ adminControllers
 													function() {
 														location.href = "#/menu/viewMenu";
 													},
-													function(e) {
+													function(errorResponse) {
+														if(errorResponse.data && errorResponse.data.error && errorResponse.data.error.errorCode === 3002){
+															$location.path('/users/login');
+															 return;
+												        }
 														$scope.error = true;
-														$scope.errorMessage = e.data.localizedMessage
-																|| e.data.message;
+														$scope.errorMessage = errorResponse.data.localizedMessage
+																|| errorResponse.data.message;
 													});
 								}
 
@@ -168,9 +184,15 @@ adminControllers.controller('MenuViewController', [
 
 			$http.get("api/v1/menu/getMenu?parentId=root").success(
 					function(res) {
+						res = res.data;
 						var rootUl = document.getElementById("mainTreeUl");
 						createSubMenu(rootUl, res);
 						createTree();
+					},function(errorResponse){
+						if(errorResponse.data && errorResponse.data.error && errorResponse.data.error.errorCode === 3002){
+							$location.path('/users/login');
+							 return;
+				        }
 					})
 
 			function createSubMenu(container, menu) {
@@ -250,15 +272,19 @@ adminControllers
 							}
 
 							MenuTag.get(function(res) {
-								$scope.existingTags = res;
+								$scope.existingTags = res.data;
 							}, function() {
 								alert("error fetching tags");
 							});
 
 							$http.get("api/v1/menu/getMenu").success(
 									function(response) {
-										$scope.existingMenus = response;
-									}, function(err) {
+										$scope.existingMenus = response.data;
+									}, function(errorResponse) {
+										if(errorResponse.data && errorResponse.data.error && errorResponse.data.error.errorCode === 3002){
+											$location.path('/users/login');
+											 return;
+								        }
 										alert("error fetching menus");
 									});
 
@@ -284,8 +310,11 @@ adminControllers
 									menuResource.id = $scope.newMenu.id;
 									menuResource.$delete(function() {
 										location.href = "#/menu/viewMenu";
-									}, function(e) {
-										console.log(e);
+									}, function(errorResponse) {
+										if(errorResponse.data && errorResponse.data.error && errorResponse.data.error.errorCode === 3002){
+											$location.path('/users/login');
+											 return;
+								        }
 										alert("error");
 									});
 								}
@@ -331,11 +360,15 @@ adminControllers
 													function() {
 														location.href = "#/menu/viewMenu";
 													},
-													function(e) {
-														console.log(e);
+													function(errorResponse) {
+														if(errorResponse.data && errorResponse.data.error && errorResponse.data.error.errorCode === 3002){
+															$location.path('/users/login');
+															 return;
+												        }
+														console.log(errorResponse);
 														$scope.error = true;
-														$scope.errorMessage = e.data.localizedMessage
-																|| e.data.message;
+														$scope.errorMessage = errorResponse.data.localizedMessage
+																|| errorResponse.data.message;
 													});
 								}
 
@@ -357,6 +390,7 @@ adminControllers
 									.get(url)
 									.success(
 											function(res) {
+												res = res.data;
 												$scope.newMenu = res;
 												$scope.allTags = res.tags;
 												if (res.linkedMenuId
@@ -369,13 +403,17 @@ adminControllers
 																	"api/v1/menu/getMenuById?id="
 																			+ res.parentMenuId)
 															.success(
-																	function(
-																			res) {
-																		$scope.parentMenu = res;
+																	function(res) {
+																		$scope.parentMenu = res.data;
 																	})
 												}
 												$scope.newMenu.filterName = res.filterName;
 
+											},function(errorResponse){
+												if(errorResponse.data && errorResponse.data.error && errorResponse.data.error.errorCode === 3002){
+													$location.path('/users/login');
+													 return;
+										        }
 											})
 
 						} ]);

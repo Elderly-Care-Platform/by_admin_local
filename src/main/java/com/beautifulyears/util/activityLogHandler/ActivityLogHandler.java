@@ -31,14 +31,14 @@ public abstract class ActivityLogHandler<T> {
 		this.mongoTemplate = mongoTemplate;
 	}
 
-	public void addLog(T entity, int crudType, HttpServletRequest req) {
+	public void addLog(T entity, int crudType, HttpServletRequest req) throws Exception {
 		User currentUser = Util.getSessionUser(req);
 		ActivityLog log = getEntityObject(entity, crudType, currentUser, null);
 		this.postActivity(log);
 	}
 
 	public void addLog(T entity, int crudType, String detail,
-			HttpServletRequest req) {
+			HttpServletRequest req) throws Exception {
 		User currentUser = Util.getSessionUser(req);
 		ActivityLog log = getEntityObject(entity, crudType, currentUser, detail);
 		this.postActivity(log);

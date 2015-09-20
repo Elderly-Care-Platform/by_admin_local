@@ -86,6 +86,13 @@
 			}
 
 			var dataAdapter = new $.jqx.dataAdapter(source, {
+				beforeSend : function(jqXHR) {
+					console.log("adding header");
+				    jqXHR.setRequestHeader("sess", localStorage.getItem("AdminSessionId"));
+				},
+				loadError: function(jqXHR, status, error){
+					window.location.href = "#/users/login";
+				},
 				beforeLoadComplete: function (records) {
                         for (var i = 0; i < records.length; i++) {
                             records[i].id1= records[i].id;

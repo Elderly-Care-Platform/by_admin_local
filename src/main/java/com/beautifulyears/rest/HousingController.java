@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.beautifulyears.domain.HousingFacility;
 import com.beautifulyears.repository.HousingRepository;
+import com.beautifulyears.rest.response.BYGenericResponseHandler;
 import com.beautifulyears.util.LoggerUtil;
 
 /**
@@ -46,9 +47,10 @@ public class HousingController {
 
 	@RequestMapping(method = RequestMethod.GET, value = "/list/all", produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
-	public List<HousingFacility> allDiscuss() {
-		return housingRepository.findAll(new Sort(Sort.Direction.DESC,
-				"createdAt"));
+	public Object allDiscuss() {
+		List<HousingFacility> housingList = housingRepository.findAll(new Sort(
+				Sort.Direction.DESC, "createdAt"));
+		return BYGenericResponseHandler.getResponse(housingList);
 	}
 
 	@RequestMapping(method = { RequestMethod.GET }, value = { "/{housingId}" }, produces = { "application/json" })
@@ -68,7 +70,7 @@ public class HousingController {
 		} catch (Exception e) {
 			logger.error("invalid parameter");
 		}
-		return housingFacility;
+		return BYGenericResponseHandler.getResponse(housingFacility);
 	}
 
 	/* @PathVariable(value = "userId") String userId */
@@ -97,7 +99,7 @@ public class HousingController {
 			logger.error("error ");
 		}
 
-		return facility;
+		return BYGenericResponseHandler.getResponse(facility);
 	}
 
 }

@@ -42,8 +42,8 @@ var byAdminApp = angular.module('byAdminApp', [
 
 
 //Routing and Session Check for Login
-byAdminApp.run(function($rootScope, $location, SessionIdService,BYMenu) {
-
+byAdminApp.run(function($rootScope, $location, SessionIdService,BYMenu,$http) {
+	$http.defaults.headers.common.sess = localStorage.getItem("AdminSessionId");
     // register listener to watch route changes
     $rootScope.$on("$routeChangeStart", function(event, next, current) {
 
@@ -54,9 +54,7 @@ byAdminApp.run(function($rootScope, $location, SessionIdService,BYMenu) {
 
             // no logged user, we should be going to #login
             if (next.templateUrl == "views/users/login.html") {
-            // already going to #login, no redirect needed
             } else {
-                // not going to #login, we should redirect now
             	$location.path("/users/login");
             }
         }
@@ -104,16 +102,19 @@ byAdminApp.run(function($rootScope, $location, SessionIdService,BYMenu) {
         });
     }
     BYMenu.query({}, function(response){
-    	mainMenu = response;
+    	mainMenu = response.data;
 
         $rootScope.menuCategoryMap = {};
         $rootScope.discussCategoryMap = {};
         $rootScope.serviceCategoryMap = {};
 
-        createMenuCategoryMap(response);
+        createMenuCategoryMap(mainMenu);
 
-    }, function(error){
-
+    }, function(errorResponse){
+    	if(errorResponse.data && errorResponse.data.error && errorResponse.data.error.errorCode === 3002){
+			$location.path('/users/login');
+			 return;
+        }
     })
 
     
@@ -131,7 +132,14 @@ adminControllers.controller('AdminDiscussListController', ['$scope', '$location'
 	  		 $location.path('/users/login');
 	  		 return;
 	 }
-     $scope.discuss = AdminDiscussList.query();
+     AdminDiscussList.query({},function(res){
+    	 $scope.discuss = res.data;
+     },function(errorResponse){
+    	 if(errorResponse.data && errorResponse.data.error && errorResponse.data.error.errorCode === 3002){
+ 			$location.path('/users/login');
+ 			 return;
+         }
+     });
   }]);
 
 
@@ -155,6 +163,7 @@ adminControllers.controller('CommentListController', ['$scope', '$location', 'Ad
 adminControllers.controller('AdminCommentCreateController', ['$scope', '$http', '$location', '$route', '$routeParams', '$location', 'AdminComment',
   function($scope, $http, $location, $route, $routeParams, $location, AdminComment) {
 	 $scope.currentComment = '';
+	 $scope.currentCommentResource = '';
 	 if(localStorage.getItem("AdminSessionId") == '') {
 		$location.path('/users/login');
 		return;
@@ -174,7 +183,14 @@ adminControllers.controller('AdminCommentCreateController', ['$scope', '$http', 
 	 	if(commentId != null )
 	 	{
 
-			$scope.currentComment = AdminComment.get({commentId:commentId});
+			AdminComment.get({commentId:commentId},function(res){
+				$scope.currentComment = res.data;
+			},function(errorResponse){
+				if(errorResponse.data && errorResponse.data.error && errorResponse.data.error.errorCode === 3002){
+					$location.path('/users/login');
+					 return;
+		        }
+			});
 
 	 		$scope.editcomment = function () {
 
@@ -184,11 +200,25 @@ adminControllers.controller('AdminCommentCreateController', ['$scope', '$http', 
 				
 				$scope.currentComment.status = $scope.currentComment.status === true ? 1:0;
 
-
-	 			$scope.currentComment.$save(function () {
+				AdminComment.update($scope.currentComment,function(){
 					toastr.success('Comment edited successfully');
 					$location.path('/comment/'+ $scope.currentComment.discussId + '/' + ($scope.currentComment.parentReplyId||"null"));
-	 			});
+	 			},function(errorResponse){
+	 				if(errorResponse.data && errorResponse.data.error && errorResponse.data.error.errorCode === 3002){
+	 					$location.path('/users/login');
+	 					 return;
+	 		        }
+	 			})
+//	 			$scope.currentComment.$save(function () {
+//					toastr.success('Comment edited successfully');
+//					$location.path('/comment/'+ $scope.currentComment.discussId + '/' + ($scope.currentComment.parentReplyId||"null"));
+//	 			},
+//	 			function(errorResponse){
+//	 				if(errorResponse.data && errorResponse.data.error && errorResponse.data.error.errorCode === 3002){
+//	 					$location.path('/users/login');
+//	 					 return;
+//	 		        }
+//	 			});
 	 		};
 
 	 		$scope.goBack = function () {
@@ -216,9 +246,16 @@ function($scope, $location, $rootScope, $location, AdminQuestionDiscuss) {
 		 {
 			 return;
 	 }
-	$scope.discuss = AdminQuestionDiscuss.query();
-	$scope.discuss.discussType = 'Q';
-	$rootScope.bc_discussType = 'Q';
+	AdminQuestionDiscuss.query({},function(res){
+		$scope.discuss = res.data;
+		$scope.discuss.discussType = 'Q';
+		$rootScope.bc_discussType = 'Q';
+	},function(errorResponse){
+		if(errorResponse.data && errorResponse.data.error && errorResponse.data.error.errorCode === 3002){
+			$location.path('/users/login');
+			 return;
+        }
+	});
 	$location.path('/discuss/Q');
 }]);
 
@@ -233,9 +270,17 @@ function($scope, $location, $rootScope, $location, AdminPostDiscuss) {
 			 $location.path('/users/login');
 			 return;
 	 }
-	$scope.discuss = AdminPostDiscuss.query();
-	$scope.discuss.discussType = 'P';
-	$rootScope.bc_discussType = 'P';
+	AdminPostDiscuss.query({},function(res){
+		$scope.discuss = res.data;
+		$scope.discuss.discussType = 'P';
+		$rootScope.bc_discussType = 'P';
+	},function(errorResponse){
+		if(errorResponse.data && errorResponse.data.error && errorResponse.data.error.errorCode === 3002){
+			$location.path('/users/login');
+			 return;
+        }
+	});
+
 	$location.path('/discuss/P');
 }]);
 
@@ -244,9 +289,17 @@ function($scope, $rootScope, $location, AdminFeedbackDiscuss) {
 	if(localStorage.getItem("AdminSessionId") == '') {
 		return;
 	}
-	$scope.discuss = AdminFeedbackDiscuss.query();
-	$scope.discuss.discussType = 'F';
-	$rootScope.bc_discussType = 'F';
+	AdminFeedbackDiscuss.query({},function(res){
+		$scope.discuss = res.data;
+		$scope.discuss.discussType = 'F';
+		$rootScope.bc_discussType = 'F';
+	},function(errorResponse){
+		if(errorResponse.data && errorResponse.data.error && errorResponse.data.error.errorCode === 3002){
+			$location.path('/users/login');
+			 return;
+        }
+	});
+
 	$location.path('/discuss/F');
 }]);
 
@@ -261,9 +314,17 @@ function($scope, $location, $rootScope, $location, AdminArticleDiscuss) {
 			 $location.path('/users/login');
 			 return;
 	 }
-	$scope.discuss = AdminArticleDiscuss.query();
-	$scope.discuss.discussType = 'A';
-	$rootScope.bc_discussType = 'A';
+	AdminArticleDiscuss.query(function(res){
+		$scope.discuss = res.data;
+		$scope.discuss.discussType = 'A';
+		$rootScope.bc_discussType = 'A';
+	},function(errorResponse){
+		if(errorResponse.data && errorResponse.data.error && errorResponse.data.error.errorCode === 3002){
+			$location.path('/users/login');
+			 return;
+        }
+	});
+
 	$location.path('/discuss/A');
 }]);
 
@@ -406,7 +467,8 @@ adminControllers.controller('AdminDiscussCreateController', ['$scope', '$http', 
 		//EDIT MODE
 	 	if(discussId != null )
 	 	{
-	 		$scope.currentDiscuss = AdminDiscuss.get({discussId:discussId},function(){
+	 		AdminDiscuss.get({discussId:discussId},function(res){
+	 			$scope.currentDiscuss = res.data;
 	 			$scope.currentDiscuss.newArticlePhotoFilename = "";
 	 			$scope.currentDiscuss.newArticlePhotoFilename = JSON.stringify($scope.currentDiscuss.articlePhotoFilename);
 	 			if($scope.currentDiscuss.topicId){
@@ -415,6 +477,11 @@ adminControllers.controller('AdminDiscussCreateController', ['$scope', '$http', 
 		 	            $scope.selectedMenuList[$scope.selectedMenuId] = $rootScope.menuCategoryMap[$scope.selectedMenuId];
 	 				}
 	 	            
+	 	        }
+	 		},function(errorResponse){
+	 			if(errorResponse.data && errorResponse.data.error && errorResponse.data.error.errorCode === 3002){
+	 				$location.path('/users/login');
+	 				 return;
 	 	        }
 	 		});
 	 		$scope.editdiscuss = function () {
@@ -439,11 +506,28 @@ adminControllers.controller('AdminDiscussCreateController', ['$scope', '$http', 
 
 				//putting the userId to discuss being created
 
-	 			$scope.currentDiscuss.$save(function () {
+				AdminDiscuss.update($scope.currentDiscuss,function () {
 					toastr.success('Edited successfully');
 					var location = $scope.currentDiscuss.discussType;
 					$location.path('/discuss/' + location);
+	 			},
+	 			function(errorResponse){
+	 				if(errorResponse.data && errorResponse.data.error && errorResponse.data.error.errorCode === 3002){
+	 					$location.path('/users/login');
+	 					 return;
+	 		        }
 	 			});
+//	 			$scope.currentDiscuss.$save(function () {
+//					toastr.success('Edited successfully');
+//					var location = $scope.currentDiscuss.discussType;
+//					$location.path('/discuss/' + location);
+//	 			},
+//	 			function(errorResponse){
+//	 				if(errorResponse.data && errorResponse.data.error && errorResponse.data.error.errorCode === 3002){
+//	 					$location.path('/users/login');
+//	 					 return;
+//	 		        }
+//	 			});
 	 		};
 	 	}
 	 	//CREATE MODE
@@ -478,20 +562,31 @@ adminControllers.controller('AdminDiscussCreateController', ['$scope', '$http', 
 				
 
 				//save the discuss
-				$scope.currentDiscuss.$save(function () {
+				
+				AdminDiscuss.update($scope.currentDiscuss,function () {
 					toastr.success('Created successfully');
 					var location = $scope.currentDiscuss.discussType;
 					$location.path('/discuss/' + location);
-				});
+	 			},
+	 			function(errorResponse){
+	 				if(errorResponse.data && errorResponse.data.error && errorResponse.data.error.errorCode === 3002){
+	 					$location.path('/users/login');
+	 					 return;
+	 		        }
+	 			});
+				
+//				$scope.currentDiscuss.$save(function () {
+//					toastr.success('Created successfully');
+//					var location = $scope.currentDiscuss.discussType;
+//					$location.path('/discuss/' + location);
+//				},
+//				function(errorResponse){
+//					if(errorResponse.data && errorResponse.data.error && errorResponse.data.error.errorCode === 3002){
+//						$location.path('/users/login');
+//						 return;
+//			        }
+//				});
 
-
-				/*
-				$http.post('/byadmin/api/v1/discuss', $scope.discuss).success(function(headers) {
-
-				}).error(function() {
-				   	$scope.error = 'Error in creating discuss';
-					$scope.message = '';
-				});*/
 				};
 		}//else
   }]);
@@ -509,7 +604,14 @@ adminControllers.controller('AdminDiscussEditController', ['$scope', '$location'
 	  		 return;
 	 }
 	var discussId = $routeParams.discussId;
-	$scope.discuss = AdminDiscussShow.show({discussId: discussId});
+	AdminDiscussShow.show({discussId: discussId},function(res){
+		$scope.discuss = res.data;
+	},function(errorResponse){
+		if(errorResponse.data && errorResponse.data.error && errorResponse.data.error.errorCode === 3002){
+			$location.path('/users/login');
+			 return;
+        }
+	});
     tinyMCE.activeEditor.setContent($scope.discuss.text, {format : 'raw'});
 
   }]);
@@ -522,7 +624,14 @@ adminControllers.controller('AdminDiscussDetailController', ['$scope', '$locatio
 	  		 return;
 	 }
      var discussId = $routeParams.discussId;
-    $scope.discuss = AdminDiscussShow.show({discussId: discussId});
+    AdminDiscussShow.show({discussId: discussId},function(res){
+		$scope.discuss = res.data;
+	},function(errorResponse){
+		if(errorResponse.data && errorResponse.data.error && errorResponse.data.error.errorCode === 3002){
+			$location.path('/users/login');
+			 return;
+        }
+	});
   }]);
 
 
@@ -534,11 +643,25 @@ adminControllers.controller('AdminDiscussDeleteController', ['$scope', '$locatio
 	  		 return;
 	 }
      var discussId = $routeParams.discussId;
-     $scope.discuss = AdminDiscuss.get({discussId:discussId});
+     AdminDiscuss.get({discussId:discussId},function(res){
+    	 $scope.discuss = res.data;
+     },function(errorResponse){
+    	 if(errorResponse.data && errorResponse.data.error && errorResponse.data.error.errorCode === 3002){
+ 			$location.path('/users/login');
+ 			 return;
+         }
+     });
 
 	var loc = $rootScope.bc_discussType;
 
-	$scope.discuss = AdminDiscuss.remove({discussId: discussId});
+	AdminDiscuss.remove({discussId: discussId},function(res){
+		$scope.discuss = res.data;
+	},function(errorResponse){
+		if(errorResponse.data && errorResponse.data.error && errorResponse.data.error.errorCode === 3002){
+			$location.path('/users/login');
+			 return;
+        }
+	});
 
 	toastr.success('Deleted successfully');
 
