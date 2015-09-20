@@ -1,6 +1,11 @@
 
 adminControllers.controller('AdminLoginController', ['$scope', '$route', '$rootScope', '$http', '$location', '$rootScope',
    function ($scope, $route, $rootScope, $http, $location, $rootScope) {
+	
+	var element = document.getElementById("login_placeholder");
+	element.innerHTML = "Login";
+    element.href = "#/users/login";
+	
 	$rootScope.sessionId='';
 	$rootScope.bc_discussType = '';
 	$rootScope.bc_username = '';
