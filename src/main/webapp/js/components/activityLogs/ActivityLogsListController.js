@@ -11,7 +11,7 @@ adminControllers.controller('ActivityLogsListController', [
 			}
 			
 			$scope.filters = {
-				readFilter:1,
+				readFilter:0,
 				dateFilter:0,
 				dateStartRange:new Date(),
 				dateEndRange:new Date()
