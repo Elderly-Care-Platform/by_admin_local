@@ -9,6 +9,13 @@ adminControllers.controller('ActivityLogsListController', [
 				$location.path('/users/login');
 				return;
 			}
+			
+			$scope.filters = {
+				readFilter:1,
+				dateFilter:0,
+				dateStartRange:new Date(),
+				dateEndRange:new Date()
+			}
 
 			$scope.host = location.host;
 
@@ -78,9 +85,23 @@ adminControllers.controller('ActivityLogsListController', [
 			}
 
 			$scope.postsByUser = function(page, size) {
+				var startDate = new Date();
+				var endDate = new Date();
+				if($scope.filters.dateFilter == "1"){
+					startDate.setDate(startDate.getDate() - 1);
+					endDate.setDate(endDate.getDate() - 1);
+					console.log(startDate,endDate);
+				}else if($scope.filters.dateFilter == "2"){
+					startDate = $scope.filters.dateStartRange;
+					endDate = $scope.filters.dateEndRange;
+				}
+				
 				var params = {
 					p : page,
-					s : size
+					s : size,
+					startDate : startDate.getTime(),
+					endDate : endDate.getTime(),
+					readStatus : $scope.filters.readFilter
 				};
 				ActivitiesList.get(params, function(res) {
 					res = res.data;
