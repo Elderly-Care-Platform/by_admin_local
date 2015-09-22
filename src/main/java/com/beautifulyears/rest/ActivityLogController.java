@@ -1,6 +1,11 @@
 package com.beautifulyears.rest;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -42,9 +47,35 @@ public class ActivityLogController {
 			@RequestParam(value = "dir", required = false, defaultValue = "0") int dir,
 			@RequestParam(value = "p", required = false, defaultValue = "0") int pageIndex,
 			@RequestParam(value = "s", required = false, defaultValue = "10") int pageSize,
+			@RequestParam(value = "readStatus", required = false) int readStatus,
+			@RequestParam(value = "startDate", required = false) long startDate,
+			@RequestParam(value = "endDate", required = false) long endDate,
 			HttpServletRequest request) throws Exception {
 		@SuppressWarnings("unused")
 		User currentUser = Util.getSessionUser(request);
+
+		Boolean isRead = null;
+		if (readStatus == 1) {
+			isRead = true;
+		} else if (readStatus == 2) {
+			isRead = false;
+		}
+
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(new Date(startDate));
+		cal.set(Calendar.HOUR_OF_DAY, 0);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+		Date startDate1 = cal.getTime();
+
+		cal.setTime(new Date(endDate));
+		cal.set(Calendar.HOUR_OF_DAY, 23);
+		cal.set(Calendar.MINUTE, 59);
+		cal.set(Calendar.SECOND, 59);
+		cal.set(Calendar.MILLISECOND, 999);
+		Date endDate1 = cal.getTime();
+
 		Direction sortDirection = Direction.DESC;
 		if (dir != 0) {
 			sortDirection = Direction.ASC;
@@ -54,6 +85,16 @@ public class ActivityLogController {
 				sort);
 		Query query = new Query();
 		query.with(pageable);
+		if (isRead != null) {
+			query.addCriteria(Criteria.where("isRead").is(isRead));
+		}
+		if (null != endDate1 && null != startDate1) {
+//			query.addCriteria(Criteria.where("activityTime").gte(startDate1)
+//					.andOperator(Criteria.where("activityTime").lte(endDate1)));
+			Criteria criteria = Criteria.where("activityTime").lte(endDate1).gte(startDate1);
+			query.addCriteria(criteria);
+			
+		}
 		List<ActivityLog> logs = this.mongoTemplate.find(query,
 				ActivityLog.class);
 		long total = this.mongoTemplate.count(query, ActivityLog.class);
@@ -64,8 +105,7 @@ public class ActivityLogController {
 
 	@RequestMapping(method = { RequestMethod.POST }, value = { "/markAsRead" }, consumes = { "application/json" })
 	@ResponseBody
-	public Object markAsRead(
-			@RequestBody ActivityLog activityLog,
+	public Object markAsRead(@RequestBody ActivityLog activityLog,
 			HttpServletRequest request) throws Exception {
 		@SuppressWarnings("unused")
 		User currentUser = Util.getSessionUser(request);

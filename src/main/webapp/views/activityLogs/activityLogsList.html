@@ -1,5 +1,35 @@
 <div style="margin-top: 20px" class="table-responsive">
 	<h1>DASHBOARD</h1>
+
+	<div id="activitiesFilter">
+		<div style="display: inline-block;">
+			<label>Read Filter</label> <select ng-model="filters.readFilter">
+				<option value="0">All</option>
+				<option value="1">Only read</option>
+				<option value="2">Only Unread</option>
+			</select>
+		</div>
+		<div style="display: inline-block;">
+			<label>Date Filter</label> <select ng-model="filters.dateFilter">
+				<option value="0">Today</option>
+				<option value="1">Yesterday</option>
+				<option value="2">Custom</option>
+			</select>
+		</div>
+		<div ng-if="filters.dateFilter == 2" style="display: inline-block;">
+			<div style="display: inline-block;">
+				<label>Start Date</label> <input type="date" name="dateStartRange" ng-model="filters.dateStartRange">
+			</div>
+			<div style="display: inline-block;">
+				<label>End Date</label> <input type="date" name="dateEndRange" ng-model="filters.dateEndRange">
+			</div>
+		</div>
+		<div style="display: inline-block;">
+			<button ng-click="postsByUser(0,10)">SEARCH</button>
+		</div>
+
+	</div>
+
 	<table class="table table-bordered ">
 		<thead>
 			<tr>
@@ -9,17 +39,26 @@
 				<th>User</th>
 				<th>Time</th>
 				<th>IsRead</th>
-
 			</tr>
 		<tbody>
 			<tr ng-repeat="log in logs"
-				ng-class="{unreadActivityLog: log.read == false}"  title="{{log.details}}">
+				ng-class="{unreadActivityLog: log.read == false}"
+				title="{{log.details}}">
 				<td>{{actionType[log.activityType]}}</td>
 				<td>{{crudTypes[log.crudType]}}</td>
-				<td ng-if="[5].indexOf(log.activityType) != -1"><a ng-click="markAsRead(true,$index)"  target="_blank" href = "http://{{host}}/site/byadmin/#/discuss/{{log.entityId}}">----</a></td>
-				<td ng-if="[3, 4, 6, 7, 8, 9, 10, 12, 13, 16].indexOf(log.activityType) != -1"><a ng-click="markAsRead(true,$index)"  target="_blank" href = "http://{{host}}/#!/discuss/{{log.entityId}}">{{log.titleToDisplay}}</a></td>
-				<td ng-if="[1,2].indexOf(log.activityType) != -1"><a  target="_blank" ng-click="markAsRead(true,$index)" href = "http://{{host}}/#!/profile/0/{{log.entityId}}">{{log.titleToDisplay}}</a></td>
-				<td ng-if="[11,14,15,17].indexOf(log.activityType) != -1"><a  target="_blank" ng-click = "markAsRead(true,$index);openProfile(log.entityId);">{{log.titleToDisplay}}</a></td>
+				<td ng-if="[5].indexOf(log.activityType) != -1"><a
+					ng-click="markAsRead(true,$index)" target="_blank"
+					href="http://{{host}}/site/byadmin/#/discuss/{{log.entityId}}">----</a></td>
+				<td
+					ng-if="[3, 4, 6, 7, 8, 9, 10, 12, 13, 16].indexOf(log.activityType) != -1"><a
+					ng-click="markAsRead(true,$index)" target="_blank"
+					href="http://{{host}}/#!/discuss/{{log.entityId}}">{{log.titleToDisplay}}</a></td>
+				<td ng-if="[1,2].indexOf(log.activityType) != -1"><a
+					target="_blank" ng-click="markAsRead(true,$index)"
+					href="http://{{host}}/#!/profile/0/{{log.entityId}}">{{log.titleToDisplay}}</a></td>
+				<td ng-if="[11,14,15,17].indexOf(log.activityType) != -1"><a
+					target="_blank"
+					ng-click="markAsRead(true,$index);openProfile(log.entityId);">{{log.titleToDisplay}}</a></td>
 				<td>{{log.currentUserEmailId}}</td>
 				<td>{{log.activityTime | date:'medium'}}</td>
 				<td ng-if="log.read == true"><a class="markingLink"
@@ -30,8 +69,8 @@
 		</tbody>
 	</table>
 	<div ng-if="postsPagination.noOfPages > 1">
-			<div class="text-left">
-				<by-pagination obj="postsPagination" callback="postsByUser"></by-pagination>
-			</div>
+		<div class="text-left">
+			<by-pagination obj="postsPagination" callback="postsByUser"></by-pagination>
 		</div>
+	</div>
 </div>
