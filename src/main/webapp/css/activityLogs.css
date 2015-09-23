@@ -23,3 +23,20 @@ a{
 .pagination li a{
 	padding: 0px 9px;
 }
+.divLeft
+{
+	float:left;
+}
+.divLeft select, .divLeft input
+{
+	width:197px;
+	margin-right:10px;
+}
+.divLeft button
+{
+	margin-top:26px;
+}
+.margin-top-20
+{
+	margin-top:20px;
+}

@@ -1,36 +1,37 @@
-<div style="margin-top: 20px" class="table-responsive">
+<div class="table-responsive margin-top-20">
 	<h1>DASHBOARD</h1>
 
 	<div id="activitiesFilter">
-		<div style="display: inline-block;">
+		<div class="divLeft">
 			<label>Read Filter</label> <select ng-model="filters.readFilter">
 				<option value="0">All</option>
 				<option value="1">Only read</option>
 				<option value="2">Only Unread</option>
 			</select>
 		</div>
-		<div style="display: inline-block;">
+		<div class="divLeft">
 			<label>Date Filter</label> <select ng-model="filters.dateFilter">
 				<option value="0">Today</option>
 				<option value="1">Yesterday</option>
 				<option value="2">Custom</option>
 			</select>
 		</div>
-		<div ng-if="filters.dateFilter == 2" style="display: inline-block;">
-			<div style="display: inline-block;">
+		<div ng-if="filters.dateFilter == 2" class="divLeft">
+			<div class="divLeft">
 				<label>Start Date</label> <input type="date" name="dateStartRange" ng-model="filters.dateStartRange">
 			</div>
-			<div style="display: inline-block;">
+			<div class="divLeft">
 				<label>End Date</label> <input type="date" name="dateEndRange" ng-model="filters.dateEndRange">
 			</div>
 		</div>
-		<div style="display: inline-block;">
-			<button ng-click="postsByUser(0,10)">SEARCH</button>
+		<div class="divLeft">
+			<button ng-click="postsByUser(0,10)" class="btn btn-primary">SEARCH</button>
 		</div>
+		<div style="clear:both;"></div>
 
 	</div>
 
-	<table class="table table-bordered ">
+	<table class="table table-bordered margin-top-20" >
 		<thead>
 			<tr>
 				<th>ActivityType</th>
@@ -59,6 +60,9 @@
 				<td ng-if="[11,14,15,17].indexOf(log.activityType) != -1"><a
 					target="_blank"
 					ng-click="markAsRead(true,$index);openProfile(log.entityId);">{{log.titleToDisplay}}</a></td>
+				<td ng-if="[18].indexOf(log.activityType) != -1"><a
+					target="_blank"
+					ng-click="markAsRead(true,$index);openHousing(log.entityId);">{{log.titleToDisplay}}</a></td>
 				<td>{{log.currentUserEmailId}}</td>
 				<td>{{log.activityTime | date:'medium'}}</td>
 				<td ng-if="log.read == true"><a class="markingLink"
