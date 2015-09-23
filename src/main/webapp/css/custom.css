@@ -147,3 +147,7 @@ label.myLabel input[type="file"] {
   max-width: 444px;
 }
 }
+.navbar .nav > li > a 
+{
+	padding: 10px 13px 10px;
+}
