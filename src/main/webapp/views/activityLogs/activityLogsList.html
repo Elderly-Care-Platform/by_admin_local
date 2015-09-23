@@ -25,7 +25,7 @@
 			</div>
 		</div>
 		<div style="display: inline-block;">
-			<button ng-click="postsByUser(0,10)">SEARCH</button>
+			<button class="btn btn-primary pull-right" ng-click="postsByUser(0,10)">SEARCH</button>
 		</div>
 
 	</div>
@@ -59,6 +59,9 @@
 				<td ng-if="[11,14,15,17].indexOf(log.activityType) != -1"><a
 					target="_blank"
 					ng-click="markAsRead(true,$index);openProfile(log.entityId);">{{log.titleToDisplay}}</a></td>
+				<td ng-if="[18].indexOf(log.activityType) != -1"><a
+					target="_blank"
+					ng-click="markAsRead(true,$index);openHousing(log.entityId);">{{log.titleToDisplay}}</a></td>
 				<td>{{log.currentUserEmailId}}</td>
 				<td>{{log.activityTime | date:'medium'}}</td>
 				<td ng-if="log.read == true"><a class="markingLink"
