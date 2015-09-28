@@ -37,13 +37,14 @@ adminControllers.controller('ActivityLogsListController', [
 				'8' : "Like on answer",
 				'9' : "Comment",
 				'10' : "Answer",
-				'11' : "Review",
+				'11' : "Profile Review",
 				'12' : "Share post",
 				'13' : "Share question",
 				'14' : "Rate housing",
 				'15' : "Rate service",
 				'16' : "Like on question",
-				'17' : "Like on review"
+				'17' : "Like on review",
+				'18' : "Housing Review"
 			};
 
 			$scope.markAsRead = function(isRead, idx) {
@@ -68,6 +69,32 @@ adminControllers.controller('ActivityLogsListController', [
 								    var link = document.createElement('a');
 								    link.target = '_blank';
 								    link.href = "http://"+$scope.host+"/#!/profile/0/"+userId;
+								    link.id = 'linkToOpen';
+
+								    document.body.appendChild(link);
+								    $('#linkToOpen')[0].click();
+								    $('#linkToOpen')[0].remove();
+							}
+						}, function(errorResponse) {
+							console.log("error fetching profile");
+							if(errorResponse.data && errorResponse.data.error && errorResponse.data.error.errorCode === 3002){
+								$location.path('/users/login');
+								 return;
+					        }
+							
+						});
+			}
+			
+			$scope.openHousing = function(profileId) {
+				$http.get("api/v1/housing/" + profileId)
+						.success(function(response) {
+							response = response.data;
+							if (response != null && response !== "") {
+								var userId = response.userId;
+								 $('#linkToOpen').remove();
+								    var link = document.createElement('a');
+								    link.target = '_blank';
+								    link.href = "http://"+$scope.host+"/#!/housingProfile/3/"+userId+"/"+profileId;
 								    link.id = 'linkToOpen';
 
 								    document.body.appendChild(link);
