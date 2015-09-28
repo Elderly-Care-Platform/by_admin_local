@@ -264,3 +264,12 @@ var activitiesList = adminServices.factory('ActivitiesList', function($resource)
 		}
 	})
 });
+
+var ActivitiesStats = adminServices.factory('ActivitiesStats', function($resource) {
+	return $resource('/byadmin/api/v1/activityLog/getStats', {}, {
+		get : {
+			method : 'GET',
+			params : {}
+		}
+	})
+});
