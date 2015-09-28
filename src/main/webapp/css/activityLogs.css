@@ -53,6 +53,11 @@ a{
     margin: 0px 10px 20px 0px;
     float: left;
     padding: 10px;
+    text-decoration: none;
+}
+.statCountItem:hover{
+	text-decoration: none;
+	background-color: rgba(128, 128, 128, 0.24);
 }
 .statCountLabel{
 	 color: #ffce55;
