@@ -1,11 +1,8 @@
 package com.beautifulyears.rest;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -27,6 +24,7 @@ import com.beautifulyears.domain.ActivityLog;
 import com.beautifulyears.domain.User;
 import com.beautifulyears.rest.response.BYGenericResponseHandler;
 import com.beautifulyears.rest.response.PageImpl;
+import com.beautifulyears.util.StatsHandler;
 import com.beautifulyears.util.Util;
 
 @Controller
@@ -34,10 +32,14 @@ import com.beautifulyears.util.Util;
 public class ActivityLogController {
 
 	private MongoTemplate mongoTemplate;
+	private StatsHandler statsHandler;
 
 	@Autowired
 	public ActivityLogController(MongoTemplate mongoTemplate) {
 		this.mongoTemplate = mongoTemplate;
+		StatsHandler statsHandler = new StatsHandler(
+				mongoTemplate);
+		new Thread(statsHandler).start();
 	}
 
 	@RequestMapping(method = { RequestMethod.GET }, value = { "/page" }, produces = { "application/json" })
@@ -48,11 +50,14 @@ public class ActivityLogController {
 			@RequestParam(value = "p", required = false, defaultValue = "0") int pageIndex,
 			@RequestParam(value = "s", required = false, defaultValue = "10") int pageSize,
 			@RequestParam(value = "readStatus", required = false) int readStatus,
+			@RequestParam(value = "activityTypeFilter", required = false) Integer activityTypeFilter,
 			@RequestParam(value = "startDate", required = false) long startDate,
 			@RequestParam(value = "endDate", required = false) long endDate,
 			HttpServletRequest request) throws Exception {
 		@SuppressWarnings("unused")
 		User currentUser = Util.getSessionUser(request);
+		
+		new Thread(statsHandler).start();
 
 		Boolean isRead = null;
 		if (readStatus == 1) {
@@ -88,6 +93,9 @@ public class ActivityLogController {
 		if (isRead != null) {
 			query.addCriteria(Criteria.where("isRead").is(isRead));
 		}
+		if (activityTypeFilter != null && activityTypeFilter != 0) {
+			query.addCriteria(Criteria.where("activityType").is(activityTypeFilter));
+		}
 		if (null != endDate1 && null != startDate1) {
 //			query.addCriteria(Criteria.where("activityTime").gte(startDate1)
 //					.andOperator(Criteria.where("activityTime").lte(endDate1)));
@@ -117,6 +125,14 @@ public class ActivityLogController {
 			mongoTemplate.save(log);
 		}
 		return BYGenericResponseHandler.getResponse(log);
+	}
+	
+	@RequestMapping(method = { RequestMethod.GET }, value = { "/getStats" }, produces = { "application/json" })
+	@ResponseBody
+	public Object getStats(HttpServletRequest request) throws Exception{
+		new Thread(statsHandler).start();
+		User currentUser = Util.getSessionUser(request);
+		return BYGenericResponseHandler.getResponse(StatsHandler.countMap);
 	}
 
 }

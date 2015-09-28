@@ -1,5 +1,27 @@
 <div class="table-responsive margin-top-20">
 	<h1>DASHBOARD</h1>
+	<div class="statCountContainer">
+		<div class="statCountItem">
+			<span class="statCountValue">{{statCount.postCount}}</span>
+  			<span class="statCountLabel">POSTS</span>
+		</div>
+		<div class="statCountItem">
+			<span class="statCountValue">{{statCount.questionCount}}</span>
+  			<span class="statCountLabel">Questions</span>
+		</div>
+		<div class="statCountItem">
+			<span class="statCountValue">{{statCount.userCount}}</span>
+  			<span class="statCountLabel">Users</span>
+		</div>
+		<div class="statCountItem">
+			<span class="statCountValue">{{statCount.housingCount}}</span>
+  			<span class="statCountLabel">Housings</span>
+		</div>
+		<div class="statCountItem">
+			<span class="statCountValue">{{statCount.serviceCount}}</span>
+  			<span class="statCountLabel">Services</span>
+		</div>
+	</div>
 
 	<div id="activitiesFilter">
 		<div class="divLeft">
@@ -7,6 +29,29 @@
 				<option value="0">All</option>
 				<option value="1">Only read</option>
 				<option value="2">Only Unread</option>
+			</select>
+		</div>
+		<div class="divLeft">
+			<label>Activity Type</label> <select ng-model="filters.activityTypeFilter">
+				<option value="0">All</option>
+				<option value='1'>User</option>
+				<option value='2'>User profile</option>
+				<option value='3'>Post</option>
+				<option value='4'>Question</option>
+				<option value='5'>Feedback</option>
+				<option value='6'>Like on post</option>
+				<option value='7'>Like on comment</option>
+				<option value='8'>Like on answer</option>
+				<option value='9'>Comment</option>
+				<option value='10'>Answer</option>
+				<option value='11'>Profile Review</option>
+				<option value='12'>Share post</option>
+				<option value='13'>Share question</option>
+				<option value='14'>Rate housing</option>
+				<option value='15'>Rate service</option>
+				<option value='16'>Like on question</option>
+				<option value='17'>Like on review</option>
+				<option value='18'>Housing Review</option>
 			</select>
 		</div>
 		<div class="divLeft">

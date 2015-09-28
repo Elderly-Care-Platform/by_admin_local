@@ -14,7 +14,8 @@ adminControllers.controller('ActivityLogsListController', [
 				readFilter:0,
 				dateFilter:0,
 				dateStartRange:new Date(),
-				dateEndRange:new Date()
+				dateEndRange:new Date(),
+				activityTypeFilter:0
 			}
 
 			$scope.host = location.host;
@@ -56,8 +57,6 @@ adminControllers.controller('ActivityLogsListController', [
 				})
 
 			}
-
-			var url = "/byadmin/api/v1/activityLog/page";
 
 			$scope.openProfile = function(profileId) {
 				$http.get("api/v1/userProfile/getByProfileId/" + profileId)
@@ -128,7 +127,8 @@ adminControllers.controller('ActivityLogsListController', [
 					s : size,
 					startDate : startDate.getTime(),
 					endDate : endDate.getTime(),
-					readStatus : $scope.filters.readFilter
+					readStatus : $scope.filters.readFilter,
+					activityTypeFilter : $scope.filters.activityTypeFilter
 				};
 				ActivitiesList.get(params, function(res) {
 					res = res.data;
@@ -145,6 +145,19 @@ adminControllers.controller('ActivityLogsListController', [
 						 return;
 			        }
 				});
+				
+					$http.get("api/v1/activityLog/getStats")
+							.success(function(response) {
+								response = response.data;
+								$scope.statCount = response;
+							}, function(errorResponse) {
+								console.log("error fetching profile");
+								if(errorResponse.data && errorResponse.data.error && errorResponse.data.error.errorCode === 3002){
+									$location.path('/users/login');
+									 return;
+						        }
+								
+							});
 			};
 
 			$scope.postsByUser(0, 10);
