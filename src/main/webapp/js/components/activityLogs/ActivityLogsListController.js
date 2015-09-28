@@ -4,7 +4,8 @@ adminControllers.controller('ActivityLogsListController', [
 		'$location',
 		'$http',
 		'ActivitiesList',
-		function($scope, $routeParams, $location, $http, ActivitiesList) {
+		'ActivitiesStats',
+		function($scope, $routeParams, $location, $http, ActivitiesList,ActivitiesStats) {
 			if (localStorage.getItem("ADMIN_USER_ROLE") !== 'SUPER_USER') {
 				$location.path('/users/login');
 				return;
@@ -146,8 +147,7 @@ adminControllers.controller('ActivityLogsListController', [
 			        }
 				});
 				
-					$http.get("api/v1/activityLog/getStats")
-							.success(function(response) {
+				ActivitiesStats.get({},function(response) {
 								response = response.data;
 								$scope.statCount = response;
 							}, function(errorResponse) {
