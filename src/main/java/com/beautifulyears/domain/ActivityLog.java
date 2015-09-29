@@ -16,6 +16,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  */
 
 @Document(collection = "activityLogs")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ActivityLog {
 
 	@Id

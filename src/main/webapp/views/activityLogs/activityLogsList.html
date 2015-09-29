@@ -49,6 +49,7 @@
 				<option value='15'>Rate service</option>
 				<option value='18'>Housing Review</option>
 				<option value='19'>Housings</option>
+				<option value='20'>Services</option>
 			</select>
 		</div>
 		<div class="divLeft">
@@ -97,7 +98,7 @@
 					ng-if="[3, 4, 6, 7, 8, 9, 10, 12, 13, 16].indexOf(log.activityType) != -1"><a
 					ng-click="markAsRead(true,$index)" target="_blank"
 					href="http://{{host}}/#!/discuss/{{log.entityId}}">{{log.titleToDisplay}}</a></td>
-				<td ng-if="[1,2].indexOf(log.activityType) != -1"><a
+				<td ng-if="[1,2,20].indexOf(log.activityType) != -1"><a
 					target="_blank" ng-click="markAsRead(true,$index)"
 					href="http://{{host}}/#!/profile/0/{{log.entityId}}">{{log.titleToDisplay}}</a></td>
 				<td ng-if="[11,14,15,17].indexOf(log.activityType) != -1"><a

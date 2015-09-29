@@ -47,7 +47,8 @@ adminControllers.controller('ActivityLogsListController', [
 				'16' : "Like on question",
 				'17' : "Like on review",
 				'18' : "Housing Review",
-				'19' : "Housing"
+				'19' : "Housing",
+				'20' : "Service"
 			};
 
 			$scope.markAsRead = function(isRead, idx) {
