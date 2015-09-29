@@ -37,6 +37,8 @@ public class StatsHandler  implements Runnable{
 
 	@Override
 	public void run() {
+		countMap = new HashMap<String, Long>();
+		
 		Query query = new Query(Criteria.where("discussType").is("P"));
 		StatsHandler.countMap.put("postCount",mongoTemplate.count(query, Discuss.class));
 		
