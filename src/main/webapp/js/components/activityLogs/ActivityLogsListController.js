@@ -46,7 +46,8 @@ adminControllers.controller('ActivityLogsListController', [
 				'15' : "Rate service",
 				'16' : "Like on question",
 				'17' : "Like on review",
-				'18' : "Housing Review"
+				'18' : "Housing Review",
+				'19' : "Housing"
 			};
 
 			$scope.markAsRead = function(isRead, idx) {
@@ -123,13 +124,20 @@ adminControllers.controller('ActivityLogsListController', [
 					endDate = $scope.filters.dateEndRange;
 				}
 				
+				var typeFilter = $scope.filters.activityTypeFilter;
+				if(typeFilter == "66"){
+					typeFilter = [6,7,8,16,17];
+				}else{
+					typeFilter = [typeFilter];
+				}
+				
 				var params = {
 					p : page,
 					s : size,
 					startDate : startDate.getTime(),
 					endDate : endDate.getTime(),
 					readStatus : $scope.filters.readFilter,
-					activityTypeFilter : $scope.filters.activityTypeFilter
+					activityTypeFilter : typeFilter
 				};
 				ActivitiesList.get(params, function(res) {
 					res = res.data;

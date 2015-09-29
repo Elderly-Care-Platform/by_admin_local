@@ -50,7 +50,7 @@ public class ActivityLogController {
 			@RequestParam(value = "p", required = false, defaultValue = "0") int pageIndex,
 			@RequestParam(value = "s", required = false, defaultValue = "10") int pageSize,
 			@RequestParam(value = "readStatus", required = false) int readStatus,
-			@RequestParam(value = "activityTypeFilter", required = false) Integer activityTypeFilter,
+			@RequestParam(value = "activityTypeFilter", required = false) List<Integer> activityTypeFilter,
 			@RequestParam(value = "startDate", required = false) long startDate,
 			@RequestParam(value = "endDate", required = false) long endDate,
 			HttpServletRequest request) throws Exception {
@@ -93,8 +93,10 @@ public class ActivityLogController {
 		if (isRead != null) {
 			query.addCriteria(Criteria.where("isRead").is(isRead));
 		}
-		if (activityTypeFilter != null && activityTypeFilter != 0) {
-			query.addCriteria(Criteria.where("activityType").is(activityTypeFilter));
+		if (activityTypeFilter != null && activityTypeFilter.get(0) != 0) {
+			query.addCriteria(Criteria.where((String) "activityType").in(
+					activityTypeFilter));
+//			query.addCriteria(Criteria.where("activityType").is(activityTypeFilter));
 		}
 		if (null != endDate1 && null != startDate1) {
 //			query.addCriteria(Criteria.where("activityTime").gte(startDate1)

@@ -39,9 +39,7 @@
 				<option value='3'>Post</option>
 				<option value='4'>Question</option>
 				<option value='5'>Feedback</option>
-				<option value='6'>Like on post</option>
-				<option value='7'>Like on comment</option>
-				<option value='8'>Like on answer</option>
+				<option value='66'>Likes</option>
 				<option value='9'>Comment</option>
 				<option value='10'>Answer</option>
 				<option value='11'>Profile Review</option>
@@ -49,9 +47,8 @@
 				<option value='13'>Share question</option>
 				<option value='14'>Rate housing</option>
 				<option value='15'>Rate service</option>
-				<option value='16'>Like on question</option>
-				<option value='17'>Like on review</option>
 				<option value='18'>Housing Review</option>
+				<option value='19'>Housings</option>
 			</select>
 		</div>
 		<div class="divLeft">
@@ -92,6 +89,7 @@
 				title="{{log.details}}">
 				<td>{{actionType[log.activityType]}}</td>
 				<td>{{crudTypes[log.crudType]}}</td>
+	<!-- ----------------------------------------------------------------------------------------------------------- -->
 				<td ng-if="[5].indexOf(log.activityType) != -1"><a
 					ng-click="markAsRead(true,$index)" target="_blank"
 					href="http://{{host}}/site/byadmin/#/discuss/{{log.entityId}}">----</a></td>
@@ -108,6 +106,11 @@
 				<td ng-if="[18].indexOf(log.activityType) != -1"><a
 					target="_blank"
 					ng-click="markAsRead(true,$index);openHousing(log.entityId);">{{log.titleToDisplay}}</a></td>
+				<td ng-if="[19].indexOf(log.activityType) != -1"><a
+					target="_blank"
+					ng-click="markAsRead(true,$index);openHousing(log.entityId);">{{log.titleToDisplay}}</a></td>
+					
+	<!-- ----------------------------------------------------------------------------------------------------------- -->				
 				<td>{{log.currentUserEmailId}}</td>
 				<td>{{log.activityTime | date:'medium'}}</td>
 				<td ng-if="log.read == true"><a class="markingLink"
