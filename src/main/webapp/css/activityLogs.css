@@ -16,12 +16,17 @@ a{
 	margin-top:0px;
 }
 .pagination li{
-	padding: 5px 1px;
 	display:inline-block;
 	float:left;
+	margin-left:2px;
 }
 .pagination li a{
 	padding: 0px 9px;
+	color:#000;
+	padding: 5px 10px;
+}
+.pagination li.active a{
+	background:#ccc;
 }
 .divLeft
 {

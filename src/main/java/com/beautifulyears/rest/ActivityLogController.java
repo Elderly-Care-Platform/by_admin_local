@@ -56,7 +56,8 @@ public class ActivityLogController {
 			HttpServletRequest request) throws Exception {
 		@SuppressWarnings("unused")
 		User currentUser = Util.getSessionUser(request);
-		
+		StatsHandler statsHandler = new StatsHandler(
+				mongoTemplate);
 		new Thread(statsHandler).start();
 
 		Boolean isRead = null;
@@ -132,6 +133,8 @@ public class ActivityLogController {
 	@RequestMapping(method = { RequestMethod.GET }, value = { "/getStats" }, produces = { "application/json" })
 	@ResponseBody
 	public Object getStats(HttpServletRequest request) throws Exception{
+		StatsHandler statsHandler = new StatsHandler(
+				mongoTemplate);
 		new Thread(statsHandler).start();
 		User currentUser = Util.getSessionUser(request);
 		return BYGenericResponseHandler.getResponse(StatsHandler.countMap);
