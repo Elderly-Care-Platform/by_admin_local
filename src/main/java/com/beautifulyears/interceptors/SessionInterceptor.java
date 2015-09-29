@@ -11,9 +11,11 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
+import com.beautifulyears.constants.DiscussConstants;
 import com.beautifulyears.domain.Session;
 import com.beautifulyears.domain.User;
 import com.beautifulyears.repository.UserRepository;
+
 @Service
 public class SessionInterceptor extends HandlerInterceptorAdapter {
 	private static final Logger logger = Logger
@@ -21,29 +23,43 @@ public class SessionInterceptor extends HandlerInterceptorAdapter {
 
 	@Autowired
 	private UserRepository userRepository;
-	@Autowired 
+	@Autowired
 	private MongoTemplate mongoTemplate;
-	
+
 	public boolean preHandle(HttpServletRequest request,
 			HttpServletResponse response, Object handler) throws Exception {
-		if(null == System.getProperty("path")){
+		if (null == System.getProperty("path")) {
 			String path = "http://" + request.getServerName() + ":"
 					+ request.getServerPort() + request.getContextPath();
 			System.setProperty("path", path);
 		}
 		String sessionId = request.getHeader("sess");
 		if ((!"null".equals(sessionId) && null != sessionId && !sessionId
-				.isEmpty())
-				&& (null == request.getSession().getAttribute("session") || null == request
-						.getSession().getAttribute("user"))) {
-			logger.debug("Creating new session object");
-			Query q = new Query();
-			q.addCriteria(Criteria.where("sessionId").is(sessionId));
-			Session session = mongoTemplate.findOne(q, Session.class);
-			if (null != session) {
-				User user = userRepository.findOne(session.getUserId());
-				request.getSession().setAttribute("session", session);
-				request.getSession().setAttribute("user", user);
+				.isEmpty())) {
+			if (null == request.getSession().getAttribute("session")
+					|| null == request.getSession().getAttribute("user")) {
+				logger.debug("Creating new session object");
+				Query q = new Query();
+				q.addCriteria(Criteria.where("sessionId").is(sessionId));
+				q.addCriteria(Criteria.where("status").is(
+						DiscussConstants.SESSION_STATUS_ACTIVE));
+				Session session = mongoTemplate.findOne(q, Session.class);
+				if (null != session) {
+					User user = userRepository.findOne(session.getUserId());
+					request.getSession().setAttribute("session", session);
+					request.getSession().setAttribute("user", user);
+				}
+			} else {
+				//if session is expired or invalidated
+				Query q = new Query();
+				q.addCriteria(Criteria.where("sessionId").is(sessionId));
+				q.addCriteria(Criteria.where("status").is(
+						DiscussConstants.SESSION_STATUS_ACTIVE));
+				Session session = mongoTemplate.findOne(q, Session.class);
+				if (null == session) {
+					request.getSession().setAttribute("session", null);
+					request.getSession().setAttribute("user", null);
+				}
 			}
 		}
 		return true;

@@ -24,7 +24,7 @@ public class Util {
 	}
 	
 	public static String truncateText(String text){
-		if(text.length() > DiscussConstants.DISCUSS_TRUNCATION_LENGTH){
+		if(text != null && text.length() > DiscussConstants.DISCUSS_TRUNCATION_LENGTH){
 			int max = DiscussConstants.DISCUSS_TRUNCATION_LENGTH;
 			int end = text.lastIndexOf(' ', max - 3);
 

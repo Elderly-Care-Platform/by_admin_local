@@ -13,13 +13,14 @@ public enum BYErrorCodes {
 	MISSING_PARAMETER(1002, "Required query parameter is missing"),
 	INTERNAL_SERVER_ERROR(1003, "Some unknown internal server error occured"),
 	ERROR_IN_SENDING_MAIL(1004,"Some unexpected error occured while sending the mail"),
+	NO_CONTENT_FOUND(1005,"No content was found with queries criteria"),
 
 	// discuss related error
 	DISCUSS_NOT_FOUND(2001, "Discuss content with provided discussId doesn't exist"),
 	DISCUSS_ALREADY_LIKED_BY_USER(2002, "Discuss content already liked by the logged in user"),
 
 	// user error
-	USER_NOT_AUTHORIZED(3001, "User is not authorized to persform the selected operation"),
+	USER_NOT_AUTHORIZED(3001, "User is not authorized to perform the selected operation"),
 	USER_LOGIN_REQUIRED(3002, "User is required to login to perform such operation"),
 	USER_LOGIN_FAILED(3003,"User login failed. Invalid user/password combination."),
 	USER_ALREADY_EXIST(3004,"User with the same emailId already exists"),
@@ -30,7 +31,10 @@ public enum BYErrorCodes {
 	
 	//review rate
 	REVIEW_TYPE_INVALID(4001,"Invalid review type"),
-	RATING_VALUE_INVALID(4002,"Invalid rating value,rating percentage value should be between 0 to 100.")
+	RATING_VALUE_INVALID(4002,"Invalid rating value,rating percentage value should be between 0 to 100."),
+	
+	//profile error
+	USER_PROFILE_DOES_NOT_EXIST(5001,"User profile for the sent userId does not exist")
 
 	;
 
