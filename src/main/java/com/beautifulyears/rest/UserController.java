@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.beautifulyears.constants.ActivityLogConstants;
+import com.beautifulyears.constants.BYConstants;
 import com.beautifulyears.constants.DiscussConstants;
 import com.beautifulyears.domain.BySession;
 import com.beautifulyears.domain.LoginRequest;
@@ -67,39 +68,52 @@ public class UserController {
 		LoggerUtil.logEntry();
 
 		try {
-			if (!Util.isEmpty(loginRequest.getEmail())
-					&& !Util.isEmpty(loginRequest.getPassword())) {
-				Query q = new Query();
-				q.addCriteria(Criteria.where("email")
-						.is(loginRequest.getEmail()).and("password")
-						.is(loginRequest.getPassword()).and("isActive")
-						.is("Active"));
-
-				User user = mongoTemplate.findOne(q, User.class);
-				if (null == user) {
-					logger.debug("User login failed with user email : "
-							+ loginRequest.getEmail());
-					killSession(req, res);
+			Query q = new Query();
+			if (loginRequest.getRegType() == BYConstants.REGISTRATION_TYPE_EMAIL) {
+				if (!Util.isEmpty(loginRequest.getEmail())
+						&& !Util.isEmpty(loginRequest.getPassword())) {
+					q.addCriteria(Criteria.where("email")
+							.is(loginRequest.getEmail()).and("password")
+							.is(loginRequest.getPassword()).and("isActive")
+							.is("Active"));
+				} else {
+					System.out.println("No such user exist");
 					LoginResponse blankUser = getBlankUser("UserName or password can't be left blank");
 					return BYGenericResponseHandler.getResponse(blankUser);
-				} else {
-					logger.debug("User logged in success for user email = "
-							+ loginRequest.getEmail());
-					Session session = createSession(req, res, user);
-					logger.debug("User exists :: userid = " + user.getId()
-							+ " :: username = " + user.getUserName());
-					LoginResponse response = new LoginResponse();
-					response.setSessionId(session.getSessionId());
-					response.setStatus("OK other user");
-					response.setId(session.getUserId());
-					response.setUserName(session.getUserName());
-					response.setUserRoleId(user.getUserRoleId());
-					return BYGenericResponseHandler.getResponse(response);
 				}
-			} else {
-				System.out.println("No such user exist");
+			}else if (loginRequest.getRegType() == BYConstants.REGISTRATION_TYPE_PHONE) {
+				if (!Util.isEmpty(loginRequest.getPhoneNumber())
+						&& !Util.isEmpty(loginRequest.getPassword())) {
+					q.addCriteria(Criteria.where("phoneNumber")
+							.is(loginRequest.getPhoneNumber()).and("password")
+							.is(loginRequest.getPassword()).and("isActive")
+							.is("Active"));
+				} else {
+					System.out.println("No such user exist");
+					LoginResponse blankUser = getBlankUser("UserName or password can't be left blank");
+					return BYGenericResponseHandler.getResponse(blankUser);
+				}
+			}
+			User user = mongoTemplate.findOne(q, User.class);
+			if (null == user) {
+				logger.debug("User login failed with user email : "
+						+ loginRequest.getEmail());
+				killSession(req, res);
 				LoginResponse blankUser = getBlankUser("UserName or password can't be left blank");
 				return BYGenericResponseHandler.getResponse(blankUser);
+			} else {
+				logger.debug("User logged in success for user email = "
+						+ loginRequest.getEmail());
+				Session session = createSession(req, res, user);
+				logger.debug("User exists :: userid = " + user.getId()
+						+ " :: username = " + user.getUserName());
+				LoginResponse response = new LoginResponse();
+				response.setSessionId(session.getSessionId());
+				response.setStatus("OK other user");
+				response.setId(session.getUserId());
+				response.setUserName(session.getUserName());
+				response.setUserRoleId(user.getUserRoleId());
+				return BYGenericResponseHandler.getResponse(response);
 			}
 
 		} catch (Exception e) {
@@ -111,23 +125,6 @@ public class UserController {
 
 	}
 
-//	@RequestMapping(method = RequestMethod.GET, value = "/logout/{sessionId}", produces = MediaType.APPLICATION_JSON_VALUE)
-//	public @ResponseBody Object logout(
-//			@PathVariable("sessionId") String sessionId) {
-//		try {
-//			LoginResponse response = new LoginResponse();
-//			response.setSessionId(null);
-//			response.setStatus("");
-//			return BYGenericResponseHandler.getResponse(response);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//			LoginResponse response = new LoginResponse();
-//			response.setSessionId(null);
-//			response.setStatus("");
-//			return BYGenericResponseHandler.getResponse(response);
-//		}
-//	}
-	
 	@RequestMapping(method = RequestMethod.GET, value = "/logout", produces = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody Object logout(HttpServletRequest req,
 			HttpServletResponse res) throws Exception {
@@ -151,7 +148,7 @@ public class UserController {
 	}
 
 	// create user - registration
-	@RequestMapping(value = "/{userId}",consumes = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/{userId}", consumes = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public Object submitUser(@RequestBody User user, HttpServletRequest req,
 			HttpServletResponse res) throws Exception {
@@ -232,6 +229,8 @@ public class UserController {
 		String socialSignOnPlatform = user.getSocialSignOnPlatform();
 		String passwordCode = user.getPassword();
 		Date passwordCodeExpiry = user.getPasswordCodeExpiry();
+		int regType = user.getRegType();
+		String phoneNumber = user.getPhoneNumber();
 
 		// Users registered through the BY site will always have ROLE = USER
 		String userRoleId = "USER";
@@ -240,14 +239,14 @@ public class UserController {
 		if (userRoleId != null
 				&& (userRoleId.equals(UserRolePermissions.USER) || userRoleId
 						.equals(UserRolePermissions.WRITER))) {
-			return new User(userName, password, email, verificationCode,
-					verificationCodeExpiry, socialSignOnId,
+			return new User(userName, regType, password, email, phoneNumber,
+					verificationCode, verificationCodeExpiry, socialSignOnId,
 					socialSignOnPlatform, passwordCode, passwordCodeExpiry,
 					userRoleId, "In-Active");
-			
+
 		} else {
-			return new User(userName, password, email, verificationCode,
-					verificationCodeExpiry, socialSignOnId,
+			return new User(userName, regType, password, email, phoneNumber,
+					verificationCode, verificationCodeExpiry, socialSignOnId,
 					socialSignOnPlatform, passwordCode, passwordCodeExpiry,
 					userRoleId, "In-Active");
 		}
@@ -255,9 +254,8 @@ public class UserController {
 
 	@RequestMapping(method = RequestMethod.DELETE, value = "/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
-	public Object deleteUser(
-			@PathVariable("userId") String userId, HttpServletRequest req)
-			throws Exception {
+	public Object deleteUser(@PathVariable("userId") String userId,
+			HttpServletRequest req) throws Exception {
 		logger.debug("Inside DELETE user");
 		userRepository.delete(userId);
 
@@ -287,7 +285,7 @@ public class UserController {
 		if (user == null) {
 			throw new UserNotFoundException(userId);
 		}
-		
+
 		return BYGenericResponseHandler.getResponse(user);
 	}
 

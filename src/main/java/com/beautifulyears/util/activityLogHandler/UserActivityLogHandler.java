@@ -8,6 +8,7 @@ import java.util.Date;
 import org.springframework.data.mongodb.core.MongoTemplate;
 
 import com.beautifulyears.constants.ActivityLogConstants;
+import com.beautifulyears.constants.BYConstants;
 import com.beautifulyears.domain.ActivityLog;
 import com.beautifulyears.domain.User;
 

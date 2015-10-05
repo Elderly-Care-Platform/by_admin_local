@@ -13,7 +13,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import com.beautifulyears.constants.UserRolePermissions;
 
 @Document(collection = "users")
-public class User implements Serializable{
+public class User implements Serializable {
 
 	/**
 	 * 
@@ -32,14 +32,33 @@ public class User implements Serializable{
 	String email;
 	private final Date createdAt = new Date();
 	private String verificationCode = UUID.randomUUID().toString();
-	Date verificationCodeExpiry = this.setCodeExpiryDate(new Date(), 15);
-	String socialSignOnId;
-	String socialSignOnPlatform;
-	String passwordCode;
-	Date passwordCodeExpiry;
-	String userRoleId;
-	String isActive;
-	List<Integer> permissions = new ArrayList<Integer>();
+	private Date verificationCodeExpiry = this
+			.setCodeExpiryDate(new Date(), 15);
+	private String socialSignOnId;
+	private String socialSignOnPlatform;
+	private String passwordCode;
+	private Date passwordCodeExpiry;
+	private String userRoleId;
+	private String isActive;
+	private int regType;
+	private String phoneNumber;
+	private List<Integer> permissions = new ArrayList<Integer>();
+
+	public int getRegType() {
+		return regType;
+	}
+
+	public void setRegType(int regType) {
+		this.regType = regType;
+	}
+
+	public String getPhoneNumber() {
+		return phoneNumber;
+	}
+
+	public void setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
+	}
 
 	public String getIsActive() {
 		return isActive;
@@ -74,15 +93,17 @@ public class User implements Serializable{
 
 	}
 
-	public User(String userName, String password, String email,
-			String verificationCode, Date verificationCodeExpiry,
-			String socialSignOnId, String socialSignOnPlatform,
-			String passwordCode, Date passwordCodeExpiry, String userRoleId,
-			String isActive) {
+	public User(String userName, int regType, String password, String email,
+			String phoneNumber, String verificationCode,
+			Date verificationCodeExpiry, String socialSignOnId,
+			String socialSignOnPlatform, String passwordCode,
+			Date passwordCodeExpiry, String userRoleId, String isActive) {
 		super();
 		this.userName = userName;
 		this.password = password;
-		this.email = email.toLowerCase();
+		this.email = email != null ? email.toLowerCase() : email;
+		this.regType = regType;
+		this.phoneNumber = phoneNumber;
 		this.verificationCode = verificationCode;
 		this.verificationCodeExpiry = verificationCodeExpiry;
 		this.socialSignOnId = socialSignOnId;
@@ -123,7 +144,7 @@ public class User implements Serializable{
 	}
 
 	public String getEmail() {
-		return email.toLowerCase();
+		return email != null ? email.toLowerCase() : email;
 	}
 
 	public void setEmail(String email) {
@@ -133,7 +154,6 @@ public class User implements Serializable{
 	public String getVerificationCode() {
 		return verificationCode;
 	}
-	
 
 	public void setVerificationCode(String verificationCode) {
 		this.verificationCode = verificationCode;
@@ -204,6 +224,4 @@ public class User implements Serializable{
 				+ "]";
 	}
 
-	
-	
 }

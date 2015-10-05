@@ -22,6 +22,8 @@ public class Session implements Serializable {
 	private String userId;
 	private String userName;
 	private String userEmail;
+	private int regType;
+	private String phoneNumber;
 	private Date createdAt = new Date();
 	private int status = DiscussConstants.SESSION_STATUS_ACTIVE;
 	private String ipAddress;
@@ -35,6 +37,8 @@ public class Session implements Serializable {
 		if (null != user) {
 			this.setUserId(user.getId());
 			this.setUserEmail(user.getEmail());
+			this.setRegType(user.getRegType());
+			this.setPhoneNumber(user.getPhoneNumber());
 			this.setUserName(user.getUserName());
 		}
 		String ipAddress = req.getHeader("X-FORWARDED-FOR");
@@ -43,6 +47,22 @@ public class Session implements Serializable {
 		}
 		this.setIpAddress(ipAddress);
 
+	}
+
+	public int getRegType() {
+		return regType;
+	}
+
+	public void setRegType(int regType) {
+		this.regType = regType;
+	}
+
+	public String getPhoneNumber() {
+		return phoneNumber;
+	}
+
+	public void setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
 	}
 
 	public String getIpAddress() {
