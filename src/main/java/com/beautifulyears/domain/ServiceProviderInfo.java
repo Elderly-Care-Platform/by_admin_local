@@ -3,34 +3,53 @@ package com.beautifulyears.domain;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+
+import com.beautifulyears.domain.menu.Menu;
 
 public class ServiceProviderInfo {
-	
-	private List<String> services = new ArrayList<String>(); 	//not applicable for individual user types who are not service providers.
-	
+
+	private List<String> services = new ArrayList<String>(); // not applicable
+																// for
+																// individual
+																// user types
+																// who are not
+																// service
+																// providers.
+
 	private boolean homeVisits = false;
-		
+
 	private String website;
 
 	private int yearsExperience;
-	
+
 	private Date incorporationDate;
 
-	
-	
+	private Map<String, List<Menu>> specialities;
+
 	public ServiceProviderInfo() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
 	public ServiceProviderInfo(List<String> services, boolean homeVisits,
-			String website, int yearsExperience, Date incorporationDate) {
+			String website, int yearsExperience, Date incorporationDate,
+			Map<String, List<Menu>> specialities) {
 		super();
 		this.services = services;
 		this.homeVisits = homeVisits;
 		this.website = website;
 		this.yearsExperience = yearsExperience;
 		this.incorporationDate = incorporationDate;
+		this.specialities = specialities;
+	}
+
+	public Map<String, List<Menu>> getSpecialities() {
+		return specialities;
+	}
+
+	public void setSpecialities(Map<String, List<Menu>> specialities) {
+		this.specialities = specialities;
 	}
 
 	public List<String> getServices() {
@@ -80,9 +99,5 @@ public class ServiceProviderInfo {
 				+ yearsExperience + ", incorporationDate=" + incorporationDate
 				+ "]";
 	}
-	
-	
-	
-	
 
 }
