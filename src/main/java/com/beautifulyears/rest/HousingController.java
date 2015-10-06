@@ -89,6 +89,7 @@ public class HousingController {
 				if (facility != null) {
 					facility.setStatus(housingFacility.getStatus());
 					facility.setFeatured(housingFacility.isFeatured());
+					facility.setVerified(housingFacility.isVerified());
 					housingRepository.save(facility);
 					logger.info("User Profile update with details: "
 							+ facility.toString());

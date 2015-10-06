@@ -13,6 +13,7 @@
                         { name: 'lastModifiedAt', type: 'date' },
                         { name: 'status', type: 'string' },
                         { name: 'isFeatured', type: 'boolean' },
+                        { name: 'verified', type: 'boolean' },
                         { name: 'primaryAddress', type: 'json' }
                         
                     ],
@@ -38,6 +39,11 @@
 			}
 
 			var featuredrenderer = function (row, column, value) {
+				if(value == '1') return '<div style="text-align: center; margin-top: 5px;" height="26" width="26">Yes</div>';
+				else return '<div style="text-align: center; margin-top: 5px;" height="26" width="26">No</div>';
+			}
+			
+			var verifiedrenderer = function (row, column, value) {
 				if(value == '1') return '<div style="text-align: center; margin-top: 5px;" height="26" width="26">Yes</div>';
 				else return '<div style="text-align: center; margin-top: 5px;" height="26" width="26">No</div>';
 			}
@@ -87,10 +93,11 @@
                 altrows: true,
                 columnsresize: true,
                 columns: [
-                  { text: 'Facility Name', datafield: 'name',cellsrenderer:namerenderer, width: 450, cellsalign:'center', align:'center' },	
+                  { text: 'Facility Name', datafield: 'name',cellsrenderer:namerenderer, width: 350, cellsalign:'center', align:'center' },	
                   { text: 'Date Created', datafield: 'createdAt', cellsformat: 'dd.MM.yyyy  HH:mm:ss', width: 250, cellsalign:'center', align:'center' },
                   { text: 'Status', datafield: 'status', cellsrenderer:statusrenderer, width: 150, cellsalign:'center', align:'center' },
                   { text: 'Featured', datafield: 'featured', cellsrenderer:featuredrenderer, width: 100, cellsalign:'center', align:'center' },
+                  { text: 'Verified', datafield: 'verified', cellsrenderer:verifiedrenderer, width: 100, cellsalign:'center', align:'center' },
                   { text: 'Address', datafield: 'primaryAddress', cellsrenderer:cityrenderer, width: 250, cellsalign:'center', align:'center' }
                 ]
             });
