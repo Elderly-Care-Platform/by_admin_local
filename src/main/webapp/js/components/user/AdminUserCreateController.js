@@ -12,6 +12,12 @@ adminControllers.controller('AdminUserCreateController', ['$scope', '$routeParam
 	 	{
 	 		AdminUser.get({userId: userId},function(res){
 	 			$scope.user = res.data;
+	 			if($scope.user.regType ==null || $scope.user.regType == undefined){
+	 				$scope.user.regType = 0;
+	 			}
+	 			if($scope.user.phoneNumber ==null || $scope.user.phoneNumber == undefined){
+	 				$scope.user.phoneNumber = "";
+	 			}
 	 		},function(errorResponse){
 	 			if(errorResponse.data && errorResponse.data.error && errorResponse.data.error.errorCode === 3002){
  					$location.path('/users/login');
@@ -34,48 +40,15 @@ adminControllers.controller('AdminUserCreateController', ['$scope', '$routeParam
 	 					$scope.error = error.data.error.errorMsg;
 	 				}
 		 		});
-//	 			$scope.user.$save(function (user, headers) {
-//	 				toastr.success("Edited User");
-//	 				$location.path('/users/all');
-//	 			},function(error){
-//	 				if(error.data && error.data.error && error.data.error.errorCode === 3002){
-//	 					$location.path('/users/login');
-//	 					 return;
-//	 		        }
-//	 				if(error && error.data && error.data.error && error.data.error.errorCode){
-//	 					$scope.error = error.data.error.errorMsg;
-//	 				}
-//	 			});
 	 		};
 	 	}
 	 	else
 	 	{
 	 		$scope.user = new AdminUser();
+	 		$scope.user.regType = 0;
 
 			$scope.register = function () {
 				if($scope.userForm.$invalid) return;
-//				$scope.user.$save(function (user, headers)
-//				{
-//
-//					$scope.message = "User registered successfully";
-//					$scope.error = '';
-//					$scope.submitted = true;
-//					$location.path('/users/all');
-//
-//				}, function (error) {
-//					// failure
-//					console.log("$save failed " + JSON.stringify(error));
-//					$scope.error = 'Error in registering.Check your inputs and try again. Make sure that the Email is unique to the system.';
-//					$scope.message = '';
-//					$scope.submitted = false;
-//					$scope.userName = '';
-//					$scope.email = '';
-//					$scope.password = '';
-//					$scope.userRoleId = '';
-//
-//					$location.path('/users/new');
-//
-//				});
 				AdminUser.update($scope.user,function(res){
 					$scope.message = "User registered successfully";
 					$scope.error = '';

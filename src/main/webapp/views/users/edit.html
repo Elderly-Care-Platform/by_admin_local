@@ -4,13 +4,31 @@
         <div class="alert alert-error" ng-show="error">{{error}}</div>
  <!-- pass in the variable if our form is valid or invalid -->
     <form name="userForm" ng-submit="edituser(userForm.$valid)" novalidate>
+    
+    	<div class="form-group">
+    		<label style="display: inline-block;"><strong>Registration Type</strong></label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    		 <label style="display: inline-block;">
+    			<input type="radio" ng-model="user.regType" ng-value=0 checked="checked">
+    			Email
+  			</label><br/>
+    		 <label style="display: inline-block;">
+   				 <input type="radio" ng-model="user.regType" ng-value=1>
+    				Phone Number
+  			</label>
+    	</div>
 
 
 		<!-- EMAIL -->
-		<div class="form-group" ng-class="{ 'has-error' : userForm.email.$invalid && !userForm.email.$pristine }">
+		<div class="form-group" ng-class="{ 'has-error' : userForm.email.$invalid && !userForm.email.$pristine && submitted }" ng-if="user.regType==0">
 			<label><strong>Email</strong></label>
-			<input type="email" name="email" class="form-control" ng-model="user.email">
+			<input type="email" name="email" class="form-control" ng-model="user.email" ng-required>
 			<span><p ng-show="userForm.email.$invalid && !userForm.email.$pristine" class="help-block">Enter a valid email.</p></span>
+		</div>
+
+		<div class="form-group"  ng-if="user.regType==1">
+			<label><strong>Phone Number</strong></label>
+			<input type="phoneNumber" name="phoneNumber" class="form-control" ng-model="user.phoneNumber" ng-required>
+			<span><p ng-show="userForm.phoneNumber.$invalid && !userForm.phoneNumber.$pristine" class="help-block">Enter a valid 10 digit phone number.</p></span>
 		</div>
 
 

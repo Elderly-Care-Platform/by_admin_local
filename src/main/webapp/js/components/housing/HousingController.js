@@ -23,6 +23,7 @@ adminControllers.controller('HousingController', [ '$scope',
 			
 			$scope.editUserProfile = function(){
 				$scope.housing.status = $scope.housing.status === true ? 1:0;
+				$scope.housing.verified = $scope.housing.verified === true ? 1:0;
 				$scope.housing.featured = ($scope.housing.featured === true || $scope.housing.featured === 1) ? true:false;
 				$http.put("api/v1/housing/"+housingId,$scope.housing).success(function(res){
 					toastr.success('Housing submitted successfully');

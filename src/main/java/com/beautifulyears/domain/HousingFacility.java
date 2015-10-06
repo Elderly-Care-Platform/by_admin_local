@@ -79,6 +79,16 @@ public class HousingFacility {
 
 	private Date lastModifiedAt = new Date();
 
+	private boolean verified = false;
+
+	public boolean isVerified() {
+		return verified;
+	}
+
+	public void setVerified(boolean isVerified) {
+		this.verified = isVerified;
+	}
+
 	public Date getLastModifiedAt() {
 		return lastModifiedAt;
 	}

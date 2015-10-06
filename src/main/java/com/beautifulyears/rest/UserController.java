@@ -81,7 +81,7 @@ public class UserController {
 					LoginResponse blankUser = getBlankUser("UserName or password can't be left blank");
 					return BYGenericResponseHandler.getResponse(blankUser);
 				}
-			}else if (loginRequest.getRegType() == BYConstants.REGISTRATION_TYPE_PHONE) {
+			} else if (loginRequest.getRegType() == BYConstants.REGISTRATION_TYPE_PHONE) {
 				if (!Util.isEmpty(loginRequest.getPhoneNumber())
 						&& !Util.isEmpty(loginRequest.getPassword())) {
 					q.addCriteria(Criteria.where("phoneNumber")
@@ -156,7 +156,15 @@ public class UserController {
 			logger.debug("NEW USER");
 			try {
 				Query q = new Query();
-				q.addCriteria(Criteria.where("email").is(user.getEmail()));
+				if (user.getRegType() == BYConstants.REGISTRATION_TYPE_EMAIL) {
+					q.addCriteria(Criteria.where("email").is(user.getEmail()));
+				} else if (user.getRegType() == BYConstants.REGISTRATION_TYPE_PHONE) {
+					q.addCriteria(Criteria.where("phoneNumber").is(
+							user.getPhoneNumber()));
+				} else {
+					throw new BYException(BYErrorCodes.INVALID_REQUEST);
+				}
+
 				if (userRepository.exists(q.toString())) {
 					throw new BYException(BYErrorCodes.USER_ALREADY_EXIST);
 				}
@@ -192,9 +200,12 @@ public class UserController {
 			newUser.setPasswordCodeExpiry(user.getPasswordCodeExpiry());
 			newUser.setUserRoleId(user.getUserRoleId());
 			newUser.setUserName(user.getUserName());
+			newUser.setRegType(user.getRegType());
 
 			newUser.setActive(user.isActive());
-			if (!newUser.getEmail().equals(user.getEmail())) {
+			if (user.getRegType() == BYConstants.REGISTRATION_TYPE_EMAIL
+					&& !newUser.getEmail().equals(user.getEmail())) {
+				newUser.setPhoneNumber("");
 				Query q = new Query();
 				q.addCriteria(Criteria.where("email").is(user.getEmail()));
 				User userWithEmail = mongoTemplate.findOne(q, User.class);
@@ -202,6 +213,17 @@ public class UserController {
 					throw new BYException(BYErrorCodes.USER_ALREADY_EXIST);
 				} else {
 					newUser.setEmail(user.getEmail());
+				}
+			}else if(user.getRegType() == BYConstants.REGISTRATION_TYPE_PHONE
+					&& !user.getPhoneNumber().equals(newUser.getPhoneNumber())){
+				newUser.setEmail("");
+				Query q = new Query();
+				q.addCriteria(Criteria.where("phoneNumber").is(user.getPhoneNumber()));
+				User userWithPhoneNumber = mongoTemplate.findOne(q, User.class);
+				if (userWithPhoneNumber != null) {
+					throw new BYException(BYErrorCodes.USER_ALREADY_EXIST);
+				} else {
+					newUser.setPhoneNumber(user.getPhoneNumber());
 				}
 			}
 			newUser = userRepository.save(newUser);
