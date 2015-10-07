@@ -204,7 +204,7 @@ public class UserController {
 
 			newUser.setActive(user.isActive());
 			if (user.getRegType() == BYConstants.REGISTRATION_TYPE_EMAIL
-					&& !newUser.getEmail().equals(user.getEmail())) {
+					&& !user.getEmail().equals(newUser.getEmail())) {
 				newUser.setPhoneNumber("");
 				Query q = new Query();
 				q.addCriteria(Criteria.where("email").is(user.getEmail()));
