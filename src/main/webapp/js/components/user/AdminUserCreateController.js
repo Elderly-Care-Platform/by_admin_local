@@ -17,6 +17,8 @@ adminControllers.controller('AdminUserCreateController', ['$scope', '$routeParam
 	 			}
 	 			if($scope.user.phoneNumber ==null || $scope.user.phoneNumber == undefined){
 	 				$scope.user.phoneNumber = "";
+	 			}else if($scope.user.email ==null || $scope.user.email == undefined){
+	 				$scope.user.email = "";
 	 			}
 	 		},function(errorResponse){
 	 			if(errorResponse.data && errorResponse.data.error && errorResponse.data.error.errorCode === 3002){
