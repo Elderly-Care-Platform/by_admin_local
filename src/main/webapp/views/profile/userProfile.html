@@ -9,6 +9,13 @@
 				<td><label class="control-label" ng-bind="profile.userId"></label></td>
 			</tr>
 			<tr>
+				<td><label class="control-label" for="title"><strong>Verified</strong></label>
+				</td>
+				<td><input type="checkbox" ng-model="profile.verified"
+					name="verified" ng-checked="profile.verified" id="verified"
+					style="vertical-align: top;"></td>
+			</tr>
+			<tr>
 				<td><label class="control-label" for="title"><strong>Withdraw</strong></label>
 				</td>
 				<td><input type="checkbox" ng-model="profile.status"

@@ -49,6 +49,8 @@ public class UserProfile {
 
 	private boolean isFeatured;
 
+	private boolean verified = false;
+
 	private final Date createdAt = new Date();
 
 	private Date lastModifiedAt = new Date();
@@ -101,6 +103,14 @@ public class UserProfile {
 	@JsonIgnore
 	public void setAggrRatingPercentage(Float aggrRating) {
 		this.aggrRatingPercentage = aggrRating;
+	}
+
+	public boolean isVerified() {
+		return verified;
+	}
+
+	public void setVerified(boolean verified) {
+		this.verified = verified;
 	}
 
 	public String getId() {

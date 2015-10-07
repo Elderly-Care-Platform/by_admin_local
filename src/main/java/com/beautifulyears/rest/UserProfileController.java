@@ -97,6 +97,7 @@ public class UserProfileController {
 						if (profile != null) {
 							profile.setStatus(userProfile.getStatus());
 							profile.setFeatured(userProfile.isFeatured());
+							profile.setVerified(userProfile.isVerified());
 							logger.info("User Profile update with details: "
 									+ profile.toString());
 						}else{
@@ -106,8 +107,7 @@ public class UserProfileController {
 								userProfile = new UserProfile();
 								userProfile.setUserId(user.getId());;
 								userProfile.getBasicProfileInfo().setPrimaryEmail(user.getEmail());
-								userProfile.setStatus(userProfile.getStatus());
-								userProfile.setFeatured(userProfile.isFeatured());
+								userProfile.setVerified(userProfile.isVerified());
 							}
 							
 						}
