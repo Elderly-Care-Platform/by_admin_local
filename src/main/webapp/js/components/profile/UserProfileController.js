@@ -24,6 +24,7 @@ adminControllers.controller('UserProfileController', [ '$scope',
 			$scope.editUserProfile = function(){
 				$scope.profile.status = $scope.profile.status === true ? 1:0;
 				$scope.profile.featured = ($scope.profile.featured === true || $scope.profile.featured === 1) ? true:false;
+				$scope.profile.verified = $scope.profile.verified === true ? 1:0;
 				$http.put("api/v1/userProfile/"+userId,$scope.profile).success(function(res){
 					toastr.success('User profile submitted successfully');
 					$location.path('/userProfile');
