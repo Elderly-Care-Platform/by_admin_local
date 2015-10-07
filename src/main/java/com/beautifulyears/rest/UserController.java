@@ -28,6 +28,7 @@ import com.beautifulyears.domain.LoginRequest;
 import com.beautifulyears.domain.LoginResponse;
 import com.beautifulyears.domain.Session;
 import com.beautifulyears.domain.User;
+import com.beautifulyears.domain.UserProfile;
 import com.beautifulyears.domain.UserRolePermissions;
 import com.beautifulyears.exceptions.BYErrorCodes;
 import com.beautifulyears.exceptions.BYException;
@@ -214,11 +215,12 @@ public class UserController {
 				} else {
 					newUser.setEmail(user.getEmail());
 				}
-			}else if(user.getRegType() == BYConstants.REGISTRATION_TYPE_PHONE
-					&& !user.getPhoneNumber().equals(newUser.getPhoneNumber())){
+			} else if (user.getRegType() == BYConstants.REGISTRATION_TYPE_PHONE
+					&& !user.getPhoneNumber().equals(newUser.getPhoneNumber())) {
 				newUser.setEmail("");
 				Query q = new Query();
-				q.addCriteria(Criteria.where("phoneNumber").is(user.getPhoneNumber()));
+				q.addCriteria(Criteria.where("phoneNumber").is(
+						user.getPhoneNumber()));
 				User userWithPhoneNumber = mongoTemplate.findOne(q, User.class);
 				if (userWithPhoneNumber != null) {
 					throw new BYException(BYErrorCodes.USER_ALREADY_EXIST);
@@ -284,9 +286,11 @@ public class UserController {
 		Query q = new Query();
 		q.addCriteria(Criteria.where("userId").is(userId));
 		User user = mongoTemplate.findOne(q, User.class);
+		UserProfile profile = mongoTemplate.findOne(q, UserProfile.class);
 		mongoTemplate.remove(user);
+		mongoTemplate.remove(profile);
 		logHandler.addLog(user, ActivityLogConstants.CRUD_TYPE_DELETE, req);
-		return BYGenericResponseHandler.getResponse(null);
+		return BYGenericResponseHandler.getResponse(null);	
 	}
 
 	@RequestMapping(method = RequestMethod.PUT, value = "/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
