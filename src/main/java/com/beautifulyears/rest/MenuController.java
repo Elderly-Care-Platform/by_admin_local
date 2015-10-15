@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.beautifulyears.domain.menu.Menu;
 import com.beautifulyears.domain.menu.Tag;
 import com.beautifulyears.rest.response.BYGenericResponseHandler;
+import com.beautifulyears.util.MenuHandler;
 
 @Controller
 @RequestMapping({ "/menu" })
@@ -85,6 +86,10 @@ public class MenuController {
 			}
 		}
 		if (oldmenu != null) {
+			MenuHandler handler = new MenuHandler(mongoTemplate);
+			handler.setParams(oldmenu);
+			new Thread(handler).start();
+			
 			Query q = new Query();
 			q.addCriteria(Criteria.where("id").is(oldmenu.getParentMenuId()));
 			Menu parentMenu = mongoTemplate.findOne(q, Menu.class);
