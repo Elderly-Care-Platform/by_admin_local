@@ -1,4 +1,4 @@
-<script type="text/javascript">
+<!-- <script type="text/javascript">
         $(document).ready(function () {
            //var url = "http://52.74.82.29:80/byadmin/api/v1/users/list/all";
            var url = "/byadmin/api/v1/housing/list/all";
@@ -103,12 +103,40 @@
             });
 
         });
-    </script>
+    </script> -->
 
 <h2>
 	Housings 
 </h2>
-
-<div id='jqxWidget' style="font-size: 13px; font-family: Verdana; float: left;">
-        <div id="jqxgrid"></div>
+<div ng-controller="HousingListController">
+	<table datatable="" cellspacing="0" class="display" width="100%">
+		<thead>
+			<tr>
+				<th>Name of the facility</th>
+				<th>Categories</th>
+				<th>Date added</th>
+				<th>User ID</th>
+				<th>city</th>
+				<th>Status</th>
+				<th>no of reviews</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="list in lists">
+            	<td>{{ list.name }}</td>
+            	<td>
+            	{{ list.systemTags.name }}
+            		
+  				</td>
+            	<td>{{ list.createdAt | date:'yyyy-MM-dd HH:mm:ss'}}</td>
+            	<td>{{ list.userId }}</td>
+            	<td>{{ list.primaryAddress.city }}</td>
+            	<td>{{list.verified == false && 'Unverified' || 'Verified'}}</td>
+            	<td>{{list.reviewCount}}</td>
+        	</tr>
+		</tbody>
+	</table>
 </div>
+<!-- <div id='jqxWidget' style="font-size: 13px; font-family: Verdana; float: left;">
+        <div id="jqxgrid"></div>
+</div> -->

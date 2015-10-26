@@ -21,7 +21,7 @@ public class ApplicationConfig {
     public MongoTemplate mongoTemplate() throws Exception {
     	MongoClient mongo = new MongoClient("localhost", 27017);
         //UserCredentials userCredentials = new UserCredentials("demo", "demo");
-        String databaseName = "demo";
+        String databaseName = "demo1";
         MongoDbFactory mongoDbFactory = new SimpleMongoDbFactory(mongo, databaseName);// userCredentials);
         MongoTemplate mongoTemplate = new MongoTemplate(mongoDbFactory);
         mongoTemplate.setWriteConcern(WriteConcern.SAFE);
