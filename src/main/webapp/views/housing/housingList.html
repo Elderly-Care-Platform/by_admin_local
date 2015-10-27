@@ -108,8 +108,34 @@
 <h2>
 	Housings 
 </h2>
-<div ng-controller="HousingListController">
-	<table datatable="" cellspacing="0" class="display" width="100%">
+<div id="activitiesFilter">
+	<div class="divLeft">
+		<label>City Filter</label> 
+		<input type="text" name="cityFilter" placeholder="Enter the city"/>
+	</div>
+	<div class="divLeft">
+		<label>Date Filter</label> 
+		<select ng-model="filters.dateFilter">
+			<option value="0">Today</option>
+			<option value="1">Yesterday</option>
+			<option value="2">Custom</option>
+		</select>
+	</div>
+	<div ng-if="filters.dateFilter == 2" class="divLeft">
+		<div class="divLeft">
+			<label>Start Date</label> <input type="date" name="dateStartRange" ng-model="filters.dateStartRange">
+		</div>
+		<div class="divLeft">
+			<label>End Date</label> <input type="date" name="dateEndRange" ng-model="filters.dateEndRange">
+		</div>
+	</div>
+	<div class="divLeft">
+		<button ng-click="postsByUser(0,10)" class="btn btn-primary">SEARCH</button>
+	</div>
+	<div style="clear:both;"></div>
+</div>
+<div ng-controller="HousingListController as showCase">
+	<table datatable="ng" dt-options="showCase.dtOptions" cellspacing="0" class="display" width="100%">
 		<thead>
 			<tr>
 				<th>Name of the facility</th>
@@ -122,17 +148,22 @@
 			</tr>
 		</thead>
 		<tbody>
-			<tr ng-repeat="list in lists">
-            	<td>{{ list.name }}</td>
+			<tr ng-repeat="HousingList in showCase.myHousingLists">
+            	<td>{{ HousingList.name }}</td>
             	<td>
-            	{{ list.systemTags.name }}
-            		
+            		<ul>
+            			<span ng-repeat="item in HousingList.systemTags">
+            				<li>
+      							{{item.name}}
+  							</li>
+  						</span>
+  					</ul>
   				</td>
-            	<td>{{ list.createdAt | date:'yyyy-MM-dd HH:mm:ss'}}</td>
-            	<td>{{ list.userId }}</td>
-            	<td>{{ list.primaryAddress.city }}</td>
-            	<td>{{list.verified == false && 'Unverified' || 'Verified'}}</td>
-            	<td>{{list.reviewCount}}</td>
+            	<td>{{ HousingList.createdAt | date:'yyyy-MM-dd HH:mm:ss'}}</td>
+            	<td>{{ HousingList.userId }}</td>
+            	<td>{{ HousingList.primaryAddress.city }}</td>
+            	<td>{{HousingList.verified == false && 'Unverified' || 'Verified'}}</td>
+            	<td>{{HousingList.reviewCount}}</td>
         	</tr>
 		</tbody>
 	</table>
