@@ -33,8 +33,6 @@ public class HousingRepositoryImpl implements HousingRepositoryCustom {
 		Query query = new Query();
 		query = getQuery(query, tagIds, userId, isFeatured, isPromotion);
 		query.with(pageable);
-		query.addCriteria(Criteria.where("status").is(
-				DiscussConstants.DISCUSS_STATUS_ACTIVE));
 
 		if (city != null) {
 			query.addCriteria(Criteria.where("primaryAddress.city").regex(city,

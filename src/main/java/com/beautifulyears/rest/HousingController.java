@@ -3,29 +3,31 @@
  */
 package com.beautifulyears.rest;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.beautifulyears.domain.HousingFacility;
-import com.beautifulyears.domain.menu.Menu;
 import com.beautifulyears.repository.HousingRepository;
 import com.beautifulyears.rest.response.BYGenericResponseHandler;
 import com.beautifulyears.rest.response.HousingResponse;
@@ -43,8 +45,6 @@ public class HousingController {
 	private static Logger logger = Logger.getLogger(HousingController.class);
 	private static HousingRepository staticHousingRepository;
 	private HousingRepository housingRepository;
-	private MongoTemplate mongoTemplate;
-	
 	// private static final Logger logger =
 	// Logger.getLogger(HousingController.class);
 
@@ -52,7 +52,6 @@ public class HousingController {
 	public HousingController(HousingRepository housingRepository,
 			MongoTemplate mongoTemplate) {
 		this.housingRepository = housingRepository;
-		this.mongoTemplate = mongoTemplate;
 		staticHousingRepository = housingRepository;
 	}
 
@@ -66,27 +65,46 @@ public class HousingController {
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/list/all", produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
-	public Object allDiscuss() {
+	public Object allDiscuss(
+			@RequestParam(value = "city", required = false) String city,
+			@RequestParam(value = "tags", required = false) List<String> tags,
+			HttpServletRequest request) throws Exception {
+
 		HousingResponse.HousingPage housingPage = null;
 		PageImpl<HousingFacility> page = null;
+		
 		Direction sortDirection = Direction.DESC;
-		Pageable pageable = new PageRequest(0, 100,
-				sortDirection, "createdAt");
-		page = staticHousingRepository.getPage(null, null, null,
-				null, null, pageable);
+	
+		String temp = "null";
+		List<ObjectId> tagIds = new ArrayList<ObjectId>();
+		if(temp.equals(city)){
+			city = null;
+		}
+		if(temp.equals(tags)){
+			tags = null;
+		}
+		if (null != tags) {
+			for (String tagId : tags) {
+				tagIds.add(new ObjectId(tagId));
+			}
+		}
+		Pageable pageable = new PageRequest(0, 100, sortDirection, "createdAt");
+		page = staticHousingRepository.getPage(city, tagIds, null, null, null, pageable);
 		housingPage = HousingResponse.getPage(page, null);
 		return BYGenericResponseHandler.getResponse(housingPage);
 	}
 	
-	/*@RequestMapping(method = RequestMethod.GET, value = "/list/all", produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(method = RequestMethod.GET, value = "/list/cities", produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
-	public Object allDiscussCategories() {
-		Query q = new Query();
-		q.with(new Sort(Sort.Direction.DESC, "createdAt")); 
-		List<Menu> menuList = mongoTemplate.find(q, Menu.class);
-		return BYGenericResponseHandler.getResponse(menuList);
-	}*/
-	
+	public Object allCities() {
+		List<HousingFacility> housingList = housingRepository.findAll();
+		Set<String> cityList = new HashSet<String> ();
+		for(HousingFacility hf: housingList){
+			String cities = hf.getPrimaryAddress().getCity();
+			cityList.add(cities);
+		}
+		return BYGenericResponseHandler.getResponse(cityList);
+	}	
 
 	@RequestMapping(method = { RequestMethod.GET }, value = { "/{housingId}" }, produces = { "application/json" })
 	@ResponseBody

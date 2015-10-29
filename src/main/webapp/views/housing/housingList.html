@@ -108,33 +108,48 @@
 <h2>
 	Housings 
 </h2>
-<div id="activitiesFilter">
-	<div class="divLeft">
-		<label>City Filter</label> 
-		<input type="text" name="cityFilter" placeholder="Enter the city"/>
-	</div>
-	<div class="divLeft">
-		<label>Date Filter</label> 
-		<select ng-model="filters.dateFilter">
-			<option value="0">Today</option>
-			<option value="1">Yesterday</option>
-			<option value="2">Custom</option>
-		</select>
-	</div>
-	<div ng-if="filters.dateFilter == 2" class="divLeft">
-		<div class="divLeft">
-			<label>Start Date</label> <input type="date" name="dateStartRange" ng-model="filters.dateStartRange">
-		</div>
-		<div class="divLeft">
-			<label>End Date</label> <input type="date" name="dateEndRange" ng-model="filters.dateEndRange">
-		</div>
-	</div>
-	<div class="divLeft">
-		<button ng-click="postsByUser(0,10)" class="btn btn-primary">SEARCH</button>
-	</div>
-	<div style="clear:both;"></div>
-</div>
 <div ng-controller="HousingListController as showCase">
+
+	<div id="housingFilter">
+		<div class="divLeft">
+			<label>Category Filter</label> 
+			
+			<select ng-model="filters.categoryFilter">
+				<option value="null">All Categories</option>
+				<option ng-repeat="catlists in catlists" value="{{catlists.id}}" ng-if="catlists.module != 0">
+  					{{catlists.displayMenuName}}
+  				</option>
+			</select>
+		</div>
+		<div class="divLeft">
+			<label>City Filter</label>
+			<select ng-model="filters.cityFilter">
+				<option value="null">All Cities</option>
+				<option ng-repeat="lists in lists" value="{{lists}}">{{lists}}</option>
+			</select>
+		</div>
+		<div class="divLeft">
+			<label>Date Filter</label> 
+			<select ng-model="filters.dateFilter">
+				<option value="0">Today</option>
+				<option value="1">Yesterday</option>
+				<option value="2">Custom</option>
+			</select> 
+		</div>
+		<div ng-if="filters.dateFilter == 2" class="divLeft">
+			<div class="divLeft">
+				<label>Start Date</label> <input type="date" name="dateStartRange" ng-model="filters.dateStartRange">
+			</div>
+			<div class="divLeft">
+				<label>End Date</label> <input type="date" name="dateEndRange" ng-model="filters.dateEndRange">
+			</div>
+		</div>
+		<div class="divLeft">
+			<button ng-click="housingsByFilter()" class="btn btn-primary">SEARCH</button>
+		</div>
+		<div style="clear:both;"></div>
+	</div>
+	
 	<table datatable="ng" dt-options="showCase.dtOptions" cellspacing="0" class="display" width="100%">
 		<thead>
 			<tr>
