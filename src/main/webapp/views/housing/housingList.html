@@ -112,12 +112,11 @@
 
 	<div id="housingFilter">
 		<div class="divLeft">
-			<label>Category Filter</label> 
-			
+			<label>Category Filter</label> 			
 			<select ng-model="filters.categoryFilter">
 				<option value="null">All Categories</option>
-				<option ng-repeat="catlists in catlists" value="{{catlists.id}}" ng-if="catlists.module != 0">
-  					{{catlists.displayMenuName}}
+				<option ng-repeat="category in catLists" value="{{category.id}}" ng-if="category.module != 0">
+  					{{category.displayMenuName}}
   				</option>
 			</select>
 		</div>
@@ -125,24 +124,14 @@
 			<label>City Filter</label>
 			<select ng-model="filters.cityFilter">
 				<option value="null">All Cities</option>
-				<option ng-repeat="lists in lists" value="{{lists}}">{{lists}}</option>
+				<option ng-repeat="city in cityLists" value="{{city}}">{{city}}</option>
 			</select>
 		</div>
 		<div class="divLeft">
-			<label>Date Filter</label> 
-			<select ng-model="filters.dateFilter">
-				<option value="0">Today</option>
-				<option value="1">Yesterday</option>
-				<option value="2">Custom</option>
-			</select> 
+			<label>Start Date</label> <input type="date" name="dateStartRange" placeholder="yyyy-mm-dd" ng-model="filters.dateStartRange">
 		</div>
-		<div ng-if="filters.dateFilter == 2" class="divLeft">
-			<div class="divLeft">
-				<label>Start Date</label> <input type="date" name="dateStartRange" ng-model="filters.dateStartRange">
-			</div>
-			<div class="divLeft">
-				<label>End Date</label> <input type="date" name="dateEndRange" ng-model="filters.dateEndRange">
-			</div>
+		<div class="divLeft">
+			<label>End Date</label> <input type="date" name="dateEndRange" placeholder="yyyy-mm-dd" ng-model="filters.dateEndRange">
 		</div>
 		<div class="divLeft">
 			<button ng-click="housingsByFilter()" class="btn btn-primary">SEARCH</button>
@@ -156,7 +145,7 @@
 				<th>Name of the facility</th>
 				<th>Categories</th>
 				<th>Date added</th>
-				<th>User ID</th>
+				<th>Email</th>
 				<th>city</th>
 				<th>Status</th>
 				<th>no of reviews</th>
@@ -164,7 +153,7 @@
 		</thead>
 		<tbody>
 			<tr ng-repeat="HousingList in showCase.myHousingLists">
-            	<td>{{ HousingList.name }}</td>
+            	<td><a target="_blank" href="http://{{host}}/#!/housingProfile/3/{{HousingList.userId}}/{{HousingList.id}}">{{ HousingList.name }}</a></td>
             	<td>
             		<ul>
             			<span ng-repeat="item in HousingList.systemTags">
@@ -175,7 +164,7 @@
   					</ul>
   				</td>
             	<td>{{ HousingList.createdAt | date:'yyyy-MM-dd HH:mm:ss'}}</td>
-            	<td>{{ HousingList.userId }}</td>
+            	<td>{{ HousingList.primaryEmail == "" && HousingList.primaryPhoneNo || HousingList.primaryEmail}}</td>
             	<td>{{ HousingList.primaryAddress.city }}</td>
             	<td>{{HousingList.verified == false && 'Unverified' || 'Verified'}}</td>
             	<td>{{HousingList.reviewCount}}</td>

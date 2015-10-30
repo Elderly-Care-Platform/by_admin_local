@@ -1,6 +1,5 @@
 var adminServices = angular.module("adminServices", ["ngResource"]);
 var adminControllers = angular.module("adminControllers", ['ui.bootstrap',"jqwidgets",'datatables', 'ngResource']);
-//var adminControllers1 = angular.module('showCase.adminControllers', ['datatables', 'ngResource']);
 var discuss = adminServices.factory('SessionIdService', function() {
     var sessionID = '';
     return {

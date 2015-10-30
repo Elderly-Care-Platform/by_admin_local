@@ -4,9 +4,9 @@
 package com.beautifulyears.rest;
 
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -43,8 +43,9 @@ import com.beautifulyears.util.LoggerUtil;
 @RequestMapping("/housing")
 public class HousingController {
 	private static Logger logger = Logger.getLogger(HousingController.class);
-	private static HousingRepository staticHousingRepository;
+	private HousingRepository staticHousingRepository;
 	private HousingRepository housingRepository;
+	private MongoTemplate mongoTemplate;
 	// private static final Logger logger =
 	// Logger.getLogger(HousingController.class);
 
@@ -52,6 +53,7 @@ public class HousingController {
 	public HousingController(HousingRepository housingRepository,
 			MongoTemplate mongoTemplate) {
 		this.housingRepository = housingRepository;
+		this.mongoTemplate = mongoTemplate;
 		staticHousingRepository = housingRepository;
 	}
 
@@ -68,6 +70,8 @@ public class HousingController {
 	public Object allDiscuss(
 			@RequestParam(value = "city", required = false) String city,
 			@RequestParam(value = "tags", required = false) List<String> tags,
+			@RequestParam(value = "startDate", required = false) Long startDate,
+			@RequestParam(value = "endDate", required = false) Long endDate,
 			HttpServletRequest request) throws Exception {
 
 		HousingResponse.HousingPage housingPage = null;
@@ -83,13 +87,38 @@ public class HousingController {
 		if(temp.equals(tags)){
 			tags = null;
 		}
+		
 		if (null != tags) {
 			for (String tagId : tags) {
 				tagIds.add(new ObjectId(tagId));
 			}
 		}
+		Date startDate1;
+		Date endDate1;
+		Calendar cal = Calendar.getInstance();
+		if(null == startDate){
+			startDate1 = null;
+		}else{
+			cal.setTime(new Date(startDate));
+			cal.set(Calendar.HOUR_OF_DAY, 0);
+			cal.set(Calendar.MINUTE, 0);
+			cal.set(Calendar.SECOND, 0);
+			cal.set(Calendar.MILLISECOND, 0);
+			startDate1 = cal.getTime();
+		}
+		if(null == endDate){
+			endDate1 = null;
+		}else{
+			cal.setTime(new Date(endDate));
+			cal.set(Calendar.HOUR_OF_DAY, 23);
+			cal.set(Calendar.MINUTE, 59);
+			cal.set(Calendar.SECOND, 59);
+			cal.set(Calendar.MILLISECOND, 999);
+			endDate1 = cal.getTime();
+		}
+		
 		Pageable pageable = new PageRequest(0, 100, sortDirection, "createdAt");
-		page = staticHousingRepository.getPage(city, tagIds, null, null, null, pageable);
+		page = staticHousingRepository.getPage(city, tagIds, startDate1, endDate1, null, null, null, pageable);
 		housingPage = HousingResponse.getPage(page, null);
 		return BYGenericResponseHandler.getResponse(housingPage);
 	}
@@ -97,12 +126,9 @@ public class HousingController {
 	@RequestMapping(method = RequestMethod.GET, value = "/list/cities", produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public Object allCities() {
-		List<HousingFacility> housingList = housingRepository.findAll();
-		Set<String> cityList = new HashSet<String> ();
-		for(HousingFacility hf: housingList){
-			String cities = hf.getPrimaryAddress().getCity();
-			cityList.add(cities);
-		}
+		String collectionName = mongoTemplate.getCollectionName(HousingFacility.class);
+		@SuppressWarnings("unchecked")
+		List<String> cityList = mongoTemplate.getCollection(collectionName).distinct("primaryAddress.city");
 		return BYGenericResponseHandler.getResponse(cityList);
 	}	
 

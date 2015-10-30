@@ -3,6 +3,7 @@
  */
 package com.beautifulyears.repository.custom;
 
+import java.util.Date;
 import java.util.List;
 
 import org.bson.types.ObjectId;
@@ -16,6 +17,6 @@ import com.beautifulyears.rest.response.PageImpl;
  *
  */
 public interface HousingRepositoryCustom {
-	public PageImpl<HousingFacility> getPage(String city, List<ObjectId> tagIds, String userId,
+	public PageImpl<HousingFacility> getPage(String city, List<ObjectId> tagIds, Date startDate, Date endDate, String userId,
 			Boolean isFeatured, Boolean isPromotion, Pageable pageable);
 }

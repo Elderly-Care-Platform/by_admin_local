@@ -22,53 +22,69 @@
             .withDisplayLength(10)
             .withOption("bAutoWidth", false)
         
-        $scope.lists = {}
+        $scope.host = location.host;
+            
+        $scope.cityLists = {}
         
         $http.get('/byadmin/api/v1/housing/list/cities'   
 		).success(function (response, status, headers, config) {
-			$scope.lists = response.data;
+			$scope.cityLists = response.data;
 		}).error(function (data, status, headers, config) {    
-			alert(status);
+			console.log(status);
 		});
         
-        $scope.catlists = {}
+        $scope.catLists = {}
         
         $http.get('/byadmin/api/v1/menu/getMenuById?id=55bcadaee4b08970a736784c'   
 		).success(function (response, status, headers, config) {
-			$scope.catlists = response.data.children;
+			$scope.catLists = response.data.children;
 		}).error(function (data, status, headers, config) {    
-			alert(status);
+			console.log(status);
 		});
         
         $scope.filters = {
         	categoryFilter:null,
-        	cityFilter:null,
-            dateFilter:0,
-    		dateStartRange:new Date(),
-    		dateEndRange:new Date(),
+        	cityFilter:null
     	}
         
         $scope.housingsByFilter = function housingsByFilter() {
         	var matchedtags = [];
         	var advancedTags;
-        	for (var i = 0; i < $scope.catlists.length; i++) {
-        		if($scope.catlists[i].id == $scope.filters.categoryFilter){
-        			matchedtags = $scope.catlists[i].tags;
+        	for (var i = 0; i < $scope.catLists.length; i++) {
+        		if($scope.catLists[i].id == $scope.filters.categoryFilter){
+        			matchedtags = $scope.catLists[i].tags;
+        			break;
         		}
         	}
         	for (var j = 0; j < matchedtags.length; j++) {
         		advancedTags = matchedtags[j].id;
         	}
+        	var startD = $scope.filters.dateStartRange;
+        	var endD = $scope.filters.dateEndRange;
+        	var startDt;
+        	var endDt;
+        	if(startD == null){
+        		startDt = null;
+        	}else{
+        		startDt = startD.getTime();
+        	}
+        	if(endD == null){
+        		endDt = null;
+        	}else{
+        		endDt = endD.getTime();
+        	}
         	var dataObj = {
         		tags: advancedTags,
         		city : $scope.filters.cityFilter,
+        		startDate : startDt,
+				endDate : endDt
     		};	
         	
         	$http.get('/byadmin/api/v1/housing/list/all', {params: dataObj}   
 			).success(function (response, status, headers, config) {
 				vm.myHousingLists = response.data.content;
 			}).error(function (data, status, headers, config) {    
-				alert(status);
+				console.log(status);
 			});
         };
         

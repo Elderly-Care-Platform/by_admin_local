@@ -3,7 +3,6 @@ package com.beautifulyears.rest.response;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.data.annotation.Id;
 
@@ -91,16 +90,10 @@ public class HousingResponse implements IResponse {
 		private String id;
 		private String userId;
 		private String name;
-		private String tier;
+
 		private UserAddress primaryAddress = new UserAddress();
-		private String primaryPhoneNo;
-		private List<String> secondaryPhoneNos = new ArrayList<String>();
 		private String primaryEmail;
-		private List<String> secondaryEmails = new ArrayList<String>();
-		private Map<String, String> profileImage;
-		private List<Map<String, String>> photoGalleryURLs = new ArrayList<Map<String, String>>();
-		private String shortDescription;
-		private String description;
+		private String primaryPhoneNo;
 		private List<String> categoriesId;
 		private List<Tag> systemTags;
 
@@ -109,8 +102,6 @@ public class HousingResponse implements IResponse {
 		private int reviewCount;
 		private boolean isReviewedByUser = false;
 		private boolean isRatedByUser = false;
-		private boolean isFeatured;
-		private String website;
 		private Date createdAt = new Date();
 		private Date lastModifiedAt = new Date();
 		private boolean isVerified = false;
@@ -119,24 +110,15 @@ public class HousingResponse implements IResponse {
 			this.id = housing.getId();
 			this.userId = housing.getUserId();
 			this.name = housing.getName();
-			this.tier = housing.getTier();
 			this.primaryAddress = housing.getPrimaryAddress();
 			this.primaryPhoneNo = housing.getPrimaryPhoneNo();
-			this.secondaryPhoneNos = housing.getSecondaryPhoneNos();
 			this.primaryEmail = housing.getPrimaryEmail();
-			this.secondaryEmails = housing.getSecondaryEmails();
-			this.profileImage = housing.getProfileImage();
-			this.photoGalleryURLs = housing.getPhotoGalleryURLs();
-			this.shortDescription = housing.getShortDescription();
-			this.description = housing.getDescription();
 			this.categoriesId = housing.getCategoriesId();
 			this.ratingPercentage = housing.getAggrRatingPercentage();
-			this.website = housing.getWebsite();
 			this.createdAt = housing.getCreatedAt();
 			this.lastModifiedAt = housing.getLastModifiedAt();
 			this.systemTags = housing.getSystemTags();
 			this.isVerified = housing.isVerified();
-			this.isFeatured = housing.isFeatured();
 
 			if (null != user && housing.getRatedBy().contains(user.getId())) {
 				this.isReviewedByUser = true;
@@ -168,46 +150,18 @@ public class HousingResponse implements IResponse {
 			return name;
 		}
 
-		public String getTier() {
-			return tier;
-		}
-
 		public UserAddress getPrimaryAddress() {
 			return primaryAddress;
 		}
-
+		
 		public String getPrimaryPhoneNo() {
 			return primaryPhoneNo;
 		}
-
-		public List<String> getSecondaryPhoneNos() {
-			return secondaryPhoneNos;
-		}
-
+		
 		public String getPrimaryEmail() {
 			return primaryEmail;
 		}
-
-		public List<String> getSecondaryEmails() {
-			return secondaryEmails;
-		}
-
-		public Map<String, String> getProfileImage() {
-			return profileImage;
-		}
-
-		public List<Map<String, String>> getPhotoGalleryURLs() {
-			return photoGalleryURLs;
-		}
-
-		public String getShortDescription() {
-			return shortDescription;
-		}
-
-		public String getDescription() {
-			return description;
-		}
-
+		
 		public List<String> getCategoriesId() {
 			return categoriesId;
 		}
@@ -230,14 +184,6 @@ public class HousingResponse implements IResponse {
 
 		public boolean isRatedByUser() {
 			return isRatedByUser;
-		}
-
-		public boolean isFeatured() {
-			return isFeatured;
-		}
-
-		public String getWebsite() {
-			return website;
 		}
 
 		public Date getCreatedAt() {
