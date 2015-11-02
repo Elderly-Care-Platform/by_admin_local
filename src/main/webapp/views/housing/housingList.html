@@ -1,4 +1,4 @@
-<script type="text/javascript">
+<!-- <script type="text/javascript">
         $(document).ready(function () {
            //var url = "http://52.74.82.29:80/byadmin/api/v1/users/list/all";
            var url = "/byadmin/api/v1/housing/list/all";
@@ -103,12 +103,75 @@
             });
 
         });
-    </script>
+    </script> -->
 
 <h2>
 	Housings 
 </h2>
+<div ng-controller="HousingListController as showCase">
 
-<div id='jqxWidget' style="font-size: 13px; font-family: Verdana; float: left;">
-        <div id="jqxgrid"></div>
+	<div id="housingFilter">
+		<div class="divLeft">
+			<label>Category Filter</label> 			
+			<select ng-model="filters.categoryFilter">
+				<option value="null">All Categories</option>
+				<option ng-repeat="category in catLists" value="{{category.id}}" ng-if="category.module != 0">
+  					{{category.displayMenuName}}
+  				</option>
+			</select>
+		</div>
+		<div class="divLeft">
+			<label>City Filter</label>
+			<select ng-model="filters.cityFilter">
+				<option value="null">All Cities</option>
+				<option ng-repeat="city in cityLists" value="{{city}}">{{city}}</option>
+			</select>
+		</div>
+		<div class="divLeft">
+			<label>Start Date</label> <input type="date" name="dateStartRange" placeholder="yyyy-mm-dd" ng-model="filters.dateStartRange">
+		</div>
+		<div class="divLeft">
+			<label>End Date</label> <input type="date" name="dateEndRange" placeholder="yyyy-mm-dd" ng-model="filters.dateEndRange">
+		</div>
+		<div class="divLeft">
+			<button ng-click="housingsByFilter()" class="btn btn-primary">SEARCH</button>
+		</div>
+		<div style="clear:both;"></div>
+	</div>
+	
+	<table datatable="ng" dt-options="showCase.dtOptions" cellspacing="0" class="display" width="100%">
+		<thead>
+			<tr>
+				<th>Name of the facility</th>
+				<th>Categories</th>
+				<th>Date added</th>
+				<th>Email</th>
+				<th>city</th>
+				<th>Status</th>
+				<th>no of reviews</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="HousingList in showCase.myHousingLists">
+            	<td><a target="_blank" href="http://{{host}}/#!/housingProfile/3/{{HousingList.userId}}/{{HousingList.id}}">{{ HousingList.name }}</a></td>
+            	<td>
+            		<ul>
+            			<span ng-repeat="item in HousingList.systemTags">
+            				<li>
+      							{{item.name}}
+  							</li>
+  						</span>
+  					</ul>
+  				</td>
+            	<td>{{ HousingList.createdAt | date:'yyyy-MM-dd HH:mm:ss'}}</td>
+            	<td>{{ HousingList.primaryEmail == "" && HousingList.primaryPhoneNo || HousingList.primaryEmail}}</td>
+            	<td>{{ HousingList.primaryAddress.city }}</td>
+            	<td>{{HousingList.verified == false && 'Unverified' || 'Verified'}}</td>
+            	<td>{{HousingList.reviewCount}}</td>
+        	</tr>
+		</tbody>
+	</table>
 </div>
+<!-- <div id='jqxWidget' style="font-size: 13px; font-family: Verdana; float: left;">
+        <div id="jqxgrid"></div>
+</div> -->
