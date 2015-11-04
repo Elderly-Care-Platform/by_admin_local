@@ -8,10 +8,11 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
 import com.beautifulyears.domain.UserProfile;
+import com.beautifulyears.repository.custom.UserProfileRepositoryCustom;
 
 
 @Repository
-public interface UserProfileRepository extends PagingAndSortingRepository<UserProfile, String>{
+public interface UserProfileRepository extends PagingAndSortingRepository<UserProfile, String>, UserProfileRepositoryCustom{
 
 	UserProfile findByUserId(String UserId);
 	UserProfile findById(String id);

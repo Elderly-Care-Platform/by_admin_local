@@ -80,6 +80,8 @@
 	<script src="js/components/login/AdminLogoutController.js"></script>	
 	<script src="js/components/login/AdminLoginController.js"></script>	
 	
+	<script src="js/components/service/ServiceListController.js"></script>
+	
 	<script src="js/components/profile/UserProfileController.js"></script>	
 	<script src="js/components/profile/UserProfileListController.js"></script>	
 	
@@ -149,8 +151,11 @@
                         <a href="#/housings">Housings</a>
                     </li>
                     <li ng-hide="{{root.bc_userRoleId == 'USER'}}">
-                        <a href="#/userProfile">Profiles</a>
+                        <a href="#/services">Services</a>
                     </li>
+                    <!-- <li ng-hide="{{root.bc_userRoleId == 'USER'}}">
+                        <a href="#/userProfile">Profiles</a>
+                    </li> -->
                     <li ng-hide="{{root.bc_userRoleId == 'USER'}}">
                         <a href="#/discuss/Q">Questions</a>
                     </li>
