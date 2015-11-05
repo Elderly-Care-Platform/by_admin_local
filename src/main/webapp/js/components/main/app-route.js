@@ -41,7 +41,7 @@ byAdminApp.config(['$routeProvider',
       .when('/userProfile', {templateUrl: 'views/profile/userProfileList.html', controller: 'UserProfileListController'})
       .when('/userProfile/:userId', {templateUrl: 'views/profile/userProfile.html', controller: 'UserProfileController'})
       
-      .when('/housings', {templateUrl: 'views/housing/housingList.html', controller: 'HousingListController'})
+      .when('/housings', {templateUrl: 'views/housing/housingList.html'})
       .when('/housings/:housingId', {templateUrl: 'views/housing/housingFacility.html', controller: 'HousingController'})
       
       .when('/activityLogs', {templateUrl: 'views/activityLogs/activityLogsList.html', controller: 'ActivityLogsListController'})

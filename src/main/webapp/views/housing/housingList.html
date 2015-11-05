@@ -1,109 +1,3 @@
-<!-- <script type="text/javascript">
-        $(document).ready(function () {
-           //var url = "http://52.74.82.29:80/byadmin/api/v1/users/list/all";
-           var url = "/byadmin/api/v1/housing/list/all";
-            // prepare the data
-            var source =
-            {
-                datatype: "json",
-                datafields: [
-                        { name: 'name', type: 'string' },
-                        { name: 'id', type: 'string' },
-                        { name: 'createdAt', type: 'date' },
-                        { name: 'lastModifiedAt', type: 'date' },
-                        { name: 'status', type: 'string' },
-                        { name: 'isFeatured', type: 'boolean' },
-                        { name: 'verified', type: 'boolean' },
-                        { name: 'primaryAddress', type: 'json' }
-                        
-                    ],
-                url: url,
-                root: 'data',
-                pagesize: 100,
-				pager: function (pagenum, pagesize, oldpagenum) {
-                    // callback called when a page or page size is changed.
-                }
-            };
-            
-            var namerenderer = function (row, column, value) {
-				if (value.indexOf('#') != -1) {
-							   title = value.substring(0, value.indexOf('#'));
-							   link = value.substring(value.indexOf('#')+1);
-			   }
-			   return '<div style="text-align: center; margin-top: 5px;"><a href="#/housings/'+ link +'">' + title + '</a></div>'
-		    }
-            
-            var statusrenderer = function (row, column, value) {
-				if(value == '0' || value == '') return '<div style="text-align: center; margin-top: 5px;" height="26" width="26">Published</div>';
-				else return '<div style="text-align: center; margin-top: 5px;" height="26" width="26">Withdrawn</div>';
-			}
-
-			var featuredrenderer = function (row, column, value) {
-				if(value == '1') return '<div style="text-align: center; margin-top: 5px;" height="26" width="26">Yes</div>';
-				else return '<div style="text-align: center; margin-top: 5px;" height="26" width="26">No</div>';
-			}
-			
-			var verifiedrenderer = function (row, column, value) {
-				if(value == '1') return '<div style="text-align: center; margin-top: 5px;" height="26" width="26">Yes</div>';
-				else return '<div style="text-align: center; margin-top: 5px;" height="26" width="26">No</div>';
-			}
-			
-			var cityrenderer = function (row, column, value) {
-				console.log(value);
-				var city = "";
-				if(value && value.locality){
-					city = value.locality + ",";
-				}
-				if(value && value.city){
-					city += value.city;
-				}
-				
-				if( city == ""){
-					return '<div style="text-align: center; margin-top: 5px;" height="26" width="26">-</div>';
-				}
-				
-				return '<div style="text-align: center; margin-top: 5px;" height="26" width="26">'+city+'</div>';
-					
-			}
-
-			var dataAdapter = new $.jqx.dataAdapter(source, {
-				beforeSend : function(jqXHR) {
-				    jqXHR.setRequestHeader("sess", localStorage.getItem("AdminSessionId"));
-				},
-				loadError: function(jqXHR, status, error){
-					window.location.href = "#/users/login";
-				},
-				beforeLoadComplete: function (records) {
-                        for (var i = 0; i < records.length; i++) {
-                        	records[i].name= records[i].name + "#" + records[i].id;
-                        };
-                        return records;
-                    }
-			});
-            $("#jqxgrid").jqxGrid(
-            {
-                width: 1050,
-                source: dataAdapter,
-                sortable: true,
-				filterable: true,
-				showfilterrow: true,
-                pageable: true,
-                autorowheight: true,
-                autoheight: true,
-                altrows: true,
-                columnsresize: true,
-                columns: [
-                  { text: 'Facility Name', datafield: 'name',cellsrenderer:namerenderer, width: 350, cellsalign:'center', align:'center' },	
-                  { text: 'Date Created', datafield: 'createdAt', cellsformat: 'dd.MM.yyyy  HH:mm:ss', width: 250, cellsalign:'center', align:'center' },
-                  { text: 'Status', datafield: 'status', cellsrenderer:statusrenderer, width: 150, cellsalign:'center', align:'center' },
-                  { text: 'Featured', datafield: 'featured', cellsrenderer:featuredrenderer, width: 100, cellsalign:'center', align:'center' },
-                  { text: 'Verified', datafield: 'verified', cellsrenderer:verifiedrenderer, width: 100, cellsalign:'center', align:'center' },
-                  { text: 'Address', datafield: 'primaryAddress', cellsrenderer:cityrenderer, width: 250, cellsalign:'center', align:'center' }
-                ]
-            });
-
-        });
-    </script> -->
 
 <h2>
 	Housings 
@@ -115,8 +9,8 @@
 			<label>Category Filter</label> 			
 			<select ng-model="filters.categoryFilter">
 				<option value="null">All Categories</option>
-				<option ng-repeat="category in catLists" value="{{category.id}}" ng-if="category.module != 0">
-  					{{category.displayMenuName}}
+				<option ng-repeat="(key, value) in categoryLists" value="{{key}}">
+  					{{value.name}}
   				</option>
 			</select>
 		</div>
@@ -156,12 +50,12 @@
             	<td><a target="_blank" href="http://{{host}}/#!/housingProfile/3/{{HousingList.userId}}/{{HousingList.id}}">{{ HousingList.name }}</a></td>
             	<td>
             		<ul>
-            			<span ng-repeat="item in HousingList.systemTags">
-            				<li>
-      							{{item.name}}
-  							</li>
-  						</span>
-  					</ul>
+						<span ng-repeat="item in HousingList.categoriesId">
+							<span ng-repeat="item1 in categoryLists[item].tags">
+								<li>{{item1.name}}</li>
+							</span>
+						</span>
+					</ul>
   				</td>
             	<td>{{ HousingList.createdAt | date:'yyyy-MM-dd HH:mm:ss'}}</td>
             	<td>{{ HousingList.primaryEmail == "" && HousingList.primaryPhoneNo || HousingList.primaryEmail}}</td>
@@ -172,6 +66,3 @@
 		</tbody>
 	</table>
 </div>
-<!-- <div id='jqxWidget' style="font-size: 13px; font-family: Verdana; float: left;">
-        <div id="jqxgrid"></div>
-</div> -->

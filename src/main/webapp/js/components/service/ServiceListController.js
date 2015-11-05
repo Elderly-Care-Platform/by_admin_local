@@ -33,31 +33,25 @@
 			console.log(status);
 		});
         
-        $scope.catLists = {};
+        $scope.categoryLists = {};
         var array = {};
-        
         $http.get('/byadmin/api/v1/menu/getMenuById?id=55bcacf8e4b08970a7367849'   
 		).success(function (response, status, headers, config) {
 	        array = response.data.children;
-	        var temp = [];
 	        function getCategory(array){
 	        	for (var i = 0; i < array.length; i++) {
-	        		if((array[i].children == null || array[i].children.length == 0) && array[i].module == 1){
-	        			temp.push(array[i].tags);
+	        		if((array[i].children == null || array[i].children.length == 0) && array[i].module == 1 && array[i].ancestorIds.length<3){
+	        			var tempArray = {
+	        				"name": array[i].displayMenuName, 
+	        				"tags": array[i].tags
+	        			}
+	        			$scope.categoryLists[array[i].id] = tempArray;
 	        		}else{
 	        			getCategory(array[i].children);
 	        		}
 	        	}
-	        	return temp;
 	        }
-	        var temp1 = getCategory(array);
-	        var temp2 = [];
-	        for (var j = 0; j < temp1.length; j++) {
-	        	temp2 = temp1[j];
-	        	for (var k = 0; k < temp2.length; k++) {
-	        		$scope.catLists[temp2[k].id] = temp2[k].name;
-	        	}
-        	}
+	        getCategory(array);
 		}).error(function (data, status, headers, config) {    
 			console.log(status);
 		});
@@ -71,12 +65,20 @@
         }
         
         $scope.servicesByFilter = function servicesByFilter() {
-        	
         	var tagValue;
-        	if($scope.filters.categoryFilter == "null"){
+        	var categoryFilterValue = $scope.filters.categoryFilter;
+        	if(categoryFilterValue == "null"){
         		tagValue = null;
         	}else{
-        		tagValue = $scope.filters.categoryFilter;
+        		var matchedtags = [];
+        		angular.forEach($scope.categoryLists, function (key, value) {
+        			if(value == categoryFilterValue){
+        				matchedtags = key.tags;
+        			}
+            	})
+        		for (var j = 0; j < matchedtags.length; j++) {
+        			tagValue = matchedtags[j].id;
+            	}
         	}
         	
         	var statusFilterValue = $scope.filters.statusFilter;
@@ -99,38 +101,38 @@
         		serviceTypeValue = $scope.filters.serviceTypeFilter;
         	}
         	
-        	var startD = new Date();
-			var endD = new Date();
+        	var startDate = new Date();
+			var endDate = new Date();
+			
 			if($scope.filters.dateFilter == "null"){
-				startD = null;
-				endD = null;
+				startDate = null;
+				endDate = null;
 			}
 			else if($scope.filters.dateFilter == null){
-				startD = null;
-				endD = null;
+				startDate = null;
+				endDate = null;
 			}
 			else if($scope.filters.dateFilter == "0"){
-				startD.setDate(startD.getDate());
-				endD.setDate(endD.getDate());
+				startDate.setDate(startDate.getDate());
+				endDate.setDate(endDate.getDate());
 			}
 			else if($scope.filters.dateFilter == "1"){
-				startD.setDate(startD.getDate() - 1);
-				endD.setDate(endD.getDate() - 1);
+				startDate.setDate(startDate.getDate() - 1);
+				endDate.setDate(endDate.getDate() - 1);
 			}else if($scope.filters.dateFilter == "2"){
-				startD = $scope.filters.dateStartRange;
-				endD = $scope.filters.dateEndRange;
+				startDate = $scope.filters.dateStartRange;
+				endDate = $scope.filters.dateEndRange;
 			}
-        	var startDt;
-        	var endDt;
-        	if(startD == null){
-        		startDt = null;
+
+        	if(startDate == null){
+        		startDate = null;
         	}else{
-        		startDt = startD.getTime();
+        		startDate = startDate.getTime();
         	}
-        	if(endD == null){
-        		endDt = null;
+        	if(endDate == null){
+        		endDate = null;
         	}else{
-        		endDt = endD.getTime();
+        		endDate = endDate.getTime();
         	}
         	
         	var filterObj = {
@@ -138,19 +140,21 @@
             	city: $scope.filters.cityFilter,
             	userTypes: serviceTypeValue,
             	status: statusValue,
-            	startDate : startDt,
-				endDate : endDt
+            	startDate : startDate,
+				endDate : endDate
         	};	
+        	
+        	ServiceList.getServiceLists(filterObj).then(function(ServiceLists) {
+            	vm.myServiceLists = ServiceLists;
+            });
             	
-            $http.get('/byadmin/api/v1/userProfile/list/services', {params: filterObj}   
-    		).success(function (response, status, headers, config) {
-    			vm.myServiceLists = response.data.content;
-    		}).error(function (data, status, headers, config) {    
-    			console.log(status);
-    		});
         }
-            
-        ServiceList.getServiceLists().then(function(ServiceLists) {
+        
+        var dataObj = {
+        	userTypes: '4,7'
+		}   
+        
+        ServiceList.getServiceLists(dataObj).then(function(ServiceLists) {
         	vm.myServiceLists = ServiceLists;
         });
         
@@ -160,11 +164,8 @@
   
     function ServiceListFactory($http) {
     	return {
-    		getServiceLists: function() {
-    			var dataObj = {
-    		        userTypes: '4,7'
-    		    };	
-    			return $http.get('/byadmin/api/v1/userProfile/list/services', {params: dataObj}).then(function(response) {
+    		getServiceLists: function(filterObj) {	
+    			return $http.get('/byadmin/api/v1/userProfile/list/services', {params: filterObj}).then(function(response) {
     				return response.data.data.content;
     			});
     		}

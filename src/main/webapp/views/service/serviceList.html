@@ -6,8 +6,8 @@
 					<label>Category Filter</label> 			
 					<select ng-model="filters.categoryFilter">
 						<option value="null">All Categories</option>
-						<option ng-repeat="(key, value) in catLists" value="{{key}}">
-  							{{value}}
+						<option ng-repeat="(key, value) in categoryLists" value="{{key}}">
+  							{{value.name}}
   						</option>
 					</select>
 				</div>
@@ -82,12 +82,12 @@
 						</td>
 						<td>
 							<ul>
-            					<span ng-repeat="item in ServiceList.systemTags">
-            						<li>
-      									{{item.name}}
-  									</li>
-  								</span>
-  							</ul>
+								<span ng-repeat="item in ServiceList.serviceProviderInfo.services">
+									<span ng-repeat="item1 in categoryLists[item].tags">
+										<li>{{item1.name}}</li>
+									</span>
+								</span>
+							</ul>
 						</td>
 						<td>
 							<p ng-if="ServiceList.userTypes == 4">Institution</p>
