@@ -23,10 +23,11 @@
             .withOption("bAutoWidth", false)
         
         $scope.host = location.host;
+        $scope.pathName = location.pathname;
         
         $scope.cityLists = {}
         
-        $http.get('/byadmin/api/v1/userProfile/list/cities'   
+        $http.get($scope.pathName + 'api/v1/userProfile/list/cities'   
 		).success(function (response, status, headers, config) {
 			$scope.cityLists = response.data;
 		}).error(function (data, status, headers, config) {    
@@ -35,19 +36,21 @@
         
         $scope.categoryLists = {};
         var array = {};
-        $http.get('/byadmin/api/v1/menu/getMenuById?id=55bcacf8e4b08970a7367849'   
+        $http.get($scope.pathName + 'api/v1/menu/getMenuById?id=55bcacf8e4b08970a7367849'   
 		).success(function (response, status, headers, config) {
 	        array = response.data.children;
 	        function getCategory(array){
 	        	for (var i = 0; i < array.length; i++) {
-	        		if((array[i].children == null || array[i].children.length == 0) && array[i].module == 1 && array[i].ancestorIds.length<3){
-	        			var tempArray = {
-	        				"name": array[i].displayMenuName, 
-	        				"tags": array[i].tags
+	        		if(array[i].module == 1 && array[i].ancestorIds.length<3){
+	        			if(array[i].children == null || array[i].children.length == 0){
+	        				var categoryArray = {
+	        					"name": array[i].displayMenuName, 
+	        					"tags": array[i].tags
+	        				}
+	        				$scope.categoryLists[array[i].id] = categoryArray;
+	        			}else{
+	        				getCategory(array[i].children);
 	        			}
-	        			$scope.categoryLists[array[i].id] = tempArray;
-	        		}else{
-	        			getCategory(array[i].children);
 	        		}
 	        	}
 	        }
@@ -66,26 +69,20 @@
         
         $scope.servicesByFilter = function servicesByFilter() {
         	var tagValue;
+        	var selectedTagValue = [];
         	var categoryFilterValue = $scope.filters.categoryFilter;
-        	if(categoryFilterValue == "null"){
+        	if(categoryFilterValue == null || categoryFilterValue == "null"){
         		tagValue = null;
         	}else{
-        		var matchedtags = [];
-        		angular.forEach($scope.categoryLists, function (key, value) {
-        			if(value == categoryFilterValue){
-        				matchedtags = key.tags;
-        			}
-            	})
-        		for (var j = 0; j < matchedtags.length; j++) {
-        			tagValue = matchedtags[j].id;
+            	selectedTagValue = $scope.categoryLists[categoryFilterValue].tags;
+        		for (var j = 0; j < selectedTagValue.length; j++) {
+        			tagValue = selectedTagValue[j].id;
             	}
         	}
         	
         	var statusFilterValue = $scope.filters.statusFilter;
         	var statusValue;
-        	if(statusFilterValue == null){
-        		statusValue = null;
-        	}else if(statusFilterValue == "null"){
+        	if(statusFilterValue == null || statusFilterValue == "null"){
         		statusValue = null;
         	}else{
         		statusValue = $scope.filters.statusFilter;
@@ -93,9 +90,7 @@
         	
         	var serviceTypeFilterValue = $scope.filters.serviceTypeFilter;
         	var serviceTypeValue;
-        	if(serviceTypeFilterValue == null){
-        		serviceTypeValue = '4,7';
-        	}else if(serviceTypeFilterValue == "null"){
+        	if(serviceTypeFilterValue == null || serviceTypeFilterValue == "null"){
         		serviceTypeValue = '4,7';
         	}else{
         		serviceTypeValue = $scope.filters.serviceTypeFilter;
@@ -104,11 +99,7 @@
         	var startDate = new Date();
 			var endDate = new Date();
 			
-			if($scope.filters.dateFilter == "null"){
-				startDate = null;
-				endDate = null;
-			}
-			else if($scope.filters.dateFilter == null){
+			if($scope.filters.dateFilter == null || $scope.filters.dateFilter == "null"){
 				startDate = null;
 				endDate = null;
 			}
@@ -165,7 +156,8 @@
     function ServiceListFactory($http) {
     	return {
     		getServiceLists: function(filterObj) {	
-    			return $http.get('/byadmin/api/v1/userProfile/list/services', {params: filterObj}).then(function(response) {
+    			var pathName = location.pathname;
+    			return $http.get(pathName + 'api/v1/userProfile/list/services', {params: filterObj}).then(function(response) {
     				return response.data.data.content;
     			});
     		}
