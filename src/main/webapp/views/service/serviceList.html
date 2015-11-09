@@ -1,0 +1,111 @@
+
+		<h3 class='menu'>Services</h3>
+		<div ng-controller="ServiceListController as showCase">
+			<div id="serviceFilter">
+				<div class="divLeft">
+					<label>Category Filter</label> 			
+					<select ng-model="filters.categoryFilter">
+						<option value="null">All Categories</option>
+						<option ng-repeat="(key, value) in categoryLists" value="{{key}}">
+  							{{value.name}}
+  						</option>
+					</select>
+				</div>
+				<div class="divLeft">
+					<label>City Filter</label>
+					<select ng-model="filters.cityFilter">
+						<option value="null">All Cities</option>
+						<option ng-repeat="city in cityLists" value="{{city}}">{{city}}</option>
+					</select>
+				</div>
+				<div class="divLeft">
+					<label>Type of Service</label>
+					<select ng-model="filters.serviceTypeFilter">
+						<option value="null">All</option>
+						<option value="7">Individual</option>
+						<option value="4">Institution</option>
+					</select>
+				</div>
+				<div class="divLeft">
+					<label>Status Filter</label>
+					<select ng-model="filters.statusFilter">
+						<option value="null">All</option>
+						<option value="true">Verified</option>
+						<option value="false">Unverified</option>
+					</select>
+				</div>
+				<div class="divLeft">
+					<label>Date Filter</label> 
+					<select ng-model="filters.dateFilter">
+						<option value="null">All</option>
+						<option value="0">Today</option>
+						<option value="1">Yesterday</option>
+						<option value="2">Custom</option>
+					</select>
+				</div>
+				<div ng-if="filters.dateFilter == 2" class="divLeft">
+					<div class="divLeft">
+						<label>Start Date</label> 
+						<input type="date" name="dateStartRange" placeholder="yyyy-mm-dd" ng-model="filters.dateStartRange">
+					</div>
+					<div class="divLeft">
+						<label>End Date</label> 
+						<input type="date" name="dateEndRange" placeholder="yyyy-mm-dd" ng-model="filters.dateEndRange">
+					</div>
+				</div>
+				<div class="divLeft">
+					<button ng-click="servicesByFilter()" class="btn btn-primary">SEARCH</button>
+				</div>
+				<div style="clear:both;"></div>
+			</div>
+			
+			<table datatable="ng" dt-options="showCase.dtOptions" cellspacing="0" class="display" width="100%">
+				<thead>
+					<tr>
+						<th>Name of the Service</th>
+						<th>Categories</th>
+						<th>Type of Service</th>
+						<th>Email</th>
+						<th>City</th>
+						<th>Status</th>
+						<th>Date Modified</th>
+						<th>no of reviews</th>
+						<th>Edit</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="ServiceList in showCase.myServiceLists">
+						<td>
+							<a target="_blank" href="http://{{host}}/#!/profile/0/{{ServiceList.id}}">
+								{{ServiceList.basicProfileInfo.firstName}}
+							</a>
+						</td>
+						<td>
+							<ul>
+								<span ng-repeat="item in ServiceList.serviceProviderInfo.services">
+									<span ng-repeat="item1 in categoryLists[item].tags">
+										<li>{{item1.name}}</li>
+									</span>
+								</span>
+							</ul>
+						</td>
+						<td>
+							<p ng-if="ServiceList.userTypes == 4">Institution</p>
+							<p ng-if="ServiceList.userTypes == 7">Individual</p>
+						</td>
+						<td>{{ServiceList.basicProfileInfo.primaryEmail == "" && ServiceList.basicProfileInfo.primaryPhoneNo || ServiceList.basicProfileInfo.primaryEmail}}</td>
+						<td>{{ServiceList.basicProfileInfo.primaryUserAddress.city}}</td>
+						<td>{{ServiceList.verified == false && 'Unverified' || 'Verified'}}</td>
+						<td>{{ServiceList.createdAt | date:'yyyy-MM-dd HH:mm:ss'}}</td>
+						<td>{{ServiceList.reviewCount}}</td>
+						<td>
+							<div style="text-align: center; margin-top: 5px;">
+								<a href="http://{{host}}/byadmin/#/userProfile/{{ServiceList.userId}}">
+									<img src="../../../byadmin/img/edit.png" alt="edit" height="26" width="26">
+								</a>
+							</div>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
