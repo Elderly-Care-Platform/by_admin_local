@@ -31,6 +31,7 @@ import com.beautifulyears.rest.response.BYGenericResponseHandler;
 import com.beautifulyears.rest.response.PageImpl;
 import com.beautifulyears.rest.response.UserProfileResponse;
 import com.beautifulyears.util.LoggerUtil;
+import com.mongodb.BasicDBObject;
 
 /**
  * The REST based service for managing "user_profile"
@@ -130,8 +131,13 @@ public class UserProfileController {
 	@ResponseBody
 	public Object allCities() {
 		String collectionName = mongoTemplate.getCollectionName(UserProfile.class);
+		List<Integer> userTypes = new ArrayList<Integer>();
+		userTypes.add(4);
+		userTypes.add(7);
+		BasicDBObject query = new BasicDBObject();
+		query.put("userTypes", new BasicDBObject("$in", userTypes));
 		@SuppressWarnings("unchecked")
-		List<String> cityList = mongoTemplate.getCollection(collectionName).distinct("basicProfileInfo.primaryUserAddress.city");
+		List<String> cityList = mongoTemplate.getCollection(collectionName).distinct("basicProfileInfo.primaryUserAddress.city", query);
 		return BYGenericResponseHandler.getResponse(cityList);
 	}	
 	
