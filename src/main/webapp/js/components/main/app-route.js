@@ -36,10 +36,12 @@ byAdminApp.config(['$routeProvider',
       .when('/menu/editMenu/:menuId', {templateUrl: 'views/menu/editMenu.html', controller: 'MenuEditController'})
       .when('/menu/listTag', {templateUrl: 'views/menu/listTag.html', controller: 'TagListController'})
       
+      .when('/services', {templateUrl: 'views/service/serviceList.html'})
+     
       .when('/userProfile', {templateUrl: 'views/profile/userProfileList.html', controller: 'UserProfileListController'})
       .when('/userProfile/:userId', {templateUrl: 'views/profile/userProfile.html', controller: 'UserProfileController'})
       
-      .when('/housings', {templateUrl: 'views/housing/housingList.html', controller: 'HousingListController'})
+      .when('/housings', {templateUrl: 'views/housing/housingList.html'})
       .when('/housings/:housingId', {templateUrl: 'views/housing/housingFacility.html', controller: 'HousingController'})
       
       .when('/activityLogs', {templateUrl: 'views/activityLogs/activityLogsList.html', controller: 'ActivityLogsListController'})
