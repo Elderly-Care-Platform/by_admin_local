@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 import org.bson.types.ObjectId;
+import org.jsoup.Jsoup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -27,12 +28,18 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.beautifulyears.constants.ActivityLogConstants;
+import com.beautifulyears.constants.DiscussConstants;
 import com.beautifulyears.domain.HousingFacility;
+import com.beautifulyears.domain.User;
 import com.beautifulyears.repository.HousingRepository;
 import com.beautifulyears.rest.response.BYGenericResponseHandler;
 import com.beautifulyears.rest.response.HousingResponse;
 import com.beautifulyears.rest.response.PageImpl;
 import com.beautifulyears.util.LoggerUtil;
+import com.beautifulyears.util.Util;
+import com.beautifulyears.util.activityLogHandler.ActivityLogHandler;
+import com.beautifulyears.util.activityLogHandler.HousingLogHandler;
 
 /**
  * @author Nitin
@@ -43,9 +50,11 @@ import com.beautifulyears.util.LoggerUtil;
 @RequestMapping("/housing")
 public class HousingController {
 	private static Logger logger = Logger.getLogger(HousingController.class);
-	private HousingRepository staticHousingRepository;
+	private static HousingRepository staticHousingRepository;
 	private HousingRepository housingRepository;
 	private MongoTemplate mongoTemplate;
+	private static MongoTemplate staticMongoTemplate;
+	private static ActivityLogHandler<HousingFacility> logHandler;
 	// private static final Logger logger =
 	// Logger.getLogger(HousingController.class);
 
@@ -55,6 +64,8 @@ public class HousingController {
 		this.housingRepository = housingRepository;
 		this.mongoTemplate = mongoTemplate;
 		staticHousingRepository = housingRepository;
+		staticMongoTemplate = mongoTemplate;
+		logHandler = new HousingLogHandler(mongoTemplate);
 	}
 
 	/*@RequestMapping(method = RequestMethod.GET, value = "/list/all", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -181,5 +192,79 @@ public class HousingController {
 
 		return BYGenericResponseHandler.getResponse(facility);
 	}
+	
+	public static List<HousingFacility> addFacilities(
+			List<HousingFacility> facilities, User user) {
+		List<HousingFacility> existingFacilities = staticHousingRepository
+				.findByUserId(user.getId());
+
+		ArrayList<HousingFacility> newlyAdded = new ArrayList<HousingFacility>(
+				facilities);
+		newlyAdded.removeAll(existingFacilities);
+
+		ArrayList<HousingFacility> removed = new ArrayList<HousingFacility>(
+				existingFacilities);
+		removed.removeAll(facilities);
+
+		ArrayList<HousingFacility> updated = new ArrayList<HousingFacility>(
+				facilities);
+		updated.retainAll(existingFacilities);
+
+		for (HousingFacility removedFacility : removed) {
+			staticMongoTemplate.remove(removedFacility);
+			logHandler.addLog(removedFacility,
+					ActivityLogConstants.CRUD_TYPE_DELETE, null, user);
+		}
+
+		for (HousingFacility addedFacility : newlyAdded) {
+			addedFacility.setUserId(user.getId());
+			HousingFacility newFacility = new HousingFacility();
+			updateHousing(newFacility, addedFacility);
+			newFacility.setLastModifiedAt(new Date());
+			staticMongoTemplate.save(newFacility);
+			logHandler.addLog(newFacility,
+					ActivityLogConstants.CRUD_TYPE_CREATE, null, user);
+			facilities.set(facilities.indexOf(addedFacility), newFacility);
+		}
+
+		for (HousingFacility updatedFacility : updated) {
+			HousingFacility old = existingFacilities.get(existingFacilities
+					.indexOf(updatedFacility));
+			updateHousing(old, updatedFacility);
+			old.setLastModifiedAt(new Date());
+			staticMongoTemplate.save(old);
+			logHandler.addLog(old, ActivityLogConstants.CRUD_TYPE_UPDATE, null,
+					user);
+		}
+
+		return facilities;
+	}
+	
+	private static void updateHousing(HousingFacility oldHousing,
+			HousingFacility newHousing) {
+		oldHousing.setDescription(newHousing.getDescription());
+		oldHousing.setName(newHousing.getName());
+		oldHousing.setPhotoGalleryURLs(newHousing.getPhotoGalleryURLs());
+		oldHousing.setPrimaryAddress(newHousing.getPrimaryAddress());
+		oldHousing.setPrimaryEmail(newHousing.getPrimaryEmail());
+		oldHousing.setPrimaryPhoneNo(newHousing.getPrimaryPhoneNo());
+		oldHousing.setProfileImage(newHousing.getProfileImage());
+		oldHousing.setSecondaryEmails(newHousing.getSecondaryEmails());
+		oldHousing.setSecondaryPhoneNos(newHousing.getSecondaryPhoneNos());
+		oldHousing.setWebsite(newHousing.getWebsite());
+		oldHousing.setUserId(newHousing.getUserId());
+		oldHousing.setCategoriesId(newHousing.getCategoriesId());
+		if (!Util.isEmpty(newHousing.getDescription())) {
+			org.jsoup.nodes.Document doc = Jsoup.parse(newHousing
+					.getDescription());
+			String domText = doc.text();
+			if (domText.length() > DiscussConstants.DISCUSS_TRUNCATION_LENGTH) {
+				oldHousing.setShortDescription(Util.truncateText(domText));
+			}
+		}
+		oldHousing.setSystemTags(newHousing.getSystemTags());
+		oldHousing.setTier(newHousing.getTier());
+	}
+
 
 }

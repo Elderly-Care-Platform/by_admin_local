@@ -1,7 +1,9 @@
 package com.beautifulyears.rest;
 
+import java.text.MessageFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.beautifulyears.constants.ActivityLogConstants;
@@ -32,9 +35,11 @@ import com.beautifulyears.domain.UserProfile;
 import com.beautifulyears.domain.UserRolePermissions;
 import com.beautifulyears.exceptions.BYErrorCodes;
 import com.beautifulyears.exceptions.BYException;
+import com.beautifulyears.mail.MailHandler;
 import com.beautifulyears.repository.UserRepository;
 import com.beautifulyears.rest.response.BYGenericResponseHandler;
 import com.beautifulyears.util.LoggerUtil;
+import com.beautifulyears.util.ResourceUtil;
 import com.beautifulyears.util.UserNameHandler;
 import com.beautifulyears.util.Util;
 import com.beautifulyears.util.activityLogHandler.ActivityLogHandler;
@@ -52,13 +57,15 @@ import com.beautifulyears.util.activityLogHandler.UserActivityLogHandler;
 public class UserController {
 	private static final Logger logger = Logger.getLogger(UserController.class);
 	private UserRepository userRepository;
+	private static UserRepository staticUserRepository;
 	private MongoTemplate mongoTemplate;
 	ActivityLogHandler<User> logHandler;
 
 	@Autowired
-	public UserController(UserRepository userRepository,
+	public UserController(UserRepository userRepository, UserRepository staticUserRepository,
 			MongoTemplate mongoTemplate) {
 		this.userRepository = userRepository;
+		UserController.staticUserRepository = staticUserRepository;
 		this.mongoTemplate = mongoTemplate;
 		logHandler = new UserActivityLogHandler(mongoTemplate);
 	}
@@ -229,8 +236,8 @@ public class UserController {
 				}
 			}
 			newUser = userRepository.save(newUser);
-			logHandler.addLog(newUser, ActivityLogConstants.CRUD_TYPE_UPDATE,
-					req);
+			/*logHandler.addLog(newUser, ActivityLogConstants.CRUD_TYPE_UPDATE,
+					req);*/
 			if (isUserNameChanged) {
 				UserNameHandler userNameHandler = new UserNameHandler(
 						mongoTemplate);
@@ -238,7 +245,7 @@ public class UserController {
 						newUser.getUserName());
 				new Thread(userNameHandler).start();
 			}
-			return BYGenericResponseHandler.getResponse(null);
+			return BYGenericResponseHandler.getResponse(newUser);
 		}
 
 	}
@@ -275,6 +282,28 @@ public class UserController {
 					userRoleId, "In-Active");
 		}
 	}
+	
+	boolean sendMailForResetPassword(User user) {
+		boolean mailStatus = false;
+		try {
+			ResourceUtil resourceUtil = new ResourceUtil(
+					"mailTemplate.properties");
+			String url = System.getProperty("path") + "#!/users/resetPassword/"
+					+ user.getVerificationCode();
+			String userName = !Util.isEmpty(user.getUserName()) ? user
+					.getUserName() : "Anonymous User";
+			String body = MessageFormat.format(
+					resourceUtil.getResource("resetPassword"), userName, url,
+					url, url);
+			MailHandler.sendMail(user.getEmail(),
+					"Reset Beutifulyears' password", body);
+			mailStatus = true;
+		} catch (Exception e) {
+			logger.error(BYErrorCodes.ERROR_IN_SENDING_MAIL);
+		}
+		return mailStatus;
+	}
+
 
 	@RequestMapping(method = RequestMethod.DELETE, value = "/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
@@ -291,6 +320,69 @@ public class UserController {
 		mongoTemplate.remove(profile);
 		logHandler.addLog(user, ActivityLogConstants.CRUD_TYPE_DELETE, req);
 		return BYGenericResponseHandler.getResponse(null);	
+	}
+	
+	@RequestMapping(value = "/resetPassword", method = RequestMethod.GET)
+	public @ResponseBody Object getResetPasswordLink(
+			@RequestParam(value = "email", required = true) String email,
+			HttpServletRequest req) {
+		LoggerUtil.logEntry();
+		if (!Util.isEmpty(email)) {
+			Query q = new Query();
+			q.addCriteria(Criteria.where("email").regex(email, "i"));
+			User user = mongoTemplate.findOne(q, User.class);
+			if (null != user) {
+				user.setVerificationCode(UUID.randomUUID().toString());
+				Date t = new Date();
+				user.setVerificationCodeExpiry(new Date(
+						t.getTime()
+								+ (BYConstants.FORGOT_PASSWORD_CODE_EXPIRY_IN_MIN * 60000)));
+				boolean mailStatus = sendMailForResetPassword(user);
+				if (mailStatus == false) {
+					throw new BYException(BYErrorCodes.ERROR_IN_SENDING_MAIL);
+				}
+				mongoTemplate.save(user);
+			} else {
+				throw new BYException(BYErrorCodes.USER_EMAIL_DOES_NOT_EXIST);
+			}
+		} else {
+			throw new BYException(BYErrorCodes.MISSING_PARAMETER);
+		}
+
+		return true;
+	}
+
+	@RequestMapping(value = "/resetPassword", method = RequestMethod.POST)
+	public @ResponseBody Object getResetPasswordLink(@RequestBody User user,
+			HttpServletRequest req, HttpServletResponse res) throws Exception {
+		LoggerUtil.logEntry();
+		User user1 = null;
+		if (null != user && !Util.isEmpty(user.getVerificationCode())
+				&& !Util.isEmpty(user.getPassword())) {
+			Query q = new Query();
+			q.addCriteria(Criteria.where("verificationCode").is(
+					user.getVerificationCode()));
+			user1 = mongoTemplate.findOne(q, User.class);
+			if (null != user1) {
+				Date currentDate = new Date();
+				if (currentDate.compareTo(user1.getVerificationCodeExpiry()) <= 0) {
+					user1.setVerificationCodeExpiry(currentDate);
+					user1.setPassword(user.getPassword());
+					logger.debug("password changed successfuully for user "
+							+ user1.getEmail() + " or " + user.getPhoneNumber());
+					// send mail on successful changing the password
+					mongoTemplate.save(user1);
+				} else {
+					throw new BYException(BYErrorCodes.USER_CODE_EXPIRED);
+				}
+			} else {
+				throw new BYException(BYErrorCodes.USER_EMAIL_DOES_NOT_EXIST);
+			}
+		} else {
+			throw new BYException(BYErrorCodes.MISSING_PARAMETER);
+		}
+		inValidateAllSessions(user.getId());
+		return login(new LoginRequest(user1), req, res);
 	}
 
 	@RequestMapping(method = RequestMethod.PUT, value = "/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -344,6 +436,13 @@ public class UserController {
 		}
 		return null;
 	}
+	
+	public static User getUsers(String userId) {
+		LoggerUtil.logEntry();
+		User user = staticUserRepository.findOne(userId);
+		return user;
+	}
+
 
 	private LoginResponse getBlankUser(String msg) {
 		System.out.println("No such user exist");

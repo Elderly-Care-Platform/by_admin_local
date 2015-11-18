@@ -30,9 +30,17 @@ public abstract class ActivityLogHandler<T> {
 		super();
 		this.mongoTemplate = mongoTemplate;
 	}
+	
+	
 
 	public void addLog(T entity, int crudType, HttpServletRequest req) throws Exception {
 		User currentUser = Util.getSessionUser(req);
+		ActivityLog log = getEntityObject(entity, crudType, currentUser, null);
+		this.postActivity(log);
+	}
+	
+	public void addLog(T entity, int crudType,String detail, User user) {
+		User currentUser = user;
 		ActivityLog log = getEntityObject(entity, crudType, currentUser, null);
 		this.postActivity(log);
 	}

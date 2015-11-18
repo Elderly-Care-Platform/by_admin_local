@@ -1,5 +1,18 @@
 @CHARSET "ISO-8859-1";
 
+*{
+	border-radius: 0px !important;
+}
+a{
+	text-decoration:none;
+	outline:none;
+}
+
+a:hover, a:focus{
+	text-decoration:none;
+	outline:none;
+}
+
 .byEditor {
     border: 1px solid #ccc;
       margin-bottom: 70px;
@@ -122,7 +135,7 @@
   display: inline-block;
     background-size: 100%;
   background-repeat: round;
-  width:100px;
+  /*width:100px;*/
 }
 
 .myLabel:hover {
@@ -145,10 +158,109 @@ label.myLabel input[type="file"] {
 
 @media (min-width: 500px){
 	.articleTitleImage {
-  max-width: 444px;
-}
+  		max-width: 444px;
+	}
 }
 .navbar .nav > li > a 
 {
 	padding: 10px 13px 10px;
+}
+
+.register-page{
+	padding-top:0;
+	color: #858585;
+	font-weight: 400;
+	line-height: 25.901px;
+	text-align:left;	
+}
+
+.register-page .textbox {
+    width: 100%;
+    padding: 2px 8px 2px 8px;
+    border-style: solid;
+    border-width: 1px;
+    border-color: #E5E5E5;
+    border-left-width: 2px;
+    border-left-color: #004f24 ;
+    border-radius: 0;
+    font-size: 14px;
+    font-size: 13px;
+    color: black;
+    border-radius:3px !important;
+}
+
+/*Accordions
+------------------------------------*/
+/*Accordion v1*/
+.acc-v1 .panel-heading {
+  padding: 0;
+  box-shadow: none;
+}
+
+.acc-v1 .panel-heading a {
+  display: block;
+  font-size: 14px;
+  padding: 5px 15px;
+  background: #fefefe;
+}
+
+.acc-icon a.accordion-toggle i {
+  color: #555;
+  margin-right: 8px;
+}
+.acc-icon a.accordion-toggle:hover i {
+  color: #39414c;
+}
+
+.margin-bottom-5, 
+.margin-bottom-10, 
+.margin-bottom-15, 
+.margin-bottom-20,
+.margin-bottom-25, 
+.margin-bottom-30, 
+.margin-bottom-35, 
+.margin-bottom-40, 
+.margin-bottom-45, 
+.margin-bottom-50, 
+.margin-bottom-55, 
+.margin-bottom-60 { 
+   clear:both;
+}
+.margin-bottom-5  { margin-bottom:5px;}
+.margin-bottom-10 { margin-bottom:10px;} 
+.margin-bottom-15 { margin-bottom:15px;}
+.margin-bottom-20 { margin-bottom:20px;}
+.margin-bottom-25 { margin-bottom:25px;}
+.margin-bottom-30 { margin-bottom:30px;}
+.margin-bottom-35 { margin-bottom:35px;}
+.margin-bottom-40 { margin-bottom:40px;}
+.margin-bottom-45 { margin-bottom:45px;}
+.margin-bottom-50 { margin-bottom:50px;}
+.margin-bottom-55 { margin-bottom:55px;}
+.margin-bottom-60 { margin-bottom:60px;}
+
+.list-head {
+    font-size: 18px;
+    height: 30px;
+
+}
+
+.no-padding {
+    padding: 0;
+}
+.bg-green-h2 {
+    height: 2px;
+    background-color: #004f24;
+    position: absolute;
+    top: -1px;
+    z-index: 1;
+}
+
+.bg-gray-h1 {
+    height: 1px;
+    border-bottom: 1px solid #c5c5c5;
+}
+
+.errorRed{
+	color:#F00;
 }

@@ -1,0 +1,55 @@
+<div class="container-fluid">
+	<div id="wrapper" class="row-fluid">
+		<h3 class='menu'>User Profile</h3>
+		<div class="alert alert-error" ng-show="error">{{errorMessage}}</div>
+			<table style="width: 900px;">
+				<tr>
+					<td><label class="control-label"><strong>UserID</strong></label>
+					</td>
+					<td><label class="control-label" ng-bind="profile.userId"></label></td>
+				</tr>
+				<tr>
+					<td><label class="control-label" for="title"><strong>Verified</strong></label>
+					</td>
+					<td><input type="checkbox" ng-model="profile.verified"
+						name="verified" ng-checked="profile.verified" id="verified"
+						style="vertical-align: top;"></td>
+				</tr>
+				<tr>
+					<td><label class="control-label" for="title"><strong>Withdraw</strong></label>
+					</td>
+					<td><input type="checkbox" ng-model="profile.status"
+						name="status" ng-checked="profile.status" id="status"
+						style="vertical-align: top;"></td>
+				</tr>
+	
+				<tr>
+					<td><label class="control-label" for="title"><strong>Featured</strong></label>
+					</td>
+					<td><input type="checkbox" ng-model="profile.featured"
+						name="featured" ng-checked="profile.featured" id="featured"
+						style="vertical-align: top;"></td>
+				</tr>
+				<tr>
+					<td><label class="control-label"><strong>First
+								Name</strong></label></td>
+					<td><label class="control-label"
+						ng-bind="profile.basicProfileInfo.firstName"></label></td>
+				</tr>
+				<tr>
+					<td><label class="control-label"><strong>Description</strong></label>
+					</td>
+					<td><label class="control-label"
+						ng-bind-html="profile.basicProfileInfo.description"></label></td>
+				</tr>
+				<tr ng-show="!error">
+					<td colspan="2">
+						<button class="btn btn-primary" ng-click="editUserProfileDetails()">Edit Details</button>
+					</td>
+					<td colspan="2" style="text-align: right;">
+						<button type="submit" class="btn btn-primary" ng-click="editUserProfile()">Submit</button>
+					</td>
+				</tr>
+			</table>
+	</div>
+</div>

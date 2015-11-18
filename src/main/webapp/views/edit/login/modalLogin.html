@@ -1,0 +1,183 @@
+<div class="modal-dialog by-modalLogin">
+    <div class="modal-content"  ng-controller="LoginController" ng-init="modalLoginInit()">
+        <!-- Modal Header -->
+        <div class="modal-header">
+            <button type="button" class="close"
+                    data-dismiss="modal">
+                <span aria-hidden="true">&times;</span>
+                <span class="sr-only">Close</span>
+            </button>
+        </div>
+<div style="display:none">{{formState = $root.loginFormState}}</div>
+        <!-- Modal Body -->
+        <div class="modal-body">
+            <div class="row signup">
+                <div class="login">
+                    <!----------------------Login Form start------------------------->
+                    <form class="" name="loginForm" ng-submit="loginUser(user)" ng-if="formState===1" novalidate>
+                        <div class="no-padding form-header-content font-bold">
+                            Login
+                        </div>
+                        <div ng-show="error">
+                            <font color="red">{{error}}</font>
+                        </div>
+                        <div ng-show="message">
+                            <font color="green">{{message}}</font>
+                        </div>
+
+                        <div class="no-padding margin-bottom-10">
+                            <input type="text" class="username-textbox textbox modal-login-input"
+                                   placeholder="Email ID or 10 digit mobile number"
+                                   ng-model="uniqueLoginId.id">
+                        </div>
+
+                        <span>
+                            <p ng-show="loginForm.email.$invalid && loginForm.email.$pristine"
+                               class="help-block">Email is required.</p>
+                        </span>
+
+                        <div class="col-md-12 no-padding margin-bottom-10">
+                            <input type="password" class="username-textbox textbox modal-login-input"
+                                   placeholder="Please enter your password"
+                                   ng-model="user.password">
+                        </div>
+                        <span>
+                            <p ng-show="loginForm.password.$invalid && loginForm.password.$pristine"
+                               class="help-block">Password is required.</p>
+                        </span>
+
+                        <div class="no-padding form-header-content margin-bottom-10" >
+                            <button class="btn btn-success login-btn" ng-disabled="!loginForm.$valid" style="margin-top:0px;"
+                                    type="submit">LOGIN
+                            </button>
+                        </div>
+
+                        <div class="no-padding margin-bottom-10">
+                            Forgot your password? <a ng-click="showForm(2)"><b><u>Click here</u></b></a>
+                        </div>
+                    </form>
+                    <!----------------------Login Form End------------------------->
+
+                    <!----------------------Registration Form start------------------------->
+                    <form class="" name="userForm" ng-submit="createNewUser(userForm.$valid)" ng-if="formState===0"
+                          novalidate>
+                        <div class="no-padding form-header-content font-bold">
+                            Sign Up
+                        </div>
+                        <div ng-if="createUserError">
+                            <font color="red">{{createUserError}}</font>
+                        </div>
+                        <div ng-if="emailError!==''">
+                            <font color="red">{{emailError}}</font>
+                        </div>
+                        <div class="no-padding margin-bottom-10">
+                            <input type="text" class="username-textbox textbox modal-login-input"
+                                   placeholder="Email ID or 10 digit mobile number"
+                                   ng-model="uniqueRegId.id">
+                        </div>
+
+                        <div class="no-padding margin-bottom-10">
+                            <input type="text" class="username-textbox textbox modal-login-input"
+                                   placeholder="Please enter your User Name (optional)"
+                                   ng-model="newUser.userName">
+                        </div>
+
+                        <div ng-if="pwdError!==''">
+                            <font color="red">{{pwdError}}</font>
+                        </div>
+
+                        <div class="no-padding margin-bottom-10">
+                            <input type="password" class="username-textbox textbox modal-login-input"
+                                   placeholder="Please enter your password"
+                                   ng-model="newUser.password">
+                        </div>
+
+                        <div class="no-padding form-header-content margin-bottom-10" >
+                            <button class="btn btn-success register-btn"
+                                    type="submit">REGISTER
+                            </button>
+                            <div class="clearfix"></div>
+                        </div>
+                    </form>
+                    <!----------------------Registration Form end------------------------->
+
+                    <!----------------------Forgot Password Form start------------------------->
+                    <form class="emailSentSuccessModal" name="forgotPwdForm" ng-submit="emailPwdLink(resetPwd.email)" ng-if="formState===2" novalidate>
+                        <div class="no-padding form-header-content font-bold">
+                             Forgot your password
+                        </div>
+
+                        <div ng-if="resetPwd.error">
+                            <font color="red">{{resetPwd.error}}</font>
+                        </div>
+
+                        <div ng-if="resetPwd.status===0" class="no-padding margin-bottom-20">
+                            <input type="text" class="username-textbox textbox modal-login-input"
+                                   placeholder="Please enter email id"
+                                   ng-model="resetPwd.email">
+                        </div>
+
+                        <div ng-if="resetPwd.status===0" class="no-padding form-header-content margin-bottom-10">
+                            <button class="btn btn-success by_btn_submit"
+                                    type="submit" style=" padding: 6px 33px;">SUBMIT
+                            </button>
+                            <div class="clearfix"></div>
+                        </div>
+
+						<div>OR</div>
+						
+						Registered with your mobile?<br/>
+SMS &lt;BYFPW&gt; to +918904155456
+
+						<div ng-if="resetPwd.status===1">
+                            We have emailed you a link to change the password
+                        </div>
+                    </form>
+                    <!----------------------Forgot Password Form End------------------------->
+                </div>
+                <div class="clearfix"></div>
+                <div class="no-padding signup-social" ng-if="resetPwd.status!=1" style=" margin-top: -5px;">
+                    <div ng-if="formState===1 || formState===0">
+                        OR
+                    </div>
+                    <div class="loginSectionLine" ng-if="!(formState===1 || formState===0)">
+                    	<img src="assets/img/home/section-line.png?versionTimeStamp=%PROJECT_VERSION%" width="100%"/>
+                    </div>
+                    <div class="no-padding form-header-content">
+                     You could use your social login to <span ng-if="formState===1" style="cursor:inherit;">login</span>  <span ng-if="formState===0" style="cursor:inherit;">sign up</span>
+                    </div>
+
+                    <div style="margin-top: 5px;">
+                        <div class="dp-inline-block by-social-login" ng-click="fbLogin()">
+                            <img src="assets/img/icons/fb-login.png" width="97" height="23" class="post-text">
+                        </div>
+                        <div class="dp-inline-block" ng-click="ggLogin()">
+                            <img src="assets/img/icons/googleplus-login.png" width="82"
+                                 height="23" class="post-text">
+                        </div>
+                    </div>
+
+					<div class="modalLoginUl">
+
+						<span class="lock-icon"> <img
+							src="assets/img/icons/lock.png" width="8" height="11">
+						</span> BeautifulYears do not share your information
+					</div>
+					<div class="clearfix"></div>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+
+        <!-- Modal Footer -->
+        <div class="modal-footer byModalFooter"  ng-if="resetPwd.status!=1">
+            <div class="no-padding" ng-if="formState===0 || formState===2">
+                Already a BeautifulYears member?<br/> <a ng-click="showForm(1)"><b><u>Login Here</u></b></a>
+            </div>
+            <div class="no-padding" ng-if="formState===1">
+                Not a BeautifulYears member?<br/> <a ng-click="showForm(0)"><b><u>Register Now</u></b></a>
+            </div>
+        </div>
+    </div>
+</div>
+
