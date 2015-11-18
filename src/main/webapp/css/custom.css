@@ -264,3 +264,62 @@ label.myLabel input[type="file"] {
 .errorRed{
 	color:#F00;
 }
+
+.switch {
+  float:left !important;
+  height: 30px !important;
+  width: 182px !important;
+  background: #fff !important;
+  border:1px solid #428bca !important;
+  margin-right:10px !important;
+}
+
+.switch input{
+  
+}
+ 
+.switch-label {
+  position: relative !important;
+  z-index: 2 !important;
+  float: left !important;
+  width: 90px !important;
+  line-height: 28px !important;
+  font-size: 11px !important;
+  color: #428BCA !important;
+  text-align: center !important;
+  cursor: pointer !important;
+}
+ 
+.switch-label:active {
+  font-weight: bold !important;
+}
+.switch-input {
+  display: none !important;
+}
+ 
+.switch-input:checked + .switch-label {
+  font-weight: bold !important;
+  color: #fff !important;
+  -webkit-transition: 0.15s ease-out;
+  -moz-transition: 0.15s ease-out;
+  -o-transition: 0.15s ease-out;
+  transition: 0.15s ease-out;
+}
+ 
+.switch-input:checked + .switch-label-on ~ .switch-selection {
+  /* Note: left: 50% doesn't transition in WebKit */
+  margin-left: 90px !important;
+}
+ 
+.switch-selection {
+  display: block !important;
+  position: absolute !important;
+  z-index: 1 !important;
+  width: 90px !important;
+  height: 28px !important;
+  background: #428bca !important;
+  -webkit-transition: left 0.15s ease-out;
+  -moz-transition: left 0.15s ease-out;
+  -o-transition: left 0.15s ease-out;
+  transition: left 0.15s ease-out;
+}

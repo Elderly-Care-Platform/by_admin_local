@@ -81,6 +81,7 @@ public class HousingController {
 	public Object allDiscuss(
 			@RequestParam(value = "city", required = false) String city,
 			@RequestParam(value = "tags", required = false) List<String> tags,
+			@RequestParam(value = "withdrawStatus", required = false) Integer withdrawStatus,
 			@RequestParam(value = "startDate", required = false) Long startDate,
 			@RequestParam(value = "endDate", required = false) Long endDate,
 			HttpServletRequest request) throws Exception {
@@ -129,7 +130,7 @@ public class HousingController {
 		}
 		
 		Pageable pageable = new PageRequest(0, 100, sortDirection, "createdAt");
-		page = staticHousingRepository.getPage(city, tagIds, startDate1, endDate1, null, null, null, pageable);
+		page = staticHousingRepository.getPage(city, tagIds, withdrawStatus, startDate1, endDate1, null, null, null, pageable);
 		housingPage = HousingResponse.getPage(page, null);
 		return BYGenericResponseHandler.getResponse(housingPage);
 	}

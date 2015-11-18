@@ -36,6 +36,7 @@ public class UserProfileResponse implements IResponse {
 		private BasicProfileInfo basicProfileInfo = new BasicProfileInfo();
 		private IndividualProfileInfo individualInfo = new IndividualProfileInfo();
 		private ServiceProviderInfo serviceProviderInfo = new ServiceProviderInfo();
+		private int status;
 		private Float ratingPercentage = 0f;
 		private int ratingCount;
 		private int reviewCount;
@@ -57,6 +58,7 @@ public class UserProfileResponse implements IResponse {
 			this.setServiceProviderInfo(profile.getServiceProviderInfo());
 			this.setCreatedAt(profile.getCreatedAt());
 			this.setLastModifiedAt(profile.getLastModifiedAt());
+			this.setStatus(profile.getStatus());
 			this.setRatingPercentage(profile.getAggrRatingPercentage());
 			this.setSystemTags(profile.getSystemTags());
 			if (null != user && profile.getRatedBy().contains(user.getId())) {
@@ -70,6 +72,10 @@ public class UserProfileResponse implements IResponse {
 			this.isFeatured = profile.isFeatured();
 			this.verified = profile.isVerified();
 			this.facilities = profile.getFacilities();
+		}
+
+		public int getStatus() {
+			return status;
 		}
 
 		public List<HousingFacility> getFacilities() {
@@ -86,6 +92,10 @@ public class UserProfileResponse implements IResponse {
 
 		public void setFeatured(boolean isFeatured) {
 			this.isFeatured = isFeatured;
+		}
+
+		public void setStatus(int status) {
+			this.status = status;
 		}
 
 		public boolean isVerified() {

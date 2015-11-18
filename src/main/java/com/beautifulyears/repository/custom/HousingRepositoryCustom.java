@@ -17,6 +17,6 @@ import com.beautifulyears.rest.response.PageImpl;
  *
  */
 public interface HousingRepositoryCustom {
-	public PageImpl<HousingFacility> getPage(String city, List<ObjectId> tagIds, Date startDate, Date endDate, String userId,
+	public PageImpl<HousingFacility> getPage(String city, List<ObjectId> tagIds, Integer withdrawStatus, Date startDate, Date endDate, String userId,
 			Boolean isFeatured, Boolean isPromotion, Pageable pageable);
 }

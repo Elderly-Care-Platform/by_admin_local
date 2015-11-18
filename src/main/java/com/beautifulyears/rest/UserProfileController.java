@@ -73,6 +73,7 @@ public class UserProfileController {
 			@RequestParam(value = "city", required = false) String city,
 			@RequestParam(value = "tags", required = false) List<String> tags,
 			@RequestParam(value = "status", required = false) Boolean status,
+			@RequestParam(value = "withdrawStatus", required = false) Integer withdrawStatus,
 			@RequestParam(value = "startDate", required = false) Long startDate,
 			@RequestParam(value = "endDate", required = false) Long endDate,
 			HttpServletRequest request) throws Exception {
@@ -130,7 +131,7 @@ public class UserProfileController {
 		
 		Pageable pageable = new PageRequest(0, 400, sortDirection, "createdAt");
 		page = staticUserProfileRepository.getServiceProvidersByFilterCriteria(userTypes, city, tagIds,
-				status, startDate1, endDate1, null, pageable, null);
+				status, withdrawStatus, startDate1, endDate1, null, pageable, null);
 		servicePage = UserProfileResponse.getPage(page, null);
 		return BYGenericResponseHandler.getResponse(servicePage);
 	}

@@ -35,6 +35,16 @@
 					</select>
 				</div>
 				<div class="divLeft">
+					<label>Withdraw Status Filter</label>
+					<div class="switch radio1">
+        				<input type="radio" class="switch-input" ng-model="filters.withdrawFilter" name="status" value="0" id="notWithdrawn" ng-checked="true">
+            			<label for="notWithdrawn" class="switch-label switch-label-off">Not Withdrawn</label>
+            			<input type="radio" class="switch-input" ng-model="filters.withdrawFilter" name="status" value="1" id="withdrawn">
+            			<label for="withdrawn" class="switch-label switch-label-on">Withdrawn</label>                                         
+            			<span class="switch-selection"></span>
+        			</div>                                             
+      			</div>
+				<div class="divLeft">
 					<label>Date Filter</label> 
 					<select ng-model="filters.dateFilter">
 						<option value="null">All</option>

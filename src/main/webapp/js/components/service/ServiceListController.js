@@ -130,6 +130,7 @@
         		tags: tagValue,
             	city: $scope.filters.cityFilter,
             	userTypes: serviceTypeValue,
+            	withdrawStatus : $scope.filters.withdrawFilter,
             	status: statusValue,
             	startDate : startDate,
 				endDate : endDate
@@ -142,7 +143,8 @@
         }
         
         var dataObj = {
-        	userTypes: '4,7'
+        	userTypes: '4,7',
+        	withdrawStatus: 0
 		}   
         
         ServiceList.getServiceLists(dataObj).then(function(ServiceLists) {
