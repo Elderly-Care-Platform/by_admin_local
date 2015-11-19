@@ -135,8 +135,6 @@ public class ActivityLogController {
 		StatsHandler statsHandler = new StatsHandler(
 				mongoTemplate);
 		new Thread(statsHandler).start();
-		@SuppressWarnings("unused")
-		User currentUser = Util.getSessionUser(request);
 		return BYGenericResponseHandler.getResponse(StatsHandler.countMap);
 	}
 

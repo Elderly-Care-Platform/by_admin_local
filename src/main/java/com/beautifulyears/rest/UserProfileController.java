@@ -252,7 +252,7 @@ public class UserProfileController {
 							
 				}
 			} else {
-				throw new BYException(BYErrorCodes.USER_NOT_AUTHORIZED);
+				throw new BYException(BYErrorCodes.NO_CONTENT_FOUND);
 			}
 		} catch (Exception e) {
 			logger.error("error ");

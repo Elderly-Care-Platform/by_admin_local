@@ -58,7 +58,7 @@ public class UserController {
 	ActivityLogHandler<User> logHandler;
 
 	@Autowired
-	public UserController(UserRepository userRepository, UserRepository staticUserRepository,
+	public UserController(UserRepository userRepository,
 			MongoTemplate mongoTemplate) {
 		this.userRepository = userRepository;
 		this.mongoTemplate = mongoTemplate;
