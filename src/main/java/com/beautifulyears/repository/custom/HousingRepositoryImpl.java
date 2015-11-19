@@ -26,7 +26,7 @@ public class HousingRepositoryImpl implements HousingRepositoryCustom {
 
 	@Override
 	public PageImpl<HousingFacility> getPage(String city,
-			List<ObjectId> tagIds, Date startDate, Date endDate, String userId, Boolean isFeatured,
+			List<ObjectId> tagIds, Integer withdrawStatus, Date startDate, Date endDate, String userId, Boolean isFeatured,
 			Boolean isPromotion, Pageable pageable) {
 		List<HousingFacility> housings = null;
 
@@ -37,6 +37,10 @@ public class HousingRepositoryImpl implements HousingRepositoryCustom {
 		if (city != null) {
 			query.addCriteria(Criteria.where("primaryAddress.city").regex(city,
 					"i"));
+		}
+		
+		if (withdrawStatus != null) {
+			query.addCriteria(Criteria.where("status").is(withdrawStatus));
 		}
 		
 		if (endDate != null && startDate != null) {

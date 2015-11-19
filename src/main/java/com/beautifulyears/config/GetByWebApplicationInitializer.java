@@ -17,6 +17,7 @@ public class GetByWebApplicationInitializer implements
 	public void onStartup(ServletContext servletContext)
 			throws ServletException {
 		System.out.println("***Starting byadmin application ***");
+
 		AnnotationConfigWebApplicationContext webApplicationContext = new AnnotationConfigWebApplicationContext();
 		webApplicationContext.register(ApplicationConfig.class,
 				WebMvcConfig.class);

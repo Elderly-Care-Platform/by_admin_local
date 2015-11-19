@@ -2,6 +2,7 @@ package com.beautifulyears.rest;
 
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.beautifulyears.constants.ActivityLogConstants;
@@ -238,7 +240,7 @@ public class UserController {
 						newUser.getUserName());
 				new Thread(userNameHandler).start();
 			}
-			return BYGenericResponseHandler.getResponse(null);
+			return BYGenericResponseHandler.getResponse(newUser);
 		}
 
 	}
@@ -292,7 +294,34 @@ public class UserController {
 		logHandler.addLog(user, ActivityLogConstants.CRUD_TYPE_DELETE, req);
 		return BYGenericResponseHandler.getResponse(null);	
 	}
+	
+	@RequestMapping(value = "/resetPassword", method = RequestMethod.GET)
+	public @ResponseBody Object getResetPasswordLink(
+			@RequestParam(value = "email", required = true) String email,
+			HttpServletRequest req) {
+		LoggerUtil.logEntry();
+		if (!Util.isEmpty(email)) {
+			Query q = new Query();
+			q.addCriteria(Criteria.where("email").regex(email, "i"));
+			User user = mongoTemplate.findOne(q, User.class);
+			if (null != user) {
+				user.setVerificationCode(UUID.randomUUID().toString());
+				Date t = new Date();
+				user.setVerificationCodeExpiry(new Date(
+						t.getTime()
+								+ (BYConstants.FORGOT_PASSWORD_CODE_EXPIRY_IN_MIN * 60000)));
+			
+				mongoTemplate.save(user);
+			} else {
+				throw new BYException(BYErrorCodes.USER_EMAIL_DOES_NOT_EXIST);
+			}
+		} else {
+			throw new BYException(BYErrorCodes.MISSING_PARAMETER);
+		}
 
+		return true;
+	}
+	
 	@RequestMapping(method = RequestMethod.PUT, value = "/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public Object editUser(@PathVariable("userId") String userId) {

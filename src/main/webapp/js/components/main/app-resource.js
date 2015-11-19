@@ -1,3 +1,4 @@
+
 var discussCategoryList = adminServices.factory('discussCategoryList',
 		function($resource) {
 			return $resource('api/v1/topic/list/all', {
@@ -57,7 +58,7 @@ var userShow_admin = adminServices.factory('AdminUserShow',
 			})
 		});
 
-var userEdit_admin = adminServices.factory('AdminUserEdit',
+var AdminUserEdit = adminServices.factory('AdminUserEdit',
 		function($resource) {
 			return $resource('/byadmin/api/v1/users/edit/:userId', {}, {
 				get : {
@@ -272,4 +273,22 @@ var ActivitiesStats = adminServices.factory('ActivitiesStats', function($resourc
 			params : {}
 		}
 	})
+});
+
+//New selected user profile
+var userProfile = adminServices.factory('UserProfile', function ($resource) {
+    return $resource('/byadmin/api/v1/userProfile/:userId', {}, {
+        get: {method: 'GET', params: {}},
+        post: {method: 'POST', params: {}},
+        update: {method: 'PUT', params: {}}
+    })
+});
+
+//User
+var user = adminServices.factory('User', function ($resource) {
+    return $resource('/byadmin/api/v1/users/:userId', {}, {
+        get: {method: 'GET', params: {userId: '@id'}},
+        post: {method: 'PUT', params: {userId: '@id'}},
+        put: {method: 'PUT', params: {userId: '@id'}}
+    })
 });

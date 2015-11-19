@@ -1,5 +1,5 @@
 var adminServices = angular.module("adminServices", ["ngResource"]);
-var adminControllers = angular.module("adminControllers", ['ui.bootstrap',"jqwidgets",'datatables', 'ngResource']);
+var adminControllers = angular.module("adminControllers", ['ui.bootstrap', "jqwidgets",'datatables', 'ngResource']);
 var discuss = adminServices.factory('SessionIdService', function() {
     var sessionID = '';
     return {
@@ -47,7 +47,7 @@ byAdminApp.run(function($rootScope, $location, SessionIdService,BYMenu,$http) {
     $rootScope.$on("$routeChangeStart", function(event, next, current) {
 
         console.log("Routechanged... ");
-
+        BYAdmin.removeEditor();
        	var session = SessionIdService.getSessionId();
        	if (session == '' || session == null) {
 

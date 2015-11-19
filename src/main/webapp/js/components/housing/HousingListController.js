@@ -33,7 +33,7 @@
 		}).error(function (data, status, headers, config) {    
 			console.log(status);
 		});
-        
+       
         $scope.categoryLists = {}
         var array = {};
         
@@ -64,7 +64,7 @@
         	categoryFilter:null,
         	cityFilter:null
     	}
-        
+
         $scope.housingsByFilter = function housingsByFilter() {
         	var tagValue;
         	var selectedTagValue = [];
@@ -78,7 +78,7 @@
         			tagValue = selectedTagValue[j].id;
             	}
         	}
-        	
+
         	var startDt;
         	var endDt;
         	if($scope.filters.dateStartRange == null){
@@ -93,6 +93,7 @@
         	}
         	var dataObj = {
         		tags: tagValue,
+        		withdrawStatus: $scope.filters.withdrawFilter,
         		city : $scope.filters.cityFilter,
         		startDate : startDt,
 				endDate : endDt
@@ -103,7 +104,9 @@
             });
         };
         
-        var dataObj = {}
+        var dataObj = {
+        	withdrawStatus: 0	
+        }
         HousingList.getHousingLists(dataObj).then(function(HousingLists) {
         	vm.myHousingLists = HousingLists;
         });

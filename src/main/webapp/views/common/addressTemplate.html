@@ -1,0 +1,63 @@
+<div ng-if="$index && $index >= 0">
+    <span>{{"Address " + (+$index+2)}}
+        <div style="width: 216px; background-color: #B2ADAD; height: 2px;"></div>
+    </span>
+
+</div>
+<div class="row margin-bottom-20 marginRightMinus5">
+    <div class="col-md-5">
+        Country
+    </div>
+    <div class="col-md-7 no-padding-right register-page">
+        <input type="text" ng-model="address.country" class="name-textbox textbox "
+               placeholder="Country"/>
+    </div>
+</div>
+
+<div class="row margin-bottom-20 marginRightMinus5">
+    <div class="col-md-5">
+        Zip
+    </div>
+    <div class="col-md-7 no-padding-right register-page zipCodeWrapper">
+        <input id="zipcode" type="text" ng-model="address.zip" class="name-textbox textbox "
+               placeholder="Zip" style="width: 50%;"/>
+        <input type="button" class="btn btn-success pull-right register-btn" value="Get address"
+               ng-click="getLocationByPincode($event, address)">
+
+    </div>
+</div>
+
+<div class="row margin-bottom-20 marginRightMinus5">
+    <div class="col-md-5">
+        City
+    </div>
+    <div class="col-md-7 no-padding-right register-page">
+        <input type="text" ng-model="address.city" class="name-textbox textbox "
+               placeholder="City"/>
+    </div>
+</div>
+
+
+<div class="row margin-bottom-20 marginRightMinus5">
+    <div class="col-md-5">
+        Locality
+    </div>
+    <div class="col-md-7 no-padding-right register-page">
+        <input type="text" ng-model="address.locality" class="name-textbox textbox " ng-google-location options="options" obj="address"
+               callback="addressCallback" id="addressLocality"
+               placeholder="Locality"/>
+    </div>
+</div>
+
+<div class="row margin-bottom-20 marginRightMinus5">
+    <div class="col-md-5">
+        Address
+    </div>
+    <div class="col-md-7 no-padding-right register-page">
+                   <textarea rows="3" ng-model="address.streetAddress" class="name-textbox textbox "
+                             placeholder="Address"></textarea>
+    </div>
+</div>
+
+
+

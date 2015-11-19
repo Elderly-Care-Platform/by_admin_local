@@ -32,7 +32,6 @@ import com.beautifulyears.util.Util;
 public class ActivityLogController {
 
 	private MongoTemplate mongoTemplate;
-	private StatsHandler statsHandler;
 
 	@Autowired
 	public ActivityLogController(MongoTemplate mongoTemplate) {
@@ -136,7 +135,6 @@ public class ActivityLogController {
 		StatsHandler statsHandler = new StatsHandler(
 				mongoTemplate);
 		new Thread(statsHandler).start();
-		User currentUser = Util.getSessionUser(request);
 		return BYGenericResponseHandler.getResponse(StatsHandler.countMap);
 	}
 
