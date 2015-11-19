@@ -18,8 +18,8 @@ BY.config.regConfig.formConfig = {
 BY.config.regConfig.userTypeConfig = {
     '-1' : {
         'type':'-1',
-        'contentPanel':'views/signup/regUserType.html?versionTimeStamp=%PROJECT_VERSION%',
-        'leftPanel' : "views/signup/registrationLeftPanel.html?versionTimeStamp=%PROJECT_VERSION%",
+        'contentPanel':'views/signup/regUserType.html',
+        'leftPanel' : "views/signup/registrationLeftPanel.html",
         'controller' : 'regUserTypeController',
         'category':'NONE',
         'label' : "I am"
@@ -34,24 +34,24 @@ BY.config.regConfig.userTypeConfig = {
     },
     '1' : {
         'type':'1',
-        'contentPanel':'views/signup/registration/regIndividual.html?versionTimeStamp=%PROJECT_VERSION%',
-        'leftPanel' : "views/signup/registrationLeftPanel.html?versionTimeStamp=%PROJECT_VERSION%",
+        'contentPanel':'views/signup/registration/regIndividual.html',
+        'leftPanel' : "views/signup/registrationLeftPanel.html",
         'controller' : 'regIndividualCtrl',
         'category':'ELDER',
         'label' : "About Me"
     },
     '2' : {
         'type':'2',
-        'contentPanel':'views/signup/registration/regIndividual.html?versionTimeStamp=%PROJECT_VERSION%',
-        'leftPanel' : "views/signup/registrationLeftPanel.html?versionTimeStamp=%PROJECT_VERSION%",
+        'contentPanel':'views/signup/registration/regIndividual.html',
+        'leftPanel' : "views/signup/registrationLeftPanel.html",
         'controller' : 'regIndividualCtrl',
         'category':'CURIOUS',
         'label' : "About Me"
     },
     '3' : {
         'type':'3',
-        'contentPanel':'views/signup/registration/regHousing.html?versionTimeStamp=%PROJECT_VERSION%',
-        'leftPanel' : "views/signup/registrationLeftPanel.html?versionTimeStamp=%PROJECT_VERSION%",
+        'contentPanel':'views/signup/registration/regHousing.html',
+        'leftPanel' : "views/signup/registrationLeftPanel.html",
         'controller' : 'regHousingCtrl',
         'category':'HOUSING',
         'label' : "Housing"

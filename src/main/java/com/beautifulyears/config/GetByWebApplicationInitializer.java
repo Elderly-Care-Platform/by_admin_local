@@ -12,13 +12,12 @@ import com.beautifulyears.servlet.UploadFile;
 
 public class GetByWebApplicationInitializer implements
 		WebApplicationInitializer {
-	public static ServletContext servletContext;
+
 	@Override
 	public void onStartup(ServletContext servletContext)
 			throws ServletException {
 		System.out.println("***Starting byadmin application ***");
-		System.out.println("mail supported is "+servletContext.getInitParameter("mail"));
-		GetByWebApplicationInitializer.servletContext = servletContext;
+
 		AnnotationConfigWebApplicationContext webApplicationContext = new AnnotationConfigWebApplicationContext();
 		webApplicationContext.register(ApplicationConfig.class,
 				WebMvcConfig.class);
