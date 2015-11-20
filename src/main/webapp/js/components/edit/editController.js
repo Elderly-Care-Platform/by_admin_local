@@ -8,6 +8,8 @@ editController.$inject = ['$scope', '$rootScope', '$routeParams', '$location','$
         $scope.sectionLabel = null;
         $scope.userType = null;
         $scope.facilityIdx = $routeParams.facilityIndex ? parseInt($routeParams.facilityIndex) : 0;
+
+        $scope.host = location.host;
         $scope.pathName = location.pathname;
         
         $scope.changeUsername = function () {
@@ -37,6 +39,8 @@ editController.$inject = ['$scope', '$rootScope', '$routeParams', '$location','$
         };
         
         $scope.updateLeftPanel = function(){
+
+
             $scope.views.leftPanel = $scope.userTypeConfig.leftPanel;
             $scope.userType  = $scope.profile.userTypes[0];
             if($scope.profile.userTypes[0]===3){

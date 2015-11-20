@@ -5,15 +5,7 @@
 <div ng-controller="HousingListController as showCase">
 
 	<div id="housingFilter">
-		<div class="divLeft">
-			<label>Category Filter</label> 			
-			<select ng-model="filters.categoryFilter">
-				<option value="null">All Categories</option>
-				<option ng-repeat="(key, value) in categoryLists" value="{{key}}">
-  					{{value.name}}
-  				</option>
-			</select>
-		</div>
+
 		<div class="divLeft">
 			<label>City Filter</label>
 			<select ng-model="filters.cityFilter">

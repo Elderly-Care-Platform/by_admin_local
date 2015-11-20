@@ -65,12 +65,12 @@
 				 text = value.split("#")[0];
 				 userType = value.split("#")[1];
 				 userID = value.split("#")[2];
-				 pathName = location.pathname;
+				 hostName = location.host;
 				 console.log(value)
 				 if(value == 'null' || value == '' || text == 'null') {
 					 return '<div style="text-align: center; margin-top: 5px;" height="26" width="26"><a href="#">Anonymous</a></div>';
 				 }else{
-				   return '<div style="text-align: center; margin-top: 5px;"><a href="' + pathName + '#!/profile/'+ userType + '/' + userID + '">' + text + '</a></div>'
+				   return '<div style="text-align: center; margin-top: 5px;"><a href="http://' + hostName + '/#!/profile/'+ userType + '/' + userID + '">' + text + '</a></div>'
 				 }
 			}
 
