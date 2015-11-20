@@ -21,18 +21,30 @@
 	<script src="lib/bootstrap.js"></script>
 	<script src="lib/ui-bootstrap-0.13.1.js"></script>
 	
+	<link rel="stylesheet" href="lib/bootstrap/css/bootstrap.min.css"/>
 	
-
-
     <link rel="stylesheet" href="css/bootstrap.css"/>
+    
+    <link rel="stylesheet" href="lib/bootstrap/css/bootstrap-select.min.css"/>
+    <link rel="stylesheet" href="lib/bootstrap/css/bootstrap-toggle.min.css"/>
+    
     <link rel="stylesheet" href="css/toastr.css"/>
     <link rel="stylesheet" href="css/custom.css"/>
     <link rel="stylesheet" href="css/discuss.css"/>
     <link rel="stylesheet" href="css/linkPreview.css"/>
     <link rel="stylesheet" href="css/activityLogs.css"/>
+    <link rel="stylesheet" href="css/login.css"/>
+    <link rel="stylesheet" href="css/by_regIndvLogin.css"/>
+    <link rel="stylesheet" href="css/by_editor.css"/>
+    <link rel="stylesheet" href="css/image-gallery.css">
     
     <link rel="Stylesheet" type="text/css" href="lib/jqwidgets/styles/jqx.energyblue.css" />
 	<link rel="Stylesheet" type="text/css" href="lib/jqwidgets/styles/jqx.base.css" />
+    
+    <script type="text/javascript" src="lib/jquery.form.js"></script>
+    <script type="text/javascript" src="js/components/common/byEditor.js"></script>
+    <script type="text/javascript" src="lib/tinymce/tinymce.min.js"></script>
+    <script type="text/javascript" src="lib/jquery-ui.min.js"></script>
 	
 	<link rel="Stylesheet" type="text/css" href="lib/treeView/css/tree.css" />
 	<link rel="Stylesheet" type="text/css" href="css/jquery.dataTables.min.css" />
@@ -55,14 +67,16 @@
 	<script type="text/javascript" src="lib/jqwidgets/jqxgrid.columnsresize.js"></script>
 	<script type="text/javascript" src="lib/jqwidgets/jqxgrid.pager.js"></script>
 	<script type="text/javascript" src="lib/jqwidgets/jqxangular.js"></script>
+	<script type="text/javascript" src="lib/jqwidgets/jqxangular.js"></script>
 	                                    
-	<script type="text/javascript" src="lib/tinymce/tinymce.min.js"></script>
+	<script type="text/javascript" src="lib/bootstrap/js/bootstrap-toggle.min.js"></script>
+	<script type="text/javascript" src="lib/bootstrap/js/bootstrap-select.min.js"></script>
+	<script type="text/javascript" src="lib/bootstrap/js/bootstrap.min.js"></script>
 
 	<script src="js/components/main/app.js"></script>
 	<script src="js/components/main/appDirectives.js"></script>
 	<script src="js/components/main/app-route.js"></script>
 	<script src="js/components/main/app-resource.js"></script>
-	<script type="text/javascript" src="js/components/common/byEditor.js"></script>
 	
 	<script src="js/components/menu/MenuController.js"></script>	
 	<script src="js/components/menu/TagController.js"></script>	
@@ -80,7 +94,15 @@
 	<script src="js/components/login/AdminLogoutController.js"></script>	
 	<script src="js/components/login/AdminLoginController.js"></script>	
 	
+	<script src="js/components/service/ServiceController.js"></script>
 	<script src="js/components/service/ServiceListController.js"></script>
+	
+	<script src="js/components/common/editConfig.js"></script>
+	<script src="js/components/edit/editController.js"></script>
+	<script src="js/components/edit/editInstitutionCtrl.js"></script>
+	<script src="js/components/edit/editIndividualCtrl.js"></script>
+	<script src="js/components/edit/editProfessionalCtrl.js"></script>
+	<script src="js/components/edit/login/modifySignupCtrl.js"></script>
 	
 	<script src="js/components/profile/UserProfileController.js"></script>	
 	<script src="js/components/profile/UserProfileListController.js"></script>	
@@ -139,7 +161,7 @@
             <a class="brand" href="#/discuss/all"><img src="./img/Logo-new.png" alt="www.beautifulyears.com" height="36" width="76"/></a>
 
 
-            <div class="nav-collapse collapse">
+            <div class="nav-collapse collapse in">
                 <ul class="nav" role="navigation">
                 	<li ng-hide="{{root.bc_userRoleId == 'USER'}}">
                         <a href="#/activityLogs">Dashboard</a>
@@ -184,10 +206,61 @@
         </div>
     </div>
 </div>
-<div> <h3>Header</h3> <div>
-<div class="container" ng-view>
 
+<div class="wrapper"> 
+	<h3>Header</h3> 
+
+	<div class="container" ng-view>
+
+	</div>
+	
 </div>
+
+<script type="text/javascript">
+    var initMap = function () {
+    };
+
+    $(document).ready(function () {
+        var options1 = {
+            beforeSend: function () {
+                //$("#progressbox").show();
+                // clear everything
+                //$("#progressbar").width('0%');
+                //$("#message").empty();
+                //$("#percent").html("0%");
+            },
+            uploadProgress: function (event, position, total, percentComplete) {
+                //$("#progressbar").width(percentComplete + '%');
+                //$("#percent").html(percentComplete + '%');
+
+                // change message text to red after 50%
+                //if (percentComplete > 50) {
+                //$("#message").html("<font color='red'>File Upload is in progress</font>");
+                // }
+            },
+            success: function () {
+                // $("#progressbar").width('100%');
+                // $("#percent").html('100%');
+            },
+            complete: function (response) {
+                //tinyMCE.activeEditor.focus();
+                //tinyMCE.get('submit-article').getBody().focus();
+
+                //?????var img = "<img style = 'height:80px;width:80px' src = 'http://" + response.responseText + "' />";
+                //alert("img path = " + response.responseText.substring(response.responseText.lastIndexOf('/')+1));
+                var img = "<img src = '/uploaded_files/" + response.responseText.substring(response.responseText.lastIndexOf('/') + 1) + "' />";
+                tinyMCE.activeEditor.execCommand("mceInsertContent", true, img);
+                //$("#articlePhotoFilename").val(response.responseText);
+            },
+            error: function () {
+                //$("#articlePhotoFilename").val("<font color='red'> ERROR: unable to upload files</font>");
+            }
+        };
+
+        $("#UploadImage").ajaxForm(options1);
+
+    });
+</script>
 
 <script type="text/javascript">
 

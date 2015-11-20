@@ -1,0 +1,42 @@
+<!--All classes from Unify start-->
+<div class="col-md-12 left-container-img-wrapper no-padding by_left_panel_fixed">
+    <div class="scrollableLeftPanelDiv by-filter-links">
+        <ul class="list-group sidebar-nav-v1" id="sidebar-nav">
+            <li class="list-group-item  username" style="border:0px;">
+                <a href="#/edit/{{profile.userId}}/changeCredential?changeUserName=true">Change Username</a>
+            </li>
+            <li class="list-group-item password" style="border:0px;">
+                <a href="#/edit/{{profile.userId}}/changeCredential?changeUserPwd=true">Change Password</a>
+            </li>
+
+            <li style="border:0px;" class="list-group-item reg-menu-1 active"
+                ng-if="profile && profile.userTypes && profile.userTypes.length===0"
+                >
+                <a href="#/edit/{{profile.userId}}">I am...</a>
+            </li>
+            <li style="border:0px;" class="list-group-item reg-menu-1 active"
+                ng-if="sectionLabel">
+                <a href="#/edit/{{profile.userId}}">{{sectionLabel}}</a>
+            </li>
+            <li style="border:0px;" class="list-group-item  reg-menu-1 housingTab{{$index+1}}"
+                ng-if="housingFacilityTabs.length > 0"
+                ng-repeat="facilityTab in housingFacilityTabs track by $index"
+                ng-class="{'active':facilityIdx===$index}">
+                <a di-href="#/edit/{{profile.userId}}/{{$index}}">{{facilityTab}}</a>
+            </li>
+            <div class="clearfix" style="height:50px; background:#fff;"></div>
+            <div ng-if="profile && profile.userTypes && profile.userTypes.length > 0">
+                <div class="viewProfile list-group-item  margin-bottom-40 " ng-if="userType!=3" >
+                    <a target ="_blank" href="http://{{host}}/#!/profile/{{profile.userTypes[0]}}/{{profile.userId}}/{{userName}}">View Profile</a>
+                </div>
+                <div class="viewProfile list-group-item  margin-bottom-40 " ng-if="userType==3 && facilityProfileId" >
+                    <a target ="_blank" href="http://{{host}}/#!/housingProfile/{{profile.userTypes[0]}}/{{profile.userId}}/{{facilityProfileId}}">View Profile</a>
+                </div>
+                <div class="viewProfile list-group-item  margin-bottom-40 " ng-if="userType==3 && !facilityProfileId" >
+                    <a target ="_blank" href="http://{{host}}/#!/profile/{{profile.userTypes[0]}}/{{profile.userId}}/{{userName}}">View Profile</a>
+                </div>
+            </div>
+        </ul>
+    </div>
+</div>
+<!--All classes from Unify end-->

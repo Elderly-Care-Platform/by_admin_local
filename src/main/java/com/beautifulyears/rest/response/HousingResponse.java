@@ -96,6 +96,7 @@ public class HousingResponse implements IResponse {
 		private String primaryPhoneNo;
 		private List<String> categoriesId;
 		private List<Tag> systemTags;
+		private int status;
 
 		private Float ratingPercentage = 0f;
 		private int ratingCount;
@@ -114,6 +115,7 @@ public class HousingResponse implements IResponse {
 			this.primaryPhoneNo = housing.getPrimaryPhoneNo();
 			this.primaryEmail = housing.getPrimaryEmail();
 			this.categoriesId = housing.getCategoriesId();
+			this.status = housing.getStatus();
 			this.ratingPercentage = housing.getAggrRatingPercentage();
 			this.createdAt = housing.getCreatedAt();
 			this.lastModifiedAt = housing.getLastModifiedAt();
@@ -137,7 +139,15 @@ public class HousingResponse implements IResponse {
 		public List<Tag> getSystemTags() {
 			return systemTags;
 		}
+		
+		public int getStatus() {
+			return status;
+		}
 
+		public void setStatus(int status) {
+			this.status = status;
+		}
+		
 		public String getId() {
 			return id;
 		}

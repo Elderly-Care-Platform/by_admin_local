@@ -20,12 +20,12 @@ public class UserProfileRepositoryImpl implements UserProfileRepositoryCustom {
 
 	@Override
 	public PageImpl<UserProfile> getServiceProvidersByFilterCriteria(
-			Object[] userTypes, String city, List<ObjectId> tagIds, Boolean status, 
+			Object[] userTypes, String city, List<ObjectId> tagIds, Boolean status, Integer withdrawStatus, 
 			Date startDate, Date endDate, Boolean isFeatured, Pageable page, List<String> fields) {
 		List<UserProfile> userProfileList = null;
 		Query q = new Query();
-		q.addCriteria(Criteria.where("status").in(
-				new Object[] { DiscussConstants.DISCUSS_STATUS_ACTIVE, null }));
+		/*q.addCriteria(Criteria.where("status").in(
+				new Object[] { DiscussConstants.DISCUSS_STATUS_ACTIVE, null }));*/
 		if(null != userTypes && userTypes.length > 0){
 			q.addCriteria(Criteria.where("userTypes").in(
 					userTypes));
@@ -33,6 +33,10 @@ public class UserProfileRepositoryImpl implements UserProfileRepositoryCustom {
 		if(null != status){
 			q.addCriteria(Criteria.where("verified").is(
 					status));
+		}
+		
+		if (withdrawStatus != null) {
+			q.addCriteria(Criteria.where("status").is(withdrawStatus));
 		}
 		
 		if (endDate != null && startDate != null) {

@@ -34,51 +34,13 @@
 			console.log(status);
 		});
         
-        $scope.categoryLists = {}
-        var array = {};
-        
-        $http.get($scope.pathName + 'api/v1/menu/getMenuById?id=55bcadaee4b08970a736784c'   
-		).success(function (response, status, headers, config) {
-			array = response.data.children;
-	        function getCategory(array){
-	        	for (var i = 0; i < array.length; i++) {
-	        		if(array[i].module == 2 && array[i].ancestorIds.length<3){
-	        			if(array[i].children == null || array[i].children.length == 0){
-	        				var categoryArray = {
-	    	        			"name": array[i].displayMenuName, 
-	    	        			"tags": array[i].tags
-	    	        		}
-	    	        		$scope.categoryLists[array[i].id] = categoryArray;
-	        			}else{
-		        			getCategory(array[i].children);
-		        		}
-	        		}
-	        	}
-	        }
-	        getCategory(array);
-		}).error(function (data, status, headers, config) {    
-			console.log(status);
-		});
-        
         $scope.filters = {
-        	categoryFilter:null,
         	cityFilter:null
     	}
-        
+
         $scope.housingsByFilter = function housingsByFilter() {
-        	var tagValue;
-        	var selectedTagValue = [];
-        	var categoryFilterValue = $scope.filters.categoryFilter;
-        	if(categoryFilterValue == null || categoryFilterValue == "null"){
-        		tagValue = null;
-        	}else{
-            	var selectedTag = $scope.categoryLists[categoryFilterValue];
-            	selectedTagValue = selectedTag.tags;
-        		for (var j = 0; j < selectedTagValue.length; j++) {
-        			tagValue = selectedTagValue[j].id;
-            	}
-        	}
-        	
+
+
         	var startDt;
         	var endDt;
         	if($scope.filters.dateStartRange == null){
@@ -92,7 +54,7 @@
         		endDt = $scope.filters.dateEndRange.getTime();
         	}
         	var dataObj = {
-        		tags: tagValue,
+        		withdrawStatus: $scope.filters.withdrawFilter,
         		city : $scope.filters.cityFilter,
         		startDate : startDt,
 				endDate : endDt
@@ -103,7 +65,9 @@
             });
         };
         
-        var dataObj = {}
+        var dataObj = {
+        	withdrawStatus: 0	
+        }
         HousingList.getHousingLists(dataObj).then(function(HousingLists) {
         	vm.myHousingLists = HousingLists;
         });

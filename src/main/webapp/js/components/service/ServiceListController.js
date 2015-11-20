@@ -36,7 +36,7 @@
         
         $scope.categoryLists = {};
         var array = {};
-        $http.get($scope.pathName + 'api/v1/menu/getMenuById?id=55bcacf8e4b08970a7367849'   
+        $http.get($scope.pathName + 'api/v1/menu/getMenuById?id=56406cd03e60f5b66f62df26'
 		).success(function (response, status, headers, config) {
 	        array = response.data.children;
 	        function getCategory(array){
@@ -130,6 +130,7 @@
         		tags: tagValue,
             	city: $scope.filters.cityFilter,
             	userTypes: serviceTypeValue,
+            	withdrawStatus : $scope.filters.withdrawFilter,
             	status: statusValue,
             	startDate : startDate,
 				endDate : endDate
@@ -142,7 +143,8 @@
         }
         
         var dataObj = {
-        	userTypes: '4,7'
+        	userTypes: '4,7',
+        	withdrawStatus: 0
 		}   
         
         ServiceList.getServiceLists(dataObj).then(function(ServiceLists) {

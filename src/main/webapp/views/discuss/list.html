@@ -13,7 +13,8 @@
                 datafields: [
                 		{ name: 'text', type: 'string' },
 						{ name: 'title', type: 'string' },
-						{ name: 'username', type: 'string' },
+						{ name: 'username', type: 'json'},
+						{ name: 'userProfile', type: 'json'},
                         { name: 'createdAt', type: 'date' },
                         { name: 'status', type: 'string' },
                         { name: 'featured', type: 'string' },
@@ -36,12 +37,11 @@
             };
 
 
-
-
 			var titlerenderer = function (row, column, value) {
 				if (value.indexOf('#') != -1) {
 							   title = value.substring(0, value.indexOf('#'));
 							   link = value.substring(value.indexOf('#')+1);
+							   
 			   }
 			   return '<div style="text-align: center; margin-top: 5px;"><a href="#/discuss/'+ link +'">' + title + '</a></div>'
 		    }
@@ -49,9 +49,9 @@
 
 		    var blurbrenderer = function (row, column, value) {
 				if (value.indexOf('#') != -1) {
-							   text = value.substring(0, value.indexOf('#')).substring(0,100);
-							   link = value.substring(value.indexOf('#')+1);
-			   }
+					text = value.substring(0, value.indexOf('#')).substring(0,100);
+					link = value.substring(value.indexOf('#')+1);
+			   	}
 			   return '<div style="text-align: center; margin-top: 5px;"><a href="#/discuss/'+ link +'">' + text + '</a></div>'
 		    }
 
@@ -59,6 +59,19 @@
 			var statusrenderer = function (row, column, value) {
 				if(value == '0' || value == '') return '<div style="text-align: center; margin-top: 5px;" height="26" width="26">Published</div>';
 				else return '<div style="text-align: center; margin-top: 5px;" height="26" width="26">Withdrawn</div>';
+			}
+			
+			var userrenderer = function (row, column, value) {
+				 text = value.split("#")[0];
+				 userType = value.split("#")[1];
+				 userID = value.split("#")[2];
+				 hostName = location.host;
+				 console.log(value)
+				 if(value == 'null' || value == '' || text == 'null') {
+					 return '<div style="text-align: center; margin-top: 5px;" height="26" width="26"><a href="#">Anonymous</a></div>';
+				 }else{
+				   return '<div style="text-align: center; margin-top: 5px;"><a href="http://' + hostName + '/#!/profile/'+ userType + '/' + userID + '">' + text + '</a></div>'
+				 }
 			}
 
 			var featuredrenderer = function (row, column, value) {
@@ -102,6 +115,7 @@
 				},
 				beforeLoadComplete: function (records) {
                         for (var i = 0; i < records.length; i++) {
+                        	
                             records[i].id1= records[i].id;
                             records[i].id2= records[i].id;
                             if(!records[i].title){
@@ -116,8 +130,10 @@
                             	ret = ret || "...";
                             	if(ret === "..." && records[i].linkInfo && records[i].linkInfo.title){
                             		ret = "LINK: " + records[i].linkInfo.title
+                            		console.log(records[i].linkInfo.description)
                             	}else if(ret === "..." && records[i].linkInfo && records[i].linkInfo.description){
                             		ret = records[i].linkInfo.description;
+                            		
                             		var breakpoint = 30 + ret.substr(60).indexOf(" ");
                             	    ret = "LINK: " + ret.substr(0, breakpoint) + "...";
                             	}
@@ -129,8 +145,17 @@
                             records[i].shareCount =  records[i].shareCount;
                             records[i].likesCount =  records[i].likedBy.length;
 
+                            if(records[i].userProfile == null){
+                            	records[i].username = null;
+                            }else {
+                            	records[i].username = records[i].username + "#" + records[i].userProfile.userTypes[0] + "#" + records[i].userProfile.userId;
+                            }
+                      		
+			
+                            
 
                         };
+
                         return records;
                     }
 			});
@@ -151,7 +176,7 @@
 					columnsresize: true,
 					columns: [
 					  { text: 'Title', datafield: 'title', cellsrenderer:titlerenderer, width: 200, cellsalign:'center', align:'center' },
-					  { text: 'Created By', datafield: 'username', width: 150, cellsalign:'center', align:'center' },
+					  { text: 'Created By', datafield: 'username', cellsrenderer:userrenderer, width: 150, cellsalign:'center', align:'center' },
 					  { text: 'Date Created', datafield: 'createdAt', cellsformat: 'dd.MM.yyyy  HH:mm:ss', width: 150, cellsalign:'center', align:'center' },
 					  { text: 'Status', datafield: 'status', cellsrenderer:statusrenderer, width: 100, cellsalign:'center', align:'center' },
 					  { text: 'Featured', datafield: 'featured', cellsrenderer:featuredrenderer, width: 100, cellsalign:'center', align:'center' },
@@ -181,7 +206,7 @@
 					columnsresize: true,
 					columns: [
 					  { text: 'Title', datafield: 'text', cellsrenderer:blurbrenderer, width: 200, cellsalign:'center', align:'center' },
-					  { text: 'Created By', datafield: 'username', width: 150, cellsalign:'center', align:'center' },
+					  { text: 'Created By', datafield: 'username', cellsrenderer:userrenderer, width: 150, cellsalign:'center', align:'center' },
 					  { text: 'Date Created', datafield: 'createdAt', cellsformat: 'dd.MM.yyyy  HH:mm:ss', width: 150, cellsalign:'center', align:'center' },
 					  { text: 'Status', datafield: 'status', cellsrenderer:statusrenderer, width: 150, cellsalign:'center', align:'center' },
 					  { text: 'Featured', datafield: 'featured', cellsrenderer:featuredrenderer, width: 100, cellsalign:'center', align:'center' },

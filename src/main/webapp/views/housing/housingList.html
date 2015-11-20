@@ -5,15 +5,7 @@
 <div ng-controller="HousingListController as showCase">
 
 	<div id="housingFilter">
-		<div class="divLeft">
-			<label>Category Filter</label> 			
-			<select ng-model="filters.categoryFilter">
-				<option value="null">All Categories</option>
-				<option ng-repeat="(key, value) in categoryLists" value="{{key}}">
-  					{{value.name}}
-  				</option>
-			</select>
-		</div>
+
 		<div class="divLeft">
 			<label>City Filter</label>
 			<select ng-model="filters.cityFilter">
@@ -22,10 +14,22 @@
 			</select>
 		</div>
 		<div class="divLeft">
-			<label>Start Date</label> <input type="date" name="dateStartRange" placeholder="yyyy-mm-dd" ng-model="filters.dateStartRange">
+			<label>Withdraw Status Filter</label>
+			<div class="switch radio1">
+        		<input type="radio" class="switch-input" ng-model="filters.withdrawFilter" name="status" value="0" id="notWithdrawn" ng-checked="true">
+            	<label for="notWithdrawn" class="switch-label switch-label-off">Not Withdrawn</label>
+            	<input type="radio" class="switch-input" ng-model="filters.withdrawFilter" name="status" value="1" id="withdrawn">
+            	<label for="withdrawn" class="switch-label switch-label-on">Withdrawn</label>                                         
+            	<span class="switch-selection"></span>
+        	</div>                                             
+      	</div>
+		<div class="divLeft">
+			<label>Start Date</label> 
+			<input type="date" name="dateStartRange" placeholder="yyyy-mm-dd" ng-model="filters.dateStartRange">
 		</div>
 		<div class="divLeft">
-			<label>End Date</label> <input type="date" name="dateEndRange" placeholder="yyyy-mm-dd" ng-model="filters.dateEndRange">
+			<label>End Date</label> 
+			<input type="date" name="dateEndRange" placeholder="yyyy-mm-dd" ng-model="filters.dateEndRange">
 		</div>
 		<div class="divLeft">
 			<button ng-click="housingsByFilter()" class="btn btn-primary">SEARCH</button>

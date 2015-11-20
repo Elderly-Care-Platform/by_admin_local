@@ -1,7 +1,9 @@
 package com.beautifulyears.rest;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -10,6 +12,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 import org.bson.types.ObjectId;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -24,13 +28,17 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.beautifulyears.constants.UserTypes;
 import com.beautifulyears.domain.User;
 import com.beautifulyears.domain.UserProfile;
+import com.beautifulyears.exceptions.BYErrorCodes;
+import com.beautifulyears.exceptions.BYException;
 import com.beautifulyears.repository.UserProfileRepository;
 import com.beautifulyears.rest.response.BYGenericResponseHandler;
 import com.beautifulyears.rest.response.PageImpl;
 import com.beautifulyears.rest.response.UserProfileResponse;
 import com.beautifulyears.util.LoggerUtil;
+import com.beautifulyears.util.Util;
 import com.mongodb.BasicDBObject;
 
 /**
@@ -65,6 +73,7 @@ public class UserProfileController {
 			@RequestParam(value = "city", required = false) String city,
 			@RequestParam(value = "tags", required = false) List<String> tags,
 			@RequestParam(value = "status", required = false) Boolean status,
+			@RequestParam(value = "withdrawStatus", required = false) Integer withdrawStatus,
 			@RequestParam(value = "startDate", required = false) Long startDate,
 			@RequestParam(value = "endDate", required = false) Long endDate,
 			HttpServletRequest request) throws Exception {
@@ -122,7 +131,7 @@ public class UserProfileController {
 		
 		Pageable pageable = new PageRequest(0, 400, sortDirection, "createdAt");
 		page = staticUserProfileRepository.getServiceProvidersByFilterCriteria(userTypes, city, tagIds,
-				status, startDate1, endDate1, null, pageable, null);
+				status, withdrawStatus, startDate1, endDate1, null, pageable, null);
 		servicePage = UserProfileResponse.getPage(page, null);
 		return BYGenericResponseHandler.getResponse(servicePage);
 	}
@@ -192,31 +201,79 @@ public class UserProfileController {
 		UserProfile profile = null;
 		try {
 			if ((userProfile != null) && (userId != null)) {
-						profile = userProfileRepository.findByUserId(userId);
+				profile = userProfileRepository.findByUserId(userId);
 
-						if (profile != null) {
-							profile.setStatus(userProfile.getStatus());
-							profile.setFeatured(userProfile.isFeatured());
-							profile.setVerified(userProfile.isVerified());
-							logger.info("User Profile update with details: "
-									+ profile.toString());
-						}else{
-							logger.debug("new user profile created");
-							User user = mongoTemplate.findById(profile, User.class);
-							if(user != null){
-								userProfile = new UserProfile();
-								userProfile.setUserId(user.getId());;
-								userProfile.getBasicProfileInfo().setPrimaryEmail(user.getEmail());
-								userProfile.setVerified(userProfile.isVerified());
-							}
+				if (profile != null) {
+					userProfile.getBasicProfileInfo()
+					.setShortDescription(
+						getShortDescription(userProfile));
+					profile.setUserTypes(userProfile.getUserTypes());
+					profile.setLastModifiedAt(new Date());
+					profile.setSystemTags(userProfile.getSystemTags());
+					profile.setStatus(userProfile.getStatus());
+					profile.setFeatured(userProfile.isFeatured());
+					profile.setVerified(userProfile.isVerified());
+					profile.setBasicProfileInfo(userProfile
+						.getBasicProfileInfo());
+					if (!Collections.disjoint(
+						profile.getUserTypes(),
+						new ArrayList<>(Arrays.asList(
+							UserTypes.INDIVIDUAL_CAREGIVER,
+							UserTypes.INDIVIDUAL_ELDER,
+							UserTypes.INDIVIDUAL_PROFESSIONAL,
+							UserTypes.INDIVIDUAL_VOLUNTEER)))) {
+						profile.setIndividualInfo(userProfile
+							.getIndividualInfo());
+					}
+					if (!Collections
+						.disjoint(
+						profile.getUserTypes(),
+						new ArrayList<>(
+							Arrays.asList(
+								UserTypes.INSTITUTION_SERVICES,
+								UserTypes.INDIVIDUAL_PROFESSIONAL)))) {
+						profile.setServiceProviderInfo(userProfile
+							.getServiceProviderInfo());
+					}
+						
+					userProfileRepository.save(profile);
+
+					logger.info("User Profile update with details: "
+						+ profile.toString());
+				}else{
+					logger.debug("new user profile created");
+					User user = mongoTemplate.findById(profile, User.class);
+					if(user != null){
+						userProfile = new UserProfile();
+						userProfile.setUserId(user.getId());
+						userProfile.getBasicProfileInfo().setPrimaryEmail(user.getEmail());
+						userProfile.setVerified(userProfile.isVerified());
+					}
 							
-						}
-						userProfileRepository.save(profile);
 				}
+			} else {
+				throw new BYException(BYErrorCodes.NO_CONTENT_FOUND);
+			}
 		} catch (Exception e) {
 			logger.error("error ");
 		}
-
+		
 		return BYGenericResponseHandler.getResponse(profile);
 	}
+	
+	private String getShortDescription(UserProfile profile) {
+		String shortDescription = null;
+		if (null != profile.getBasicProfileInfo()
+				&& null != profile.getBasicProfileInfo().getDescription()) {
+			Document doc = Jsoup.parse(profile.getBasicProfileInfo()
+					.getDescription());
+			String longDesc = doc.text();
+			String desc = Util.truncateText(doc.text());
+			if (longDesc != null && !desc.equals(longDesc)) {
+				shortDescription = desc;
+			}
+		}
+		return shortDescription;
+	}
+	
 }
