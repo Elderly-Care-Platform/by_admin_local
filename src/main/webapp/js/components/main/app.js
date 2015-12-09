@@ -420,9 +420,6 @@ adminControllers.controller('AdminDiscussCreateController', ['$scope', '$http', 
             if (event.target.checked) {
                 $scope.selectedMenuList[category.id] = category;
                 selectParentHierArchy(category);
-                //if(category.parentMenuId && $scope.selectedMenuList[category.parentMenuId]){
-                //    delete $scope.selectedMenuList[category.parentMenuId];
-                //}
             } else {
                 delete $scope.selectedMenuList[category.id];
             }
@@ -430,6 +427,7 @@ adminControllers.controller('AdminDiscussCreateController', ['$scope', '$http', 
 
         var systemTagList = {};
         var getSystemTagList = function (data) {
+            /**function to include all parent tags into discuss system tags**/
             function selectAllParentTags(data) {
                 angular.forEach(data, function (menu, index) {
                     systemTagList[menu.id] = menu.tags;
@@ -443,14 +441,17 @@ adminControllers.controller('AdminDiscussCreateController', ['$scope', '$http', 
                 })
             }
 
+            /**function to include selected menu tags into discuss system tags**/
             function selectedMenuTags(data){
                 angular.forEach(data, function (menu, index) {
                     systemTagList[menu.id] = menu.tags;
                 })
             }
 
+            /**If selectedMenuList does not include parent hierarchy then add all parent tags**/
             //selectAllParentTags(data);
 
+            /**If selectedMenuList already included parent hierarchy then add selected menu tags**/
             selectedMenuTags(data);
 
 
@@ -471,11 +472,13 @@ adminControllers.controller('AdminDiscussCreateController', ['$scope', '$http', 
                 if ($scope.currentDiscuss.topicId) {
                     for (var i = 0; i < $scope.currentDiscuss.topicId.length; i++) {
                         $scope.selectedMenuId = $scope.currentDiscuss.topicId[i];
-                        if($rootScope.menuCategoryMap[$scope.selectedMenuId]){
-                            $scope.selectedMenuList[$scope.selectedMenuId] = $rootScope.menuCategoryMap[$scope.selectedMenuId];
+                        var menu = $rootScope.menuCategoryMap[$scope.selectedMenuId];
+                        if(menu){
+                            if(!$scope.selectedMenuList[$scope.selectedMenuId]){
+                                $scope.selectedMenuList[$scope.selectedMenuId] = menu;
+                            }
                         }
                     }
-
                 }
             }, function (errorResponse) {
                 if (errorResponse.data && errorResponse.data.error && errorResponse.data.error.errorCode === 3002) {
