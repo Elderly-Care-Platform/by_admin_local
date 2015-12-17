@@ -9,22 +9,27 @@
                 <a href="#/edit/{{profile.userId}}/changeCredential?changeUserPwd=true">Change Password</a>
             </li>
 
-            <li style="border:0px;" class="list-group-item reg-menu-1 active"
-                ng-if="profile && profile.userTypes && profile.userTypes.length===0"
-                >
-                <a href="#/edit/{{profile.userId}}">I am...</a>
-            </li>
-            <li style="border:0px;" class="list-group-item reg-menu-1 active"
-                ng-if="sectionLabel">
-                <a href="#/edit/{{profile.userId}}">{{sectionLabel}}</a>
-            </li>
-            <li style="border:0px;" class="list-group-item  reg-menu-1 housingTab{{$index+1}}"
+            <!-- main service -->
+    		<li class="by_profileDetailed_menu reg-menu-1 by_profileDetailed_menuActive" ng-if="serviceBranchTabs.length===0">
+        		<a href="#/edit/registrationProfile">{{userTypeConfig.label}}</a>
+    		</li>
+
+    		<!-- service branches -->
+    		<div class="by_profileDetailed_menu  reg-menu-1 serviceTab{{$index+1}}"
+         		ng-repeat="serviceTab in serviceBranchTabs track by $index"
+         		ng-class="{'by_profileDetailed_menuActive':branchIdx===$index}">
+        		<a di-href="#/edit/{{profile.userId}}/{{$index}}">{{serviceTab}}</a>
+    		</div>
+    		
+            <div style="border:0px;" class="list-group-item  reg-menu-1 housingTab{{$index+1}}"
                 ng-if="housingFacilityTabs.length > 0"
                 ng-repeat="facilityTab in housingFacilityTabs track by $index"
                 ng-class="{'active':facilityIdx===$index}">
                 <a di-href="#/edit/{{profile.userId}}/{{$index}}">{{facilityTab}}</a>
-            </li>
+            </div>
+            
             <div class="clearfix" style="height:50px; background:#fff;"></div>
+            
             <div ng-if="profile && profile.userTypes && profile.userTypes.length > 0">
                 <div class="viewProfile list-group-item  margin-bottom-40 " ng-if="userType!=3" >
                     <a target ="_blank" href="http://{{host}}/#!/profile/{{profile.userTypes[0]}}/{{profile.userId}}/{{userName}}">View Profile</a>

@@ -8,21 +8,32 @@ editController.$inject = ['$scope', '$rootScope', '$routeParams', '$location','$
         $scope.sectionLabel = null;
         $scope.userType = null;
         $scope.facilityIdx = $routeParams.facilityIndex ? parseInt($routeParams.facilityIndex) : 0;
+        $scope.serviceBranchTabs = [];
+        $scope.branchIdx = $routeParams.branchIndex ? parseInt($routeParams.branchIndex) : 0;
+        
+        $scope.host = location.host;
         $scope.pathName = location.pathname;
         
         $scope.changeUsername = function () {
-            $(".reg-menu-1").removeClass('active');
-            $(".username").addClass('active');
+            $window.scrollTo(0, 0);
+            $(".by_profileDetailed_menu").removeClass('by_profileDetailed_menuActive');
+            $(".username").addClass('by_profileDetailed_menuActive');
             $scope.views.leftPanel = "views/edit/editLeftPanel.html";
             $scope.views.contentPanel = "views/edit/login/modifyUsername.html";
         };
         
         $scope.changePassword = function () {
-            $(".reg-menu-1").removeClass('active');
-            $(".password").addClass('active');
+        	window.scrollTo(0, 0);
+            $(".by_profileDetailed_menu").removeClass('by_profileDetailed_menuActive');
+            $(".password").addClass('by_profileDetailed_menuActive');
             $scope.views.leftPanel = "views/edit/editLeftPanel.html";
             $scope.views.contentPanel = "views/edit/login/modifyPassword.html";
         };
+        
+        $scope.leftPanelHeight = function(){            
+            var clientHeight = $( window ).height() - 57;
+            $(".by_menuDetailed").css('height', clientHeight+"px");
+        }
         
         $scope.editUserProfile = function () {
             if ($scope.profile && $scope.profile.userTypes && $scope.profile.userTypes.length) {
@@ -37,6 +48,7 @@ editController.$inject = ['$scope', '$rootScope', '$routeParams', '$location','$
         };
         
         $scope.updateLeftPanel = function(){
+
             $scope.views.leftPanel = $scope.userTypeConfig.leftPanel;
             $scope.userType  = $scope.profile.userTypes[0];
             if($scope.profile.userTypes[0]===3){
@@ -62,18 +74,44 @@ editController.$inject = ['$scope', '$rootScope', '$routeParams', '$location','$
                         $scope.facilityIdx = $scope.facilityIdx - 1;
                     }
                 }
-            } else {
+                
+            } else if($scope.profile.userTypes[0]===4){
+            	if($scope.profile.serviceBranches && $scope.profile.serviceBranches.length > 0){
+                    for(var i=0; i<$scope.profile.serviceBranches.length; i++){
+                        if($scope.profile.serviceBranches[i].basicProfileInfo.firstName && $scope.profile.serviceBranches[i].basicProfileInfo.firstName.trim().length > 0){
+                            $scope.serviceBranchTabs.push($scope.profile.serviceBranches[i].basicProfileInfo.firstName);
+                        } else{
+                            $scope.serviceBranchTabs.push("serviceBranches"+(i+1));
+                        }
+                        if($scope.branchIdx==i){
+                            $scope.branchProfileId = $scope.profile.serviceBranches[i].id;
+                        }
+                    }
+                }else{
+                    $scope.sectionLabel = $scope.userTypeConfig.label;
+                }
+            	
+                if($routeParams.branchIndex){
+                    if($scope.branchIdx >= $scope.profile.serviceBranches.length){
+                        $scope.serviceBranchTabs.push("branch "+$scope.branchIdx);
+                    }
+                }
+
+            }else {
                 $scope.sectionLabel = $scope.userTypeConfig.label;
             }
+            
         };
 
         $scope.updateContentPanel = function(){
+        	
         	if($routeParams.changeUserName) {
         		$scope.changeUsername();
             } else if($routeParams.changeUserPwd){
             	$scope.changePassword();
             } else{
             	$scope.views.contentPanel = $scope.userTypeConfig.contentPanel;
+            	
                 if (!$scope.views.contentPanel || $scope.views.contentPanel == "") {
                 	$scope.exit();
                 }
@@ -87,7 +125,7 @@ editController.$inject = ['$scope', '$rootScope', '$routeParams', '$location','$
                     $scope.userTypeConfig = BY.config.regConfig.userTypeConfig[$scope.profile.userTypes[0]];
                     $scope.updateLeftPanel();
                     $scope.updateContentPanel();
-                    
+
                 } else {
                     $scope.views.leftPanel = BY.config.regConfig.userTypeConfig[-1].leftPanel;
                     if($routeParams.changeUserName) {
@@ -116,7 +154,7 @@ editController.$inject = ['$scope', '$rootScope', '$routeParams', '$location','$
         }
 
         $scope.showFacility = function(facilityIdx){
-            $location.path('/users/housingRegistration/'+ facilityIdx);
+            $location.path('/edit/housingRegistration/'+ facilityIdx);
         }
         
         $scope.initialize = function(){

@@ -65,6 +65,18 @@
 			<version>2.4</version>
 		</dependency>
 		
+		<!-- Email -->
+		<dependency>
+			<groupId>com.sun.mail</groupId>
+			<artifactId>smtp</artifactId>
+			<version>1.5.4</version>
+		</dependency>
+		<dependency>
+			<groupId>com.sun.mail</groupId>
+			<artifactId>javax.mail</artifactId>
+			<version>1.5.4</version>
+		</dependency>
+		
 		<!-- for document parsing -->
 		<dependency>
 			<groupId>org.jsoup</groupId>

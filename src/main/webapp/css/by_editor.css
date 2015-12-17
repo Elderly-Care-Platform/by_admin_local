@@ -26,7 +26,7 @@ a.accordion-toggle {
 	font-size: 14px !important;
 	background: transparent !important;
 	vertical-align: top;
-	width: 92%;
+	/*width: 92%;*/
 }
 
 .by_editor_post_divider label img {

@@ -54,6 +54,7 @@ import com.beautifulyears.util.activityLogHandler.UserActivityLogHandler;
 public class UserController {
 	private static final Logger logger = Logger.getLogger(UserController.class);
 	private UserRepository userRepository;
+	private static UserRepository staticUserRepository;
 	private MongoTemplate mongoTemplate;
 	ActivityLogHandler<User> logHandler;
 
@@ -61,6 +62,7 @@ public class UserController {
 	public UserController(UserRepository userRepository,
 			MongoTemplate mongoTemplate) {
 		this.userRepository = userRepository;
+		staticUserRepository = userRepository;
 		this.mongoTemplate = mongoTemplate;
 		logHandler = new UserActivityLogHandler(mongoTemplate);
 	}
@@ -353,6 +355,12 @@ public class UserController {
 		return BYGenericResponseHandler.getResponse(user);
 	}
 
+	public static User getUsers(String userId) {
+		LoggerUtil.logEntry();
+		User user = staticUserRepository.findOne(userId);
+		return user;
+	}
+	
 	private Session createSession(HttpServletRequest req,
 			HttpServletResponse res, User user) {
 		LoggerUtil.logEntry();

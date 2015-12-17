@@ -41,6 +41,9 @@ public class UserProfile {
 
 	// contains information about service provider
 	private ServiceProviderInfo serviceProviderInfo = new ServiceProviderInfo();
+	
+	@DBRef
+	private List<UserProfile> serviceBranches = new ArrayList<UserProfile>();
 
 	@DBRef
 	private List<HousingFacility> facilities = new ArrayList<HousingFacility>();
@@ -152,6 +155,14 @@ public class UserProfile {
 	public void setIndividualInfo(IndividualProfileInfo individualInfo) {
 		this.individualInfo = individualInfo;
 	}
+	
+	public List<UserProfile> getServiceBranches() {
+		return serviceBranches;
+	}
+
+	public void setServiceBranches(List<UserProfile> serviceBranches) {
+		this.serviceBranches = serviceBranches;
+	}
 
 	public ServiceProviderInfo getServiceProviderInfo() {
 		return serviceProviderInfo;
@@ -239,18 +250,14 @@ public class UserProfile {
 
 	@Override
 	public String toString() {
-		return "UserProfile [id=" + id + ", userId=" + userId + ", userTypes="
-				+ userTypes + ", basicProfileInfo=" + basicProfileInfo
-				+ ", individualInfo=" + individualInfo
-				+ ", serviceProviderInfo=" + serviceProviderInfo
-				+ ", facilities=" + facilities + ", tags=" + tags
-				+ ", isFeatured=" + isFeatured + ", createdAt=" + createdAt
-				+ ", lastModifiedAt=" + lastModifiedAt + ", systemTags="
-				+ systemTags + ", userTags=" + userTags + ", status=" + status
-				+ ", reviewedBy=" + reviewedBy + ", ratedBy=" + ratedBy
-				+ ", aggrRatingPercentage=" + aggrRatingPercentage
-				+ ", isReviewedByUser=" + isReviewedByUser + ", isRatedByUser="
-				+ isRatedByUser + "]";
+		return "UserProfile [id=" + id + ", userId=" + userId + ", userTypes=" + userTypes + ", basicProfileInfo="
+				+ basicProfileInfo + ", individualInfo=" + individualInfo + ", serviceProviderInfo="
+				+ serviceProviderInfo + ", serviceBranches=" + serviceBranches + ", facilities=" + facilities
+				+ ", tags=" + tags + ", isFeatured=" + isFeatured + ", verified=" + verified + ", createdAt="
+				+ createdAt + ", lastModifiedAt=" + lastModifiedAt + ", systemTags=" + systemTags + ", userTags="
+				+ userTags + ", status=" + status + ", reviewedBy=" + reviewedBy + ", ratedBy=" + ratedBy
+				+ ", aggrRatingPercentage=" + aggrRatingPercentage + ", isReviewedByUser=" + isReviewedByUser
+				+ ", isRatedByUser=" + isRatedByUser + "]";
 	}
 
 }

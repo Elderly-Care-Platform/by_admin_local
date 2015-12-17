@@ -3,7 +3,7 @@
 		<div ng-controller="ServiceListController as showCase">
 			<div id="serviceFilter">
 				<div class="divLeft">
-					<label>Category Filter</label> 			
+					<label>Category Filter</label>
 					<select ng-model="filters.categoryFilter">
 						<option value="null">All Categories</option>
 						<option ng-repeat="(key, value) in categoryLists" value="{{key}}">
@@ -23,7 +23,7 @@
 					<select ng-model="filters.serviceTypeFilter">
 						<option value="null">All</option>
 						<option value="7">Individual</option>
-						<option value="4">Institution</option>
+						<option value="8">Institution</option>
 					</select>
 				</div>
 				<div class="divLeft">
@@ -100,7 +100,7 @@
 							</ul>
 						</td>
 						<td>
-							<p ng-if="ServiceList.userTypes == 4">Institution</p>
+							<p ng-if="ServiceList.userTypes == 8">Institution</p>
 							<p ng-if="ServiceList.userTypes == 7">Individual</p>
 						</td>
 						<td>{{ServiceList.basicProfileInfo.primaryEmail == "" && ServiceList.basicProfileInfo.primaryPhoneNo || ServiceList.basicProfileInfo.primaryEmail}}</td>

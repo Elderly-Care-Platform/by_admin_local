@@ -59,7 +59,7 @@ BY.config.regConfig.userTypeConfig = {
     '4' : {
         'type':'4',
         'contentPanel':'views/edit/editInstitution.html',
-        'leftPanel' : "views/edit/editLeftPanel.html",
+        'leftPanel' : "views/edit/editInstitutionLeftPanel.html",
         'controller' : 'editInstitutionCtrl',
         'category':'SERVICES',
         'label' : "Institution info"
@@ -83,6 +83,14 @@ BY.config.regConfig.userTypeConfig = {
         'controller' : 'editProfessionalCtrl',
         'category':'PROFESSIONAL',
         'label' : "Professional Info"
+    },
+    '8': {
+    	'type': '8',
+    	'contentPanel': 'views/edit/editInstitution.html',
+        'leftPanel': 'views/edit/editInstitutionLeftPanel.html',
+        'controller': 'editInstitutionCtrl',
+        'category': 'SERVICE_BRANCH',
+        'label': 'Branch Info'
     }
 }
 
@@ -194,3 +202,61 @@ BY.config.regConfig.housingFacility = {
         'website' : ""
 
 };
+
+BY.config.regConfig.institutionBranch = {
+	    "id": null,
+	    "userId": null,
+	    "userTypes": [8],
+	    "basicProfileInfo": {
+	        "firstName": null,
+	        "profileImage": null,
+	        "primaryEmail": null,
+	        "secondaryEmails": [],
+	        "primaryPhoneNo": null,
+	        "secondaryPhoneNos": [],
+	        "description": null,
+	        "photoGalleryURLs": [],
+	        "primaryUserAddress": {"streetAddress": null, "city": null, "zip": null, "locality": null, "country": null},
+	        "otherAddresses": [],
+	        "shortDescription": null
+	    },
+	    "individualInfo": {
+	        "salutation": null,
+	        "lastName": null,
+	        "gender": 0,
+	        "dob": null,
+	        "otherDates": null,
+	        "occupation": null,
+	        "emotionalIssues": null,
+	        "medicalIssues": null,
+	        "otherIssues": null,
+	        "maritalStatus": null,
+	        "hobbies": null,
+	        "otherHobbies": null,
+	        "interests": null,
+	        "otherInterests": null,
+	        "language": null
+	    },
+	    "serviceProviderInfo": {
+	        "services": [],
+	        "homeVisits": false,
+	        "website": null,
+	        "yearsExperience": 0,
+	        "incorporationDate": null,
+	        "specialities": null
+	    },
+	    "ratingPercentage": 0.0,
+	    "ratingCount": 0,
+	    "reviewCount": 0,
+	    "createdAt": null,
+	    "systemTags": [],
+	    "lastModifiedAt": null,
+	    "verified": false,
+	    "serviceBranches": [],
+	    "facilities": [],
+	    "reviewedByUser": false,
+	    "featured": false,
+	    "ratedByUser": false
+
+	};
+

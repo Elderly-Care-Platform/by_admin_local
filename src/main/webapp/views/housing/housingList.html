@@ -5,15 +5,7 @@
 <div ng-controller="HousingListController as showCase">
 
 	<div id="housingFilter">
-		<div class="divLeft">
-			<label>Category Filter</label> 			
-			<select ng-model="filters.categoryFilter">
-				<option value="null">All Categories</option>
-				<option ng-repeat="(key, value) in categoryLists" value="{{key}}">
-  					{{value.name}}
-  				</option>
-			</select>
-		</div>
+
 		<div class="divLeft">
 			<label>City Filter</label>
 			<select ng-model="filters.cityFilter">
@@ -49,7 +41,6 @@
 		<thead>
 			<tr>
 				<th>Name of the facility</th>
-				<th>Categories</th>
 				<th>Date added</th>
 				<th>Email</th>
 				<th>city</th>
@@ -60,15 +51,6 @@
 		<tbody>
 			<tr ng-repeat="HousingList in showCase.myHousingLists">
             	<td><a target="_blank" href="http://{{host}}/#!/housingProfile/3/{{HousingList.userId}}/{{HousingList.id}}">{{ HousingList.name }}</a></td>
-            	<td>
-            		<ul>
-						<span ng-repeat="item in HousingList.categoriesId">
-							<span ng-repeat="item1 in categoryLists[item].tags">
-								<li>{{item1.name}}</li>
-							</span>
-						</span>
-					</ul>
-  				</td>
             	<td>{{ HousingList.createdAt | date:'yyyy-MM-dd HH:mm:ss'}}</td>
             	<td>{{ HousingList.primaryEmail == "" && HousingList.primaryPhoneNo || HousingList.primaryEmail}}</td>
             	<td>{{ HousingList.primaryAddress.city }}</td>

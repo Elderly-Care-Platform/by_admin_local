@@ -65,12 +65,11 @@
 				 text = value.split("#")[0];
 				 userType = value.split("#")[1];
 				 userID = value.split("#")[2];
-				 pathName = location.pathname;
-				 console.log(value)
+				 hostName = location.host;
 				 if(value == 'null' || value == '' || text == 'null') {
 					 return '<div style="text-align: center; margin-top: 5px;" height="26" width="26"><a href="#">Anonymous</a></div>';
 				 }else{
-				   return '<div style="text-align: center; margin-top: 5px;"><a href="' + pathName + '#!/profile/'+ userType + '/' + userID + '">' + text + '</a></div>'
+				   return '<div style="text-align: center; margin-top: 5px;"><a href="http://' + hostName + '/#!/profile/'+ userType + '/' + userID + '">' + text + '</a></div>'
 				 }
 			}
 
@@ -100,10 +99,6 @@
 
 			var editrenderer = function (row, column, value) {
                 return '<div style="text-align: center; margin-top: 5px;"><a href="#/discuss/showedit/'+ value +'"><img src="../../../byadmin/img/edit.png" alt="edit" height="26" width="26"></a></div>'
-			}
-
-			var deleterenderer = function (row, column, value) {
-            	return '<div style="text-align: center; margin-top: 5px;"><a href="#/discuss/delete/'+ value +'"><img src="../../../byadmin/img/delete.png" alt="delete" height="26" width="26"></a></div>'
 			}
 
 			var dataAdapter = new $.jqx.dataAdapter(source, {
@@ -185,8 +180,7 @@
 					  { text: 'Likes', datafield: 'likesCount', width: 80, cellsalign:'center', align:'center' },
 					  { text: 'Shares', datafield: 'shareCount', width: 80, cellsalign:'center', align:'center' },
 					  { text: 'Edit', datafield: 'id', cellsrenderer: editrenderer, minwidth: 50, cellsalign:'center', align:'center' },
-					  { text: 'Delete', datafield: 'id1', cellsrenderer: deleterenderer, minwidth: 50, cellsalign:'center', align:'center' }
-
+					  
 					]
 				});
             }
@@ -214,8 +208,7 @@
 					  { text: 'Answers', datafield: 'comments', cellsrenderer:commentsrenderer, width: 80, cellsalign:'center', align:'center' },
 					  { text: 'Likes', datafield: 'likesCount', width: 50, cellsalign:'center', align:'center' },
 					  { text: 'Shares', datafield: 'shareCount', width: 50, cellsalign:'center', align:'center' },
-					  { text: 'Edit', datafield: 'id', cellsrenderer: editrenderer, minwidth: 50, cellsalign:'center', align:'center' },
-					  { text: 'Delete', datafield: 'id1', cellsrenderer: deleterenderer, minwidth: 50, cellsalign:'center', align:'center' }
+					  { text: 'Edit', datafield: 'id', cellsrenderer: editrenderer, minwidth: 50, cellsalign:'center', align:'center' }
 					]
             	});
             }
@@ -248,7 +241,26 @@
 </table>
 -->
 
-
-<div id='jqxWidget' style="font-size: 13px; font-family: Verdana; float: left;">
+	<div id='jqxWidget' style="font-size: 13px; font-family: Verdana; float: left;">
         <div id="jqxgrid"></div>
-</div>
+	</div>
+	
+	<modal title="Login form" visible="showModal">
+    	<form role="form">
+      		<div class="form-group">
+        		<label for="email">To</label>
+        		<input type="email" class="form-control" id="email" placeholder="Enter email" />
+      		</div>
+      		<div class="form-group">
+        		<label for="email">From</label>
+        		<input type="email" class="form-control" id="email" placeholder="Enter email" />
+      		</div>
+      		<div class="form-group">
+        		<label for="password">Message</label>
+        		<input type="password" class="form-control" id="password" placeholder="Password" />
+      		</div>
+      		<button type="submit" class="btn btn-default">Submit</button>
+    	</form>
+  </modal>
+  
+

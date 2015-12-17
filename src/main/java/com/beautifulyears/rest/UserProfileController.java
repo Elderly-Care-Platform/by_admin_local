@@ -170,16 +170,16 @@ public class UserProfileController {
 		return BYGenericResponseHandler.getResponse(userProfile);
 	}
 
-	@RequestMapping(method = { RequestMethod.GET }, value = { "/{userId}" }, produces = { "application/json" })
+	/*@RequestMapping(method = { RequestMethod.GET }, value = { "/{id}" }, produces = { "application/json" })
 	@ResponseBody
 	public Object getUserProfilebyID(
-			@PathVariable(value = "userId") String userId,
+			@PathVariable(value = "id") String id,
 			HttpServletRequest req, HttpServletResponse res) throws Exception {
 		LoggerUtil.logEntry();
 		UserProfile userProfile = null;
 		try {
-			if (userId != null) {
-				userProfile = this.userProfileRepository.findByUserId(userId);
+			if (id != null) {
+				userProfile = userProfileRepository.findById(id);
 			} else {
 				logger.error("invalid parameter");
 			}
@@ -189,7 +189,28 @@ public class UserProfileController {
 		}
 		return BYGenericResponseHandler.getResponse(userProfile);
 	}
+*/
+	
+	@RequestMapping(method = { RequestMethod.GET }, value = { "/{userId}" }, produces = { "application/json" })
+	@ResponseBody
+	public Object getUserProfilebyID(
+			@PathVariable(value = "userId") String userId,
+			HttpServletRequest req, HttpServletResponse res) throws Exception {
+		LoggerUtil.logEntry();
+		UserProfile userProfile = null;
+		try {
+			if (userId != null) {
+				userProfile = userProfileRepository.findByUserId(userId);
+			} else {
+				logger.error("invalid parameter");
+			}
 
+		} catch (Exception e) {
+			logger.error("invalid parameter");
+		}
+		return BYGenericResponseHandler.getResponse(userProfile);
+	}
+	
 	/* @PathVariable(value = "userId") String userId */
 	@RequestMapping(method = { RequestMethod.PUT }, value = { "/{userId}" }, consumes = { "application/json" })
 	@ResponseBody
@@ -199,6 +220,7 @@ public class UserProfileController {
 
 		LoggerUtil.logEntry();
 		UserProfile profile = null;
+		User requestedUser = UserController.getUsers(userId);
 		try {
 			if ((userProfile != null) && (userId != null)) {
 				profile = userProfileRepository.findByUserId(userId);
@@ -225,15 +247,23 @@ public class UserProfileController {
 						profile.setIndividualInfo(userProfile
 							.getIndividualInfo());
 					}
-					if (!Collections
-						.disjoint(
-						profile.getUserTypes(),
-						new ArrayList<>(
-							Arrays.asList(
-								UserTypes.INSTITUTION_SERVICES,
-								UserTypes.INDIVIDUAL_PROFESSIONAL)))) {
+					else if(profile.getUserTypes().contains(UserTypes.INSTITUTION_SERVICES) || profile.getUserTypes().contains(UserTypes.INSTITUTION_BRANCH)){
 						profile.setServiceProviderInfo(userProfile
-							.getServiceProviderInfo());
+								.getServiceProviderInfo());
+						List<UserProfile> branchInfo = userProfile.getServiceBranches();
+						saveBranches(branchInfo, userId);
+						profile.setServiceBranches(userProfile
+								.getServiceBranches());
+					}
+					else if (profile.getUserTypes().contains(UserTypes.INDIVIDUAL_PROFESSIONAL)){
+						profile.setServiceProviderInfo(userProfile
+								.getServiceProviderInfo());
+					}
+					else if (profile.getUserTypes().contains(UserTypes.INSTITUTION_HOUSING)){
+						profile.setFacilities(HousingController
+								.addFacilities(
+										userProfile.getFacilities(),
+										requestedUser));
 					}
 						
 					userProfileRepository.save(profile);
@@ -259,6 +289,19 @@ public class UserProfileController {
 		}
 		
 		return BYGenericResponseHandler.getResponse(profile);
+	}
+	
+	private void saveBranches(List<UserProfile> branchInfo,String userId) {
+		for(UserProfile branch: branchInfo){
+			if(!branch.getUserTypes().contains(UserTypes.INSTITUTION_BRANCH)){
+				throw new BYException(BYErrorCodes.MISSING_PARAMETER);
+			}
+		}
+		for(UserProfile branch: branchInfo){
+			branch.setUserId(userId);
+			mongoTemplate.save(branch);
+		}
+		
 	}
 	
 	private String getShortDescription(UserProfile profile) {

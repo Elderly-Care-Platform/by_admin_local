@@ -1,0 +1,190 @@
+<div>
+    <div class="col-md-12 whiteBg register-page padding20 borderShadow margin-bottom-20 indvBorderRadius">
+        <div class="addBasicInfo">My Institution Information</div>
+        <div class="row margin-bottom-20 marginRightMinus5 register-page">
+            <div class="col-md-5 required">
+                Branch name
+            </div>
+            <div class="col-md-7 no-padding-right register-page">
+                <input type="text" class="username-textbox textbox" name="branchname"
+                       placeholder="Please enter branch name"
+                       ng-model="branchBasicInfo.firstName" required/>
+                <span ng-show="institutionForm.branchname.$invalid && submitted" class="errorRed">Please enter your branch name</span>
+            </div>
+        </div>
+
+
+        <div class="row no-padding margin-bottom-20 marginleft0">
+            <div class="col-md-12 no-padding fontSizeIndi  list-head dp-block">
+                Our Branch address is
+            </div>
+
+            <div class="col-md-12 no-padding bg-gray-h1">
+                <div class="bg-green-h2" style="width: 216px;"></div>
+            </div>
+        </div>
+
+        <div class="row margin-bottom-40 marginRightMinus5">
+
+            <div class="col-md-12 no-padding">
+
+                <div class="row margin-bottom-20  marginRightMinus5" style="padding-left: 15px">
+                    <div class="col-md-5">
+                        Country
+                    </div>
+                    <div class="col-md-7 no-padding-right register-page">
+                        <input type="text" class="username-textbox textbox"
+                               ng-model="branchBasicInfo.primaryUserAddress.country"/>
+                    </div>
+                </div>
+
+                <div class="row margin-bottom-20  marginRightMinus5" style="padding-left: 15px">
+                    <div class="col-md-5">
+                        Zip
+                    </div>
+                    <div class="col-md-7 no-padding-right register-page">
+                        <input type="text" class="username-textbox textbox"
+                               ng-model="branchBasicInfo.primaryUserAddress.zip" style="width:50%;"/>
+                        <input type="button" class="btn btn-success pull-right register-btn"
+                               value="Get address" style="padding:4px 12px;"
+                               ng-click="getLocationByPincode($event, branchAddress)">
+                    </div>
+                </div>
+
+                <div class="row margin-bottom-20  marginRightMinus5" style="padding-left: 15px">
+                    <div class="col-md-5 required">
+                        City
+                    </div>
+                    <div class="col-md-7 no-padding-right register-page">
+                        <input type="text" class="username-textbox textbox" name="branchCity"
+                               ng-model="branchBasicInfo.primaryUserAddress.city" required/>
+                            <span ng-show="institutionForm.branchCity.$invalid && submitted"
+                                  class="errorRed">Please enter your city</span>
+                    </div>
+                </div>
+
+
+                <div class="row  margin-bottom-20  marginRightMinus5" style="padding-left: 15px">
+                    <div class="col-md-5 ">Locality</div>
+                    <div class="col-md-7 no-padding-right register-page">
+                        <input type="text" ng-model="branchBasicInfo.primaryUserAddress.locality"
+                               class="name-textbox textbox addressLocality" ng-google-location options="options" obj="branchAddress"
+                               callback="addressCallback" placeholder="Locality"/>
+                    </div>
+                </div>
+
+                <div class="row margin-bottom-20  marginRightMinus5" style="padding-left: 15px">
+                    <div class="col-md-5 ">Address detail</div>
+                    <div class="col-md-7 no-padding-right register-page">
+                            <textarea class="textbox " rows="3"
+                                      ng-model="branchBasicInfo.primaryUserAddress.streetAddress"></textarea>
+                    </div>
+                </div>
+
+
+                <div class="row margin-bottom-20 marginRightMinus5" style="padding-left: 15px">
+                    <div class="col-md-5">
+                        Phone Number
+                    </div>
+                    <div class="col-md-7 no-padding-right register-page">
+                        <input type="text" class="username-textbox textbox" name="primaryTel"
+                               ng-model="branchBasicInfo.primaryPhoneNo"
+                               placeholder="Telephone number" ng-pattern="/^[+\d-]*\d[\d-]$/" maxlength="17"
+                               minlength="10">
+                        <span ng-show="(institutionForm.primaryTel.$invalid || institutionForm.primaryTel.$error.pattern) && submitted"
+                                  class="errorRed">Not a valid number!</span>
+                    </div>
+                </div>
+
+                <div class="row margin-bottom-20 marginRightMinus5" style="padding-left: 15px"
+                     ng-repeat="number in branchBasicInfo.secondaryPhoneNos track by $index">
+                    <div class="col-md-5">
+                        Additional Phone Number
+                    </div>
+                    <div class="col-md-7 no-padding-right register-page">
+                        <input type="text" class="username-textbox textbox" name="{{'tel'+$index}}"
+                               ng-model="branchBasicInfo.secondaryPhoneNos[$index]"
+                               placeholder="Telephone number" ng-pattern="/^[+\d-]*\d[\d-]$/" maxlength="17"
+                               minlength="10"/>
+
+                        <span ng-show="(institutionForm.{{'tel'+$index}}.$invalid || institutionForm.{{'tel'+$index}}.$error.pattern) && submitted"
+                                  class="errorRed">Not a valid number!</span>
+                    </div>
+                </div>
+
+
+                <div class="row add-phone-wrap margin-bottom-20" style="margin-top:-10px;">
+                    <div class="col-md-5"></div>
+                    <div class="col-md-7 no-padding-right register-page">
+                        <a class="add-phone" ng-click="addPhoneNumber(branchBasicInfo.secondaryPhoneNos)">+ add another phone no</a>
+                    </div>
+                </div>
+
+                <div class="row margin-bottom-20 marginRightMinus5" style="padding-left: 15px">
+                    <div class="col-md-5">
+                        Email ID
+                    </div>
+                    <div class="col-md-7 no-padding-right register-page">
+                        <input type="email" class="username-textbox textbox" name="primaryEmail"
+                               ng-model="branchBasicInfo.primaryEmail"
+                               placeholder="Email"/>
+                        <!--<span ng-show="institutionForm.primaryEmail.$invalid && !institutionForm.primaryEmail.$error.email && submitted" class="errorRed">Please enter your Email Id!</span>-->
+                        <span ng-show="institutionForm.primaryEmail.$error.email && submitted" class="errorRed">
+                            Not valid Email!
+                        </span>
+                    </div>
+                </div>
+
+                <div class="row margin-bottom-20 marginRightMinus5" style="padding-left: 15px" ng-repeat="email in branchBasicInfo.secondaryEmails track by $index">
+                    <div class="col-md-5">
+                        Additional Email ID
+                    </div>
+                    <div class="col-md-7 no-padding-right register-page">
+                        <input type="email" class="username-textbox textbox" name="{{'email'+$index}}"
+                               ng-model="branchBasicInfo.secondaryEmails[$index]"
+                               placeholder="Email"/>
+                        <span ng-show="institutionForm.{{'email'+$index}}.$error.email && submitted" class="errorRed">Not valid Email!</span>
+                    </div>
+                </div>
+
+
+                <div class="row add-email-wrap margin-bottom-20" style="margin-top:-10px;">
+                    <div class="col-md-5"></div>
+                    <div class="col-md-7 no-padding-right register-page">
+                        <a class="add-email" ng-click="addEmail(branchBasicInfo.secondaryEmails)">+ add another email id</a>
+                    </div>
+                </div>
+
+                <div class="row margin-bottom-20 marginRightMinus5" style="padding-left: 15px">
+                    <div class="col-md-5">
+                        Website
+                    </div>
+                    <div class="col-md-7 no-padding-right register-page">
+                        <input type="text" class="username-textbox textbox"
+                               ng-model="selectedBranch.serviceProviderInfo.website"
+                               placeholder="Website"/>
+                        <span ng-show="websiteError && submitted" class="errorRed">
+                            Please enter proper website url
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+    <div class="clearfix"></div>
+    <div class="col-md-12 no-padding margin-top-0 margin-bottom-20">
+        <input type="button" value="Done" class="nextButton by_btn_submit"
+               ng-click="postUserProfile(institutionForm, false)"/>
+        <input type="button" value="+ Add Another Branch" ng-click="postUserProfile(institutionForm, true)"
+               class="nextButton by_btn_submit" style="float:left; width:200px; margin-left:0px;"/>
+
+        <div class="clearfix"></div>
+    </div>
+
+</div>
+
+
+       

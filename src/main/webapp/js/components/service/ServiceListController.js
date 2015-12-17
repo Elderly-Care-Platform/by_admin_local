@@ -36,7 +36,7 @@
         
         $scope.categoryLists = {};
         var array = {};
-        $http.get($scope.pathName + 'api/v1/menu/getMenuById?id=55bcacf8e4b08970a7367849'   
+        $http.get($scope.pathName + 'api/v1/menu/getMenuById?id=56406cd03e60f5b66f62df26'
 		).success(function (response, status, headers, config) {
 	        array = response.data.children;
 	        function getCategory(array){
@@ -91,7 +91,7 @@
         	var serviceTypeFilterValue = $scope.filters.serviceTypeFilter;
         	var serviceTypeValue;
         	if(serviceTypeFilterValue == null || serviceTypeFilterValue == "null"){
-        		serviceTypeValue = '4,7';
+        		serviceTypeValue = '8,7';
         	}else{
         		serviceTypeValue = $scope.filters.serviceTypeFilter;
         	}
@@ -143,7 +143,7 @@
         }
         
         var dataObj = {
-        	userTypes: '4,7',
+        	userTypes: '8,7',
         	withdrawStatus: 0
 		}   
         

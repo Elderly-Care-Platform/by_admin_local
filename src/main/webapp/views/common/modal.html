@@ -1,0 +1,26 @@
+<div class="modal-dialog by-modalLogin">
+    <div class="modal-content"  ng-controller="LoginController" ng-init="modalLoginInit()">
+        <!-- Modal Header -->
+        <div class="modal-header">
+            <button type="button" class="close"
+                    data-dismiss="modal">
+                <span aria-hidden="true">&times;</span>
+                <span class="sr-only">Close</span>
+            </button>
+        </div>
+        <!-- Modal Body -->
+        <div class="modal-body">
+            
+        </div>
+
+        <!-- Modal Footer -->
+        <div class="modal-footer byModalFooter"  ng-if="resetPwd.status!=1">
+            <div class="no-padding" ng-if="formState===0 || formState===2">
+                Already a BeautifulYears member?<br/> <a ng-click="showForm(1)"><b><u>Login Here</u></b></a>
+            </div>
+            <div class="no-padding" ng-if="formState===1">
+                Not a BeautifulYears member?<br/> <a ng-click="showForm(0)"><b><u>Register Now</u></b></a>
+            </div>
+        </div>
+    </div>
+</div>

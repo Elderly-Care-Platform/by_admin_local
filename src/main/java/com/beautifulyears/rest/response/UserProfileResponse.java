@@ -47,6 +47,9 @@ public class UserProfileResponse implements IResponse {
 		private Date lastModifiedAt = new Date();
 		private boolean isFeatured;
 		private boolean verified;
+		
+		private List<UserProfileResponse.UserProfileEntity> serviceBranches = new ArrayList<UserProfileResponse.UserProfileEntity>();
+		
 		private List<HousingFacility> facilities = new ArrayList<HousingFacility>();
 
 		public UserProfileEntity(UserProfile profile, User user) {
@@ -72,10 +75,22 @@ public class UserProfileResponse implements IResponse {
 			this.isFeatured = profile.isFeatured();
 			this.verified = profile.isVerified();
 			this.facilities = profile.getFacilities();
+			for(UserProfile profileBranches: profile.getServiceBranches()){
+				this.serviceBranches.add(UserProfileResponse
+						.getUserProfileEntity(profileBranches, user));
+			}
 		}
 
 		public int getStatus() {
 			return status;
+		}
+		
+		public List<UserProfileResponse.UserProfileEntity> getServiceBranches() {
+			return serviceBranches;
+		}
+
+		public void setServiceBranches(List<UserProfileResponse.UserProfileEntity> serviceBranches) {
+			this.serviceBranches = serviceBranches;
 		}
 
 		public List<HousingFacility> getFacilities() {

@@ -38,11 +38,11 @@ byAdminApp.config(['$routeProvider',
       
       .when('/services', {templateUrl: 'views/service/serviceList.html'})
       .when('/services/:userId', {templateUrl: 'views/service/service.html', controller: 'ServiceController'})
-     
-      //.when('/edit/:userId', {controller: 'editController'})
       
       .when('/edit/:userId', {templateUrl: 'views/edit/edit.html', controller: 'editController'})
-      .when('/edit/:userId/changeCredential', {templateUrl: 'views/edit/edit.html', controller: 'editController'})
+      //.when('/edit/:userId/:facilityIndex', {templateUrl: 'views/edit/edit.html', controller: 'editController'})
+      .when('/edit/:userId/:branchIndex', {templateUrl: 'views/edit/edit.html', controller: 'editController'})
+      .when('/edit/registrationProfile', { templateUrl: 'views/edit/edit.html', controller: 'editController'})
       
       .when('/userProfile', {templateUrl: 'views/profile/userProfileList.html', controller: 'UserProfileListController'})
       .when('/userProfile/:userId', {templateUrl: 'views/profile/userProfile.html', controller: 'UserProfileController'})
@@ -52,5 +52,5 @@ byAdminApp.config(['$routeProvider',
       
       .when('/activityLogs', {templateUrl: 'views/activityLogs/activityLogsList.html', controller: 'ActivityLogsListController'})
       ;
-    //?????$routeProvider.otherwise({redirectTo: '/users/login'});
+
   }]);

@@ -13,4 +13,6 @@ public interface UserProfileRepositoryCustom {
 	
 	public PageImpl<UserProfile> getServiceProvidersByFilterCriteria(Object[] userTypes, String city, List<ObjectId> tagIds, Boolean status, Integer withdrawStatus, Date startDate, Date endDate, Boolean isFeatured, Pageable page,List<String> fields);
 	public PageImpl<UserProfile> findAllUserProfiles(Pageable pageable);
+	public UserProfile findByUserId(String UserId);
+	
 }

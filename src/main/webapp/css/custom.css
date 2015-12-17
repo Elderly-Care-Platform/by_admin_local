@@ -323,3 +323,10 @@ label.myLabel input[type="file"] {
   -o-transition: left 0.15s ease-out;
   transition: left 0.15s ease-out;
 }
+
+.mail-input{
+	width:100%;
+}
+textarea.mail-input{
+	border-bottom:none;
+}
