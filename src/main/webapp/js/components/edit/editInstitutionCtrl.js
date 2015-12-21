@@ -385,7 +385,7 @@ editInstitutionCtrl.$inject = ['$scope', '$rootScope', '$routeParams', '$locatio
                     console.log("success");
                     $scope.submitted = false;
                     if($scope.addBranch){
-                        $location.path('/edit/'+ $routeParams.userId + ($scope.profile.serviceBranches.length));
+                        $location.path('/edit/'+ $routeParams.userId + "/" + ($scope.profile.serviceBranches.length));
                     }else{
                         $scope.$parent.exit();
                     }
