@@ -19,10 +19,7 @@ public class GetByWebApplicationInitializer implements
 	public void onStartup(ServletContext servletContext)
 			throws ServletException {
 		System.out.println("***Starting byadmin application ***");
-		System.out.println("mail supported is "+ servletContext.getInitParameter("mail"));
-		GetByWebApplicationInitializer.servletContext = servletContext;
-		//root path used in logs config
-		System.setProperty("rootPath", servletContext.getRealPath("/"));
+	
 		AnnotationConfigWebApplicationContext webApplicationContext = new AnnotationConfigWebApplicationContext();
 		webApplicationContext.register(ApplicationConfig.class,
 				WebMvcConfig.class);

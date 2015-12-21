@@ -250,10 +250,8 @@ public class UserProfileController {
 					else if(profile.getUserTypes().contains(UserTypes.INSTITUTION_SERVICES) || profile.getUserTypes().contains(UserTypes.INSTITUTION_BRANCH)){
 						profile.setServiceProviderInfo(userProfile
 								.getServiceProviderInfo());
-						List<UserProfile> branchInfo = userProfile.getServiceBranches();
-						saveBranches(branchInfo, userId);
-						profile.setServiceBranches(userProfile
-								.getServiceBranches());
+						List<UserProfile> branchInfo = saveBranches(userProfile.getServiceBranches(), userId);
+						profile.setServiceBranches(branchInfo);
 					}
 					else if (profile.getUserTypes().contains(UserTypes.INDIVIDUAL_PROFESSIONAL)){
 						profile.setServiceProviderInfo(userProfile
@@ -291,16 +289,37 @@ public class UserProfileController {
 		return BYGenericResponseHandler.getResponse(profile);
 	}
 	
-	private void saveBranches(List<UserProfile> branchInfo,String userId) {
+	private List<UserProfile> saveBranches(List<UserProfile> branchInfo,String userId) {
 		for(UserProfile branch: branchInfo){
 			if(!branch.getUserTypes().contains(UserTypes.INSTITUTION_BRANCH)){
 				throw new BYException(BYErrorCodes.MISSING_PARAMETER);
 			}
 		}
+		List<UserProfile> updateBranchInfo = new ArrayList<UserProfile>();
 		for(UserProfile branch: branchInfo){
-			branch.setUserId(userId);
+			UserProfile newBranch = new UserProfile();
+			if(null == branch.getId()){
+				newBranch.setUserId(userId);
+				newBranch.setLastModifiedAt(new Date());
+				newBranch.setBasicProfileInfo(branch.getBasicProfileInfo());
+				newBranch.setIndividualInfo(branch.getIndividualInfo());
+				newBranch.setServiceProviderInfo(branch.getServiceProviderInfo());
+				newBranch.setSystemTags(branch.getSystemTags());
+				newBranch.setTags(branch.getTags());
+				newBranch.setUserTags(branch.getUserTags());
+				ArrayList<Integer> list = new ArrayList<Integer>();
+				list.add(UserTypes.INSTITUTION_BRANCH);
+				newBranch.setUserTypes(list);
+				branch = newBranch;
+			}else{
+				branch.setUserId(userId);
+				branch.setLastModifiedAt(new Date());
+			}
+			
 			mongoTemplate.save(branch);
+			updateBranchInfo.add(branch);
 		}
+		return updateBranchInfo;
 		
 	}
 	
