@@ -51,7 +51,7 @@
 		</thead>
 		<tbody>
 			<tr ng-repeat="HousingList in showCase.myHousingLists">
-            	<td><a target="_blank" href="http://{{host}}/#!/housingProfile/3/{{HousingList.userId}}/{{HousingList.id}}">{{ HousingList.name }}</a></td>
+            	<td><a target="_blank" href="http://{{host}}/#!/users/others?profileId={{HousingList.userId}}&housingFacilityId={{HousingList.id}}">{{ HousingList.name }}</a></td>
             	<td>
             		<ul>
 						<span ng-repeat="item in HousingList.categoriesId">
