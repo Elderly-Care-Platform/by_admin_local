@@ -70,7 +70,7 @@ adminControllers.controller('ActivityLogsListController', [
 								 $('#linkToOpen').remove();
 								    var link = document.createElement('a');
 								    link.target = '_blank';
-								    link.href = "http://"+$scope.host+"/#!/profile/0/"+userId;
+								    link.href = "http://"+$scope.host+"/#!/users/placeholder?profileId="+userId;
 								    link.id = 'linkToOpen';
 
 								    document.body.appendChild(link);
@@ -96,7 +96,7 @@ adminControllers.controller('ActivityLogsListController', [
 								 $('#linkToOpen').remove();
 								    var link = document.createElement('a');
 								    link.target = '_blank';
-								    link.href = "http://"+$scope.host+"/#!/housingProfile/3/"+userId+"/"+profileId;
+								    link.href = "http://"+$scope.host+"/#!/users/placeholder?profileId="+profileId;
 								    link.id = 'linkToOpen';
 
 								    document.body.appendChild(link);

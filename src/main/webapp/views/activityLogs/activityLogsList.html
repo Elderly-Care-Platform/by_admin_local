@@ -39,7 +39,7 @@
 				<option value='3'>Post</option>
 				<option value='4'>Question</option>
 				<option value='5'>Feedback</option>
-				<option value='66'>Likes</option>
+				<option value='6'>Likes</option>
 				<option value='9'>Comment</option>
 				<option value='10'>Answer</option>
 				<option value='11'>Profile Review</option>
@@ -97,10 +97,10 @@
 				<td
 					ng-if="[3, 4, 6, 7, 8, 9, 10, 12, 13, 16].indexOf(log.activityType) != -1"><a
 					ng-click="markAsRead(true,$index)" target="_blank"
-					href="http://{{host}}/#!/discuss/{{log.entityId}}">{{log.titleToDisplay}}</a></td>
+					href="http://{{host}}/#!/communities/placeholder/?id={{log.entityId}}">{{log.titleToDisplay}}</a></td>
 				<td ng-if="[1,2,20].indexOf(log.activityType) != -1"><a
 					target="_blank" ng-click="markAsRead(true,$index)"
-					href="http://{{host}}/#!/profile/0/{{log.entityId}}">{{log.titleToDisplay}}</a></td>
+					href="http://{{host}}/#!/users/placeholder?profileId={{log.entityId}}">{{log.titleToDisplay}}</a></td>
 				<td ng-if="[11,14,15,17].indexOf(log.activityType) != -1"><a
 					target="_blank"
 					ng-click="markAsRead(true,$index);openProfile(log.entityId);">{{log.titleToDisplay}}</a></td>
