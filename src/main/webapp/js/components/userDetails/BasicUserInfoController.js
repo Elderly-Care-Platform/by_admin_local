@@ -29,4 +29,9 @@ adminControllers.controller('BasicUserInfoController', [
 					});
 				}
 			}
+			
+			$scope.regTypes = {
+					"0" : "EMAIL",
+					"1" : "PHONE NUMBER"
+				}
 		} ]);
