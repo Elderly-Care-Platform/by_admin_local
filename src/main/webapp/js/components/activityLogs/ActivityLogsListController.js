@@ -183,9 +183,16 @@ adminControllers.controller('ActivityLogsListController', [
 				case 12:
 				case 13:
 				case 16:
+					ret = "/discuss/"+activity.entityId;
+					break;
+				case 7:
+				case 8:
 				case 9:
 				case 10:
-					ret = "/discuss/"+activity.entityId;
+					var arr = activity.details.match(/.*(reply id = )(.*)\s/);
+					if(arr && arr.length >= 3){
+						ret = "/comment/"+arr[2];
+					}
 					break;
 				}
 				if(ret != ""){
