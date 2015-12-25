@@ -2,6 +2,7 @@
     <div id="wrapper" class="row-fluid">
         <h3 class='menu'>Edit Comment</h3>
         <a href="#/discuss/{{currentComment.discussId}}"><img src="../../../byadmin/img/goto.png" alt="edit" height="26" width="26"> Back to article</a>
+        <h5> userId: {{currentComment.userId}}<a href="#/userDetails/{{currentComment.userId}}"><img src="../../../byadmin/img/goto.png" alt="edit" height="26" width="26"></a></h5>
         <div class="alert alert-error" ng-show="error">{{errorMessage}}</div>
 <form novalidate class="form-horizontal">
 
