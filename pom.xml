@@ -78,26 +78,7 @@
 			<version>[0.4, 0.5)</version>
 		</dependency>
 	</dependencies>
-	<profiles>
-		<profile>
-
-			<id>openshift</id>
-			<build>
-				<finalName>byadmin</finalName>
-				<plugins>
-					<plugin>
-						<artifactId>maven-war-plugin</artifactId>
-						<version>2.4</version>
-						<configuration>
-							<failOnMissingWebXml>false</failOnMissingWebXml>
-							<outputDirectory>webapps</outputDirectory>
-							<warName>byadmin</warName>
-						</configuration>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-	</profiles>
+	
 	
 	<build>
 		<finalName>byadmin</finalName>
@@ -105,12 +86,52 @@
 			<plugin>
 				<artifactId>maven-war-plugin</artifactId>
 				<version>2.4</version>
+				<executions>
+					<execution>
+						<id>war-exploded</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>exploded</goal>
+						</goals>
+					</execution>
+				</executions>
 				<configuration>
+					<useCache>true</useCache>
 					<failOnMissingWebXml>false</failOnMissingWebXml>
 					<outputDirectory>target</outputDirectory>
-					<warName>byadmin</warName>
 				</configuration>
 			</plugin>
+			
+			<plugin>
+				<groupId>com.google.code.maven-replacer-plugin</groupId>
+				<artifactId>replacer</artifactId>
+				<version>1.5.2</version>
+				<executions>
+					<execution>
+						<id>replaceDynPartInResourcePath</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>replace</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<basedir>${basedir}/target/byadmin</basedir>
+					<includes>
+						<include>**/*.html</include>
+						<include>**/*.js</include>
+						<include>**/*.css</include>
+					</includes>
+					<replacements>
+						<replacement>
+							<token>%PROJECT_VERSION%</token>
+							<value>${maven.build.timestamp}</value>
+						</replacement>
+					</replacements>
+				</configuration>
+
+			</plugin>
+			
 		</plugins>
 	</build>
 </project>
