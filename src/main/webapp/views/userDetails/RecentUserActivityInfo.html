@@ -1,0 +1,55 @@
+<div style="font-weight: 900;">
+	<a ng-click="toggleDisplay()"
+		ng-class="viewDisplayStatus !== true ? 'icon-plus' : 'icon-minus'"></a>&nbsp;Recent
+	User Activity Info
+</div>
+
+<div ng-if="viewDisplayStatus == true">
+
+	<div>
+		<u style="font-weight: 600;">Last session Info</u>
+	</div>
+	<img alt="loading" src="../../../byadmin/img/loading.gif"
+		ng-if="sessionInfoState == 'loading'">
+	<table class="table table-bordered margin-top-20">
+		<tr>
+			<td>Last Session created At:</td>
+			<td>{{lastSessionData.createdAt | date:'medium'}}</td>
+		</tr>
+		<tr>
+			<td>Current Status:</td>
+			<td>{{sessionStatus[lastSessionData.status]}}</td>
+		</tr>
+	</table>
+	<hr>
+
+
+
+	<div>
+		<u style="font-weight: 600;">Last activity Info</u>
+	</div>
+	<img alt="loading" src="../../../byadmin/img/loading.gif"
+		ng-if="sessionInfoState == 'loading'">
+	<table ng-if="lastActivityData.id" class="table table-bordered margin-top-20">
+		<tr>
+			<td>Last Activity done by User at:</td>
+			<td>{{lastActivityData.activityTime | date:'medium'}}</td>
+		</tr>
+		<tr>
+			<td>Activity Type:</td>
+			<td>{{actionType[lastActivityData.activityType]}}<a
+				ng-click="getLinkAction(lastActivityData)"><img
+					src="../../../byadmin/img/goto.png" alt="edit" height="26"
+					width="26"></a></td>
+		</tr>
+		<tr>
+			<td>Operation Type:</td>
+			<td>{{crudTypes[lastActivityData.crudType]}}</td>
+		</tr>
+		<tr>
+			<td>Title:</td>
+			<td>{{lastActivityData.titleToDisplay}}</td>
+		</tr>
+	</table>
+	<div ng-if="!lastActivityData.id">No Activity Done So Far!!!!!!!</div>
+</div>

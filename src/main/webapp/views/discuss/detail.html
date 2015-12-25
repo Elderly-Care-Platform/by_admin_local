@@ -1,5 +1,9 @@
 
-<h5> by {{discuss.username}} <small class="muted">{{discuss.createdAt | date:'medium'}}</small></h5>
+<h5> by {{discuss.username}} <small class="muted">{{discuss.createdAt | date:'medium'}}</small><a
+				href="#/discuss/showedit/{{discuss.id}}"><img
+					src="../../../byadmin/img/edit.png" alt="edit" height="26"
+					width="26"></a></h5>
+<h5> userId: {{discuss.userId}}<a href="#/userDetails/{{discuss.userId}}"><img src="../../../byadmin/img/goto.png" alt="edit" height="26" width="26"></a></h5>
 <h4>{{discuss.title}}</h4>
 <div>
 <img alt="title image" class="articleTitleImage" src="{{discuss.articlePhotoFilename.original}}" ng-if="discuss.discussType == 'A'">
@@ -7,4 +11,6 @@
 <p class="lead">
 	<span ng-bind-html="discuss.text" style="font-size:15px;"></span>
 </p>
+
+<a href="#/comment/{{discuss.id}}/null">View Comments/Answers ({{discuss.aggrReplyCount}})</a>
 </div>

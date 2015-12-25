@@ -1,0 +1,52 @@
+
+<div style="font-weight: 900;">
+	<a ng-click="toggleDisplay()"
+		ng-class="viewDisplayStatus !== true ? 'icon-plus' : 'icon-minus'"></a>&nbsp;BASIC
+	USER INFO
+</div>
+
+<div ng-if="viewDisplayStatus == true">
+	<img alt="loading" src="../../../byadmin/img/loading.gif"
+		ng-if="status == 'loading'">
+	<table class="table table-bordered margin-top-20">
+		<tr>
+			<td>UserName:</td>
+			<td>{{userData.userName}}</td>
+		</tr>
+		<tr>
+			<td>Email:</td>
+			<td>{{userData.email}}</td>
+		</tr>
+		<tr>
+			<td>Phone Number:</td>
+			<td>{{userData.phoneNumber}}</td>
+		</tr>
+		<tr>
+			<td>Created On:</td>
+			<td>{{userData.createdAt | date:'medium'}}</td>
+		</tr>
+		<tr>
+			<td>Status:</td>
+			<td>{{userData.isActive}}</td>
+		</tr>
+		<tr>
+			<td>Password:</td>
+			<td>-------</td>
+		</tr>
+		<tr>
+			<td>Registration Type</td>
+			<td>{{userData.regType}}</td>
+		</tr>
+		<tr>
+			<td>Role</td>
+			<td>{{userData.userRoleId}}</td>
+		</tr>
+		<tr>
+			<td></td>
+			<td><a href="#/users/showedit/{{userId}}"><img
+					src="../../../byadmin/img/edit.png" alt="edit" height="26"
+					width="26"></a></td>
+		</tr>
+	</table>
+
+</div>

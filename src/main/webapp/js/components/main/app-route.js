@@ -51,6 +51,11 @@ byAdminApp.config(['$routeProvider',
       .when('/housings/:housingId', {templateUrl: 'views/housing/housingFacility.html', controller: 'HousingController'})
       
       .when('/activityLogs', {templateUrl: 'views/activityLogs/activityLogsList.html', controller: 'ActivityLogsListController'})
+      
+      
+      .when('/users/search', {templateUrl: 'views/userDetails/userAdvanceSearch.html', controller: 'UserSearchController'})
+      .when('/userDetails/:userId', {templateUrl: 'views/userDetails/userMasterDetail.html', controller: 'UserDetailController'})
+      
       ;
     //?????$routeProvider.otherwise({redirectTo: '/users/login'});
   }]);
