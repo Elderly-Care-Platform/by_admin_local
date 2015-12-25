@@ -1,5 +1,5 @@
-adminControllers.controller('AdminListAnnouncementController', ['$scope', '$location', '$rootScope', '$location', 'AdminAnnouncements',
-function($scope, $location, $rootScope, $location, AdminAnnouncements) {
+adminControllers.controller('AdminListAnnouncementController', ['$scope', '$rootScope', '$location', 'AdminAnnouncements',
+function($scope, $rootScope, $location, AdminAnnouncements) {
 	if(localStorage.getItem("AdminSessionId") == '') {
 		$location.path('/users/login');
 		return;

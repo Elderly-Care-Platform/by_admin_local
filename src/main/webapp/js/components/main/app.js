@@ -149,8 +149,8 @@ adminControllers.controller('CommentListController', ['$scope', '$location', 'Ad
 
     }]);
 
-adminControllers.controller('AdminCommentCreateController', ['$scope', '$http', '$location', '$route', '$routeParams', '$location', 'AdminComment',
-    function ($scope, $http, $location, $route, $routeParams, $location, AdminComment) {
+adminControllers.controller('AdminCommentCreateController', ['$scope', '$http', '$route', '$routeParams', '$location', 'AdminComment',
+    function ($scope, $http, $route, $routeParams, $location, AdminComment) {
         $scope.currentComment = '';
         $scope.currentCommentResource = '';
         if (localStorage.getItem("AdminSessionId") == '') {
@@ -221,8 +221,8 @@ adminControllers.controller('AdminCommentCreateController', ['$scope', '$http', 
 /////////////////////////////////////////////////////////////// ////////////////////////////////////////////////////////////
 
 
-adminControllers.controller('AdminListQuestionController', ['$scope', '$location', '$rootScope', '$location', 'AdminQuestionDiscuss',
-    function ($scope, $location, $rootScope, $location, AdminQuestionDiscuss) {
+adminControllers.controller('AdminListQuestionController', ['$scope', '$rootScope', '$location', 'AdminQuestionDiscuss',
+    function ($scope,  $rootScope, $location, AdminQuestionDiscuss) {
         if (localStorage.getItem("AdminSessionId") == '') {
             $location.path('/users/login');
             return;
@@ -243,8 +243,8 @@ adminControllers.controller('AdminListQuestionController', ['$scope', '$location
         $location.path('/discuss/Q');
     }]);
 
-adminControllers.controller('AdminListPostController', ['$scope', '$location', '$rootScope', '$location', 'AdminPostDiscuss',
-    function ($scope, $location, $rootScope, $location, AdminPostDiscuss) {
+adminControllers.controller('AdminListPostController', ['$scope', '$rootScope', '$location', 'AdminPostDiscuss',
+    function ($scope, $rootScope, $location, AdminPostDiscuss) {
         if (localStorage.getItem("AdminSessionId") == '') {
             $location.path('/users/login');
             return;
@@ -286,8 +286,8 @@ adminControllers.controller('AdminListFeedbackController', ['$scope', '$rootScop
         $location.path('/discuss/F');
     }]);
 
-adminControllers.controller('AdminListArticleController', ['$scope', '$location', '$rootScope', '$location', 'AdminArticleDiscuss',
-    function ($scope, $location, $rootScope, $location, AdminArticleDiscuss) {
+adminControllers.controller('AdminListArticleController', ['$scope', '$rootScope', '$location', 'AdminArticleDiscuss',
+    function ($scope, $rootScope, $location, AdminArticleDiscuss) {
         if (localStorage.getItem("AdminSessionId") == '') {
             $location.path('/users/login');
             return;
@@ -392,8 +392,8 @@ adminControllers.controller('LoadTMController', ['$scope', '$route',
 ]);
 
 
-adminControllers.controller('AdminDiscussCreateController', ['$scope', '$http', '$location', '$route', '$routeParams', '$location', 'AdminDiscuss', 'MenuTag', '$rootScope',
-    function ($scope, $http, $location, $route, $routeParams, $location, AdminDiscuss, MenuTag, $rootScope) {
+adminControllers.controller('AdminDiscussCreateController', ['$scope', '$http', '$route', '$routeParams', '$location', 'AdminDiscuss', 'MenuTag', '$rootScope',
+    function ($scope, $http, $route, $routeParams, $location, AdminDiscuss, MenuTag, $rootScope) {
         if (localStorage.getItem("AdminSessionId") == '') {
             $location.path('/users/login');
             return;
@@ -591,8 +591,8 @@ adminControllers.controller('AdminDiscussCreateController', ['$scope', '$http', 
     }]);
 
 
-adminControllers.controller('AdminDiscussEditController', ['$scope', '$location', '$routeParams', '$location', 'AdminDiscussShow',
-    function ($scope, $location, $routeParams, $location, AdminDiscussShow) {
+adminControllers.controller('AdminDiscussEditController', ['$scope', '$routeParams', '$location', 'AdminDiscussShow',
+    function ($scope, $routeParams, $location, AdminDiscussShow) {
         if (localStorage.getItem("ADMIN_USER_ROLE") == 'WRITER' || localStorage.getItem("ADMIN_USER_ROLE") == 'USER' || localStorage.getItem("ADMIN_USER_ROLE") == '') {
             $location.path('/users/login');
             return;
@@ -610,8 +610,8 @@ adminControllers.controller('AdminDiscussEditController', ['$scope', '$location'
 
     }]);
 
-adminControllers.controller('AdminDiscussDetailController', ['$scope', '$location', '$routeParams', '$location', 'AdminDiscussShow',
-    function ($scope, $location, $routeParams, $location, AdminDiscussShow) {
+adminControllers.controller('AdminDiscussDetailController', ['$scope', '$routeParams', '$location', 'AdminDiscussShow',
+    function ($scope, $routeParams, $location, AdminDiscussShow) {
         if (localStorage.getItem("ADMIN_USER_ROLE") == 'WRITER' || localStorage.getItem("ADMIN_USER_ROLE") == 'USER' || localStorage.getItem("ADMIN_USER_ROLE") == '') {
             $location.path('/users/login');
             return;
@@ -628,8 +628,8 @@ adminControllers.controller('AdminDiscussDetailController', ['$scope', '$locatio
     }]);
 
 
-adminControllers.controller('AdminDiscussDeleteController', ['$scope', '$location', '$rootScope', '$routeParams', '$location', 'AdminDiscuss',
-    function ($scope, $location, $rootScope, $routeParams, $location, AdminDiscuss) {
+adminControllers.controller('AdminDiscussDeleteController', ['$scope', '$rootScope', '$routeParams', '$location', 'AdminDiscuss',
+    function ($scope, $rootScope, $routeParams, $location, AdminDiscuss) {
         if (localStorage.getItem("ADMIN_USER_ROLE") == 'WRITER' || localStorage.getItem("ADMIN_USER_ROLE") == 'USER' || localStorage.getItem("ADMIN_USER_ROLE") == '') {
             $location.path('/users/login');
             return;

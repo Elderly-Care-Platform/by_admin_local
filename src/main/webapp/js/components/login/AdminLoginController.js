@@ -1,6 +1,6 @@
 
-adminControllers.controller('AdminLoginController', ['$scope', '$route', '$rootScope', '$http', '$location', '$rootScope',
-   function ($scope, $route, $rootScope, $http, $location, $rootScope) {
+adminControllers.controller('AdminLoginController', ['$scope', '$route', '$http', '$location', '$rootScope',
+   function ($scope, $route, $http, $location, $rootScope) {
 	
 	var element = document.getElementById("login_placeholder");
 	element.innerHTML = "Login";

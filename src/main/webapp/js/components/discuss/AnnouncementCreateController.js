@@ -1,6 +1,6 @@
 
-adminControllers.controller('AnnouncementCreateController', ['$scope', '$http', '$location', '$route', '$routeParams', '$location', 'AdminDiscuss','MenuTag','$rootScope',
-  function($scope, $http, $location, $route, $routeParams, $location, AdminDiscuss,MenuTag,$rootScope) {
+adminControllers.controller('AnnouncementCreateController', ['$scope', '$http', '$route', '$routeParams', '$location', 'AdminDiscuss','MenuTag','$rootScope',
+  function($scope, $http, $route, $routeParams, $location, AdminDiscuss,MenuTag,$rootScope) {
 	 if(localStorage.getItem("AdminSessionId") == '') {
 		$location.path('/users/login');
 		return;

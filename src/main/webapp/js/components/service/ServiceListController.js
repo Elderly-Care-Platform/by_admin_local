@@ -64,7 +64,7 @@
             cityFilter:null,
             serviceTypeFilter:null,
             statusFilter: null, 
-            dateFilter:null,
+            dateFilter:null
         }
         
         $scope.servicesByFilter = function servicesByFilter() {
