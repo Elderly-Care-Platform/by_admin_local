@@ -12,5 +12,5 @@
 	<span ng-bind-html="discuss.text" style="font-size:15px;"></span>
 </p>
 
-<a href="#/comment/{{discuss.id}}/null">View Comments/Answers ({{discuss.aggrReplyCount}})</a>
+<a ng-if="discuss.aggrReplyCount > 0" href="#/comment/{{discuss.id}}/null">View Comments/Answers ({{discuss.aggrReplyCount}})</a>
 </div>
