@@ -97,6 +97,11 @@
 				</executions>
 				<configuration>
 					<useCache>true</useCache>
+					<webResources>
+		            <resource>
+		                <directory>${project.build.directory}/minify</directory>
+		            </resource>
+		        </webResources>
 					<failOnMissingWebXml>false</failOnMissingWebXml>
 					<outputDirectory>target</outputDirectory>
 				</configuration>
@@ -131,7 +136,41 @@
 				</configuration>
 
 			</plugin>
-			
+			<plugin>
+				    <groupId>com.samaxes.maven</groupId>
+				    <artifactId>minify-maven-plugin</artifactId>
+				    <version>1.7.2</version>
+				    <executions>
+				        <execution>
+				            <phase>compile</phase>
+				            <goals>
+				                <goal>minify</goal>
+				            </goals>
+				        </execution>
+				    </executions>
+				    <configuration>
+				        <charset>UTF-8</charset>
+				        <skipMerge>true</skipMerge>
+				        <cssSourceDir>css</cssSourceDir>
+				        <jsSourceDir>js</jsSourceDir>
+				        <jsEngine>CLOSURE</jsEngine>
+				        <nosuffix>true</nosuffix>
+				        <webappTargetDir>${project.build.directory}/minify</webappTargetDir>
+				        <cssSourceIncludes>
+				            <cssSourceInclude>**/*.css</cssSourceInclude>
+				        </cssSourceIncludes>
+				        <cssSourceExcludes>
+				            <cssSourceExclude>**/*.min.css</cssSourceExclude>
+				        </cssSourceExcludes>
+				        <jsSourceIncludes>
+				            <jsSourceInclude>**/*.js</jsSourceInclude>
+				        </jsSourceIncludes>
+				        <jsSourceExcludes>
+				            <jsSourceExclude>**/*.min.js</jsSourceExclude>
+				            <jsSourceExclude>**/main/*.js</jsSourceExclude>
+				        </jsSourceExcludes>
+				    </configuration>
+				</plugin>
 		</plugins>
 	</build>
 </project>
