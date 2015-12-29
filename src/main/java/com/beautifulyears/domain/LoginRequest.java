@@ -1,7 +1,7 @@
 package com.beautifulyears.domain;
 
 public class LoginRequest {
-	private int regType;
+	private int userIdType;
 	private String phoneNumber;
 	private String email;
 	private String password;
@@ -16,12 +16,12 @@ public class LoginRequest {
 		this.password = password;
 	}
 
-	public int getRegType() {
-		return regType;
+	public int getUserIdType() {
+		return userIdType;
 	}
 
-	public void setRegType(int regType) {
-		this.regType = regType;
+	public void setUserIdType(int userIdType) {
+		this.userIdType = userIdType;
 	}
 
 	public String getPhoneNumber() {
@@ -36,12 +36,12 @@ public class LoginRequest {
 		// super();
 		this.email = user.getEmail();
 		this.password = user.getPassword();
-		this.regType = user.getRegType();
+		this.userIdType = user.getUserIdType();
 		this.phoneNumber = user.getPhoneNumber();
 	}
 
 	public String getEmail() {
-		return email.toLowerCase();
+		return email != null ? email.toLowerCase() : email;
 	}
 
 	public void setEmail(String email) {

@@ -40,16 +40,25 @@ public class User implements Serializable {
 	private Date passwordCodeExpiry;
 	private String userRoleId;
 	private String isActive;
-	private int regType;
+	private Integer userIdType;
+	private Integer userRegType;
 	private String phoneNumber;
 	private List<Integer> permissions = new ArrayList<Integer>();
 
-	public int getRegType() {
-		return regType;
+	public Integer getUserRegType() {
+		return userRegType;
 	}
 
-	public void setRegType(int regType) {
-		this.regType = regType;
+	public void setUserRegType(Integer userRegType) {
+		this.userRegType = userRegType;
+	}
+
+	public Integer getUserIdType() {
+		return userIdType;
+	}
+
+	public void setUserIdType(Integer userIdType) {
+		this.userIdType = userIdType;
 	}
 
 	public String getPhoneNumber() {
@@ -93,7 +102,7 @@ public class User implements Serializable {
 
 	}
 
-	public User(String userName, int regType, String password, String email,
+	public User(String userName, Integer userIdType,Integer userRegType, String password, String email,
 			String phoneNumber, String verificationCode,
 			Date verificationCodeExpiry, String socialSignOnId,
 			String socialSignOnPlatform, String passwordCode,
@@ -102,7 +111,8 @@ public class User implements Serializable {
 		this.userName = userName;
 		this.password = password;
 		this.email = email != null ? email.toLowerCase() : email;
-		this.regType = regType;
+		this.userRegType = userRegType;
+		this.userIdType = userIdType;
 		this.phoneNumber = phoneNumber;
 		this.verificationCode = verificationCode;
 		this.verificationCodeExpiry = verificationCodeExpiry;

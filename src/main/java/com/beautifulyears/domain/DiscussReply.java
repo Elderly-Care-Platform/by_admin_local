@@ -47,6 +47,16 @@ public class DiscussReply {
 	private Date lastModifiedAt;
 
 	private int status;
+	
+	private boolean verified;
+
+	public boolean isVerified() {
+		return verified;
+	}
+
+	public void setVerified(boolean verified) {
+		this.verified = verified;
+	}
 
 	private Float userRatingPercentage = 0f;
 

@@ -2,12 +2,15 @@ package com.beautifulyears.domain;
 
 import java.util.List;
 
+import org.springframework.data.mongodb.core.index.TextIndexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "linkDetails")
 public class LinkInfo {
 	private String url;
+	@TextIndexed(weight=1)
 	private String title;
+	@TextIndexed(weight=2)
 	private String description;
 	private String mainImage;
 	private List<String> otherImages;

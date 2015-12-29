@@ -13,11 +13,11 @@ public class UserAddress {
 
 	
 	private String streetAddress; 
-	@TextIndexed
+	@TextIndexed(weight=1)
 	private String city;	
-	@TextIndexed
+	@TextIndexed(weight=2)
 	private String zip; 
-	@TextIndexed
+	@TextIndexed(weight=3)
 	private String locality;
 	private String country;
 	
