@@ -72,7 +72,7 @@ public class UserController {
 
 		try {
 			Query q = new Query();
-			if (loginRequest.getRegType() == BYConstants.REGISTRATION_TYPE_EMAIL) {
+			if (loginRequest.getUserIdType() == BYConstants.REGISTRATION_TYPE_EMAIL) {
 				if (!Util.isEmpty(loginRequest.getEmail())
 						&& !Util.isEmpty(loginRequest.getPassword())) {
 					q.addCriteria(Criteria.where("email")
@@ -84,7 +84,7 @@ public class UserController {
 					LoginResponse blankUser = getBlankUser("UserName or password can't be left blank");
 					return BYGenericResponseHandler.getResponse(blankUser);
 				}
-			} else if (loginRequest.getRegType() == BYConstants.REGISTRATION_TYPE_PHONE) {
+			} else if (loginRequest.getUserIdType() == BYConstants.REGISTRATION_TYPE_PHONE) {
 				if (!Util.isEmpty(loginRequest.getPhoneNumber())
 						&& !Util.isEmpty(loginRequest.getPassword())) {
 					q.addCriteria(Criteria.where("phoneNumber")
@@ -159,9 +159,9 @@ public class UserController {
 			logger.debug("NEW USER");
 			try {
 				Query q = new Query();
-				if (user.getRegType() == BYConstants.REGISTRATION_TYPE_EMAIL) {
+				if (user.getUserIdType() == BYConstants.REGISTRATION_TYPE_EMAIL) {
 					q.addCriteria(Criteria.where("email").is(user.getEmail()));
-				} else if (user.getRegType() == BYConstants.REGISTRATION_TYPE_PHONE) {
+				} else if (user.getUserIdType() == BYConstants.REGISTRATION_TYPE_PHONE) {
 					q.addCriteria(Criteria.where("phoneNumber").is(
 							user.getPhoneNumber()));
 				} else {
@@ -203,10 +203,11 @@ public class UserController {
 			newUser.setPasswordCodeExpiry(user.getPasswordCodeExpiry());
 			newUser.setUserRoleId(user.getUserRoleId());
 			newUser.setUserName(user.getUserName());
-			newUser.setRegType(user.getRegType());
+			newUser.setUserIdType(user.getUserIdType());
+			newUser.setUserRegType(user.getUserRegType());
 
 			newUser.setActive(user.isActive());
-			if (user.getRegType() == BYConstants.REGISTRATION_TYPE_EMAIL
+			if (user.getUserIdType() == BYConstants.REGISTRATION_TYPE_EMAIL
 					&& !user.getEmail().equals(newUser.getEmail())) {
 				newUser.setPhoneNumber("");
 				Query q = new Query();
@@ -217,7 +218,7 @@ public class UserController {
 				} else {
 					newUser.setEmail(user.getEmail());
 				}
-			} else if (user.getRegType() == BYConstants.REGISTRATION_TYPE_PHONE
+			} else if (user.getUserIdType() == BYConstants.REGISTRATION_TYPE_PHONE
 					&& !user.getPhoneNumber().equals(newUser.getPhoneNumber())) {
 				newUser.setEmail("");
 				Query q = new Query();
@@ -255,7 +256,8 @@ public class UserController {
 		String socialSignOnPlatform = user.getSocialSignOnPlatform();
 		String passwordCode = user.getPassword();
 		Date passwordCodeExpiry = user.getPasswordCodeExpiry();
-		int regType = user.getRegType();
+		Integer userIdType = user.getUserIdType();
+		Integer userRegType = user.getUserRegType();
 		String phoneNumber = user.getPhoneNumber();
 
 		// Users registered through the BY site will always have ROLE = USER
@@ -265,16 +267,16 @@ public class UserController {
 		if (userRoleId != null
 				&& (userRoleId.equals(UserRolePermissions.USER) || userRoleId
 						.equals(UserRolePermissions.WRITER))) {
-			return new User(userName, regType, password, email, phoneNumber,
-					verificationCode, verificationCodeExpiry, socialSignOnId,
-					socialSignOnPlatform, passwordCode, passwordCodeExpiry,
-					userRoleId, "In-Active");
+			return new User(userName, userIdType, userRegType, password, email,
+					phoneNumber, verificationCode, verificationCodeExpiry,
+					socialSignOnId, socialSignOnPlatform, passwordCode,
+					passwordCodeExpiry, userRoleId, "In-Active");
 
 		} else {
-			return new User(userName, regType, password, email, phoneNumber,
-					verificationCode, verificationCodeExpiry, socialSignOnId,
-					socialSignOnPlatform, passwordCode, passwordCodeExpiry,
-					userRoleId, "In-Active");
+			return new User(userName, userIdType, userRegType, password, email,
+					phoneNumber, verificationCode, verificationCodeExpiry,
+					socialSignOnId, socialSignOnPlatform, passwordCode,
+					passwordCodeExpiry, userRoleId, "In-Active");
 		}
 	}
 
@@ -292,9 +294,9 @@ public class UserController {
 		mongoTemplate.remove(user);
 		mongoTemplate.remove(profile);
 		logHandler.addLog(user, ActivityLogConstants.CRUD_TYPE_DELETE, req);
-		return BYGenericResponseHandler.getResponse(null);	
+		return BYGenericResponseHandler.getResponse(null);
 	}
-	
+
 	@RequestMapping(value = "/resetPassword", method = RequestMethod.GET)
 	public @ResponseBody Object getResetPasswordLink(
 			@RequestParam(value = "email", required = true) String email,
@@ -310,7 +312,7 @@ public class UserController {
 				user.setVerificationCodeExpiry(new Date(
 						t.getTime()
 								+ (BYConstants.FORGOT_PASSWORD_CODE_EXPIRY_IN_MIN * 60000)));
-			
+
 				mongoTemplate.save(user);
 			} else {
 				throw new BYException(BYErrorCodes.USER_EMAIL_DOES_NOT_EXIST);
@@ -321,7 +323,7 @@ public class UserController {
 
 		return true;
 	}
-	
+
 	@RequestMapping(method = RequestMethod.PUT, value = "/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public Object editUser(@PathVariable("userId") String userId) {

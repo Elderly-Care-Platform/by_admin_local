@@ -1,0 +1,21 @@
+<div class="container-fluid">
+	<div id="wrapper" class="row-fluid">
+
+		<h3 class='menu'>User Master Details</h3>
+		<div ng-if="status == 0"
+			ng-include="'views/userDetails/BasicUserInfo.html'"
+			ng-controller="BasicUserInfoController" style="margin: 0 0 30px 0;"></div>
+		<div ng-if="status == 0"
+			ng-include="'views/userDetails/UserProfiles.html'"
+			ng-controller="UserProfileInfoController" style="margin: 0 0 30px 0;"></div>
+		<div ng-if="status == 0"
+			ng-include="'views/userDetails/RecentUserActivityInfo.html'"
+			ng-controller="RecentUserActivityInfoController"
+			style="margin: 0 0 30px 0;"></div>
+		<div ng-if="status == 0"
+			ng-include="'views/userDetails/UserAllActivitiesInfo.html'"
+			ng-controller="UserAllActivitiesInfoController"
+			style="margin: 0 0 30px 0;"></div>
+		<div ng-if="status != 0">Invalid user id provided!!!</div>
+	</div>
+</div>

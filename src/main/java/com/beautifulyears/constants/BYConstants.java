@@ -13,4 +13,12 @@ public final class BYConstants {
 	public static final int REGISTRATION_TYPE_EMAIL = 0;
 	
 	public static final int REGISTRATION_TYPE_PHONE = 1;
+	
+	public static final int USER_REG_TYPE_FULL = 0;
+	public static final int USER_REG_TYPE_GUEST = 1;
+	public static final int USER_REG_TYPE_SOCIAL = 2;
+	
+	public static final int SESSION_TYPE_FULL = 0;
+	public static final int SESSION_TYPE_GUEST = 1;
+	public static final int SESSION_TYPE_PARTIAL = 2;
 }

@@ -2,6 +2,7 @@ package com.beautifulyears.util;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.beautifulyears.constants.BYConstants;
 import com.beautifulyears.constants.DiscussConstants;
 import com.beautifulyears.domain.User;
 import com.beautifulyears.exceptions.BYErrorCodes;
@@ -21,6 +22,14 @@ public class Util {
 			throw new BYException(BYErrorCodes.USER_LOGIN_REQUIRED);
 		}
 		
+	}
+	
+	public static boolean isSuperUser(User user){
+		boolean isSuperUser = false;
+		if(null != user && ("SUPER_USER").equals(user.getUserRoleId())){
+			isSuperUser = true;
+		}
+		return isSuperUser;
 	}
 	
 	public static String truncateText(String text){

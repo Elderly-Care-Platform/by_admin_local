@@ -1,0 +1,13 @@
+<div style="font-weight: 900;">
+	<a ng-click="toggleDisplay()"
+		ng-class="viewDisplayStatus != true ? 'icon-plus' : 'icon-minus'"></a>&nbsp;User
+	Profiles
+</div>
+
+
+<div ng-if="viewDisplayStatus == true">
+	<img alt="loading" src="../../../byadmin/img/loading.gif"
+		ng-if="status == 'loading'">
+	<div id="userProfilesDataInfo"></div>
+
+</div>

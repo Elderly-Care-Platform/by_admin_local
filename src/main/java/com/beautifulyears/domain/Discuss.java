@@ -23,17 +23,17 @@ public class Discuss {
 
 	@Id
 	private String id;
-	@TextIndexed
+	@TextIndexed(weight=1)
 	private String title;
 
 	private Map<String, String> articlePhotoFilename;
 
 	private String userId;
-	@TextIndexed
+	@TextIndexed(weight=2)
 	private String username;
 
 	private String discussType; // Q, P and A (Question, Post and Article)
-	@TextIndexed
+	@TextIndexed(weight=3)
 	private String text;
 
 	private int status; // published, unpublished
@@ -68,7 +68,7 @@ public class Discuss {
 
 	private int contentType;
 
-	@TextIndexed
+	@TextIndexed(weight=4)
 	private LinkInfo linkInfo;
 
 	public Discuss() {

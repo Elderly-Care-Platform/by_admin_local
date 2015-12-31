@@ -77,6 +77,7 @@
 	<table class="table table-bordered margin-top-20" >
 		<thead>
 			<tr>
+				<th width="40px"></th>
 				<th>ActivityType</th>
 				<th>Operation</th>
 				<th>Title</th>
@@ -88,6 +89,10 @@
 			<tr ng-repeat="log in logs"
 				ng-class="{unreadActivityLog: log.read == false}"
 				title="{{log.details}}">
+				<td><a
+					ng-click="getLinkAction(log)"><img
+						src="../../../byadmin/img/goto.png" alt="edit" height="26"
+						width="26"></a></td>
 				<td>{{actionType[log.activityType]}}</td>
 				<td>{{crudTypes[log.crudType]}}</td>
 	<!-- ----------------------------------------------------------------------------------------------------------- -->

@@ -29,7 +29,7 @@ public class HousingFacility {
 
 	private String userId;
 
-	@TextIndexed
+	@TextIndexed(weight=1)
 	private String name;
 
 	@DBRef
@@ -37,7 +37,7 @@ public class HousingFacility {
 
 	private String tier;
 
-	@TextIndexed
+	@TextIndexed(weight=2)
 	private UserAddress primaryAddress = new UserAddress();
 
 	private String primaryPhoneNo;
@@ -50,7 +50,7 @@ public class HousingFacility {
 	private List<Map<String, String>> photoGalleryURLs = new ArrayList<Map<String, String>>();
 
 	private String shortDescription;
-	@TextIndexed
+	@TextIndexed(weight=3)
 	private String description;
 
 	private List<String> categoriesId;

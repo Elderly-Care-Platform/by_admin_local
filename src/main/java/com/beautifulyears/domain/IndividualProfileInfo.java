@@ -13,7 +13,7 @@ public class IndividualProfileInfo {
 
 	private String salutation;
 
-	@TextIndexed
+	@TextIndexed(weight=1)
 	private String lastName;
 
 	private int gender; // 0: female, 1: male.
@@ -24,32 +24,32 @@ public class IndividualProfileInfo {
 
 	private String occupation;// working, not working, retired, studying
 
-	@TextIndexed
+	@TextIndexed(weight=2)
 	private List<String> emotionalIssues;
 
-	@TextIndexed
+	@TextIndexed(weight=3)
 	@DBRef
 	private List<Menu> medicalIssues;
 
-	@TextIndexed
+	@TextIndexed(weight=4)
 	private List<String> otherIssues;
 
 	private String maritalStatus;
 
 	private List<Language> spokenLanguage;
 
-	@TextIndexed
+	@TextIndexed(weight=5)
 	@DBRef
 	private List<Menu> hobbies;
 
-	@TextIndexed
+	@TextIndexed(weight=6)
 	private List<String> otherHobbies;
 
-	@TextIndexed
+	@TextIndexed(weight=7)
 	@DBRef
 	private List<Menu> interests;
 
-	@TextIndexed
+	@TextIndexed(weight=8)
 	private List<String> otherInterests;
 
 	public String getSalutation() {

@@ -14,6 +14,7 @@
                 		{ name: 'text', type: 'string' },
 						{ name: 'title', type: 'string' },
 						{ name: 'username', type: 'string' },
+						{ name: 'userId', type: 'string' },
                         { name: 'createdAt', type: 'date' },
                         { name: 'status', type: 'string' },
                         { name: 'id1', type: 'string' },
@@ -53,13 +54,6 @@
 				else return '<div style="text-align: center; margin-top: 5px;" height="26" width="26">Published</div>';
 			}
 
-			var editrenderer = function (row, column, value) {
-                return '<div style="text-align: center; margin-top: 5px;"><a href="#/discuss/showedit/'+ value +'"><img src="../../../byadmin/img/edit.png" alt="edit" height="26" width="26"></a></div>'
-			}
-
-			var deleterenderer = function (row, column, value) {
-            	return '<div style="text-align: center; margin-top: 5px;"><a href="#/discuss/delete/'+ value +'"><img src="../../../byadmin/img/delete.png" alt="delete" height="26" width="26"></a></div>'
-			}
 
 			var dataAdapter = new $.jqx.dataAdapter(source, {
 				beforeSend : function(jqXHR) {
@@ -95,7 +89,7 @@
 					  { text: 'Title', datafield: 'text', cellsrenderer:blurbrenderer, width: 500, cellsalign:'center', align:'center' },
 					  { text: 'Created By', datafield: 'username', width: 150, cellsalign:'center', align:'center' },
 					  { text: 'Date Created', datafield: 'createdAt', cellsformat: 'dd.MM.yyyy  HH:mm:ss', width: 250, cellsalign:'center', align:'center' },
-					  { text: 'Delete', datafield: 'id1', cellsrenderer: deleterenderer, minwidth: 100, cellsalign:'center', align:'center' }
+					  { text: 'UserId', datafield: 'userId', width: 300, cellsalign:'center', align:'center' }
 					]
             	});
 

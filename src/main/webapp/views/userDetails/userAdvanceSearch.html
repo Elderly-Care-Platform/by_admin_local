@@ -1,0 +1,52 @@
+<div class="container-fluid">
+	<div id="wrapper" class="row-fluid">
+
+		<h3 class='menu'>Advance User Search</h3>
+<form>
+		<table>
+			<tr>
+				<td>UserId (exact):</td>
+				<td><input type="text" ng-model="filters.userId"></td>
+			</tr>
+			<tr>
+				<td>User Email (contains, atleast 3 characters):</td>
+				<td><input type="text" ng-model="filters.email"></td>
+			</tr>
+			<tr>
+				<td>UserName (contains, atleast 3 characters):</td>
+				<td><input type="text" ng-model="filters.userName"></td>
+			</tr>
+			<tr>
+				<td></td>
+				<td>
+					<button type="submit" ng-click="search()" class="btn btn-primary">SEARCH</button>
+				</td>
+			</tr>
+
+		</table>
+</form>
+<img alt="loading" src="../../../byadmin/img/loading.gif"
+		ng-if="status == 'loading'">
+		<table ng-if="searchResults != null && searchResults.length > 0" class="table table-bordered margin-top-20">
+			<thead>
+				<tr>
+					<th>ID</th>
+					<th>UserName</th>
+					<th>Email</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="user in searchResults">
+					<td><a href="#/userDetails/{{user.id}}">{{user.id}}</a></td>
+					<td><a href="#/userDetails/{{user.id}}">{{user.userName}}</a></td>
+					<td><a href="#/userDetails/{{user.id}}">{{user.email}}</a></td>
+				</tr>
+
+			</tbody>
+		</table>
+
+<div ng-if="status == '' && searchResults != null && searchResults.length == 0">No Results Found!!!</div>
+
+
+	</div>
+</div>

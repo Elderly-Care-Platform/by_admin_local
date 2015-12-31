@@ -39,9 +39,9 @@ public class HousingLogHandler extends ActivityLogHandler<HousingFacility> {
 			log.setTitleToDisplay(housing.getName());
 			if (null != currentUser) {
 				log.setUserId(currentUser.getId());
-				if(currentUser.getRegType() == BYConstants.REGISTRATION_TYPE_EMAIL){
+				if(currentUser.getUserIdType() == BYConstants.REGISTRATION_TYPE_EMAIL){
 					log.setCurrentUserEmailId(currentUser.getEmail());
-				}else if(currentUser.getRegType() == BYConstants.REGISTRATION_TYPE_PHONE){
+				}else if(currentUser.getUserIdType() == BYConstants.REGISTRATION_TYPE_PHONE){
 					log.setCurrentUserEmailId(currentUser.getPhoneNumber());
 				}
 			}

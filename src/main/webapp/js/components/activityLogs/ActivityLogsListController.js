@@ -168,6 +168,39 @@ adminControllers.controller('ActivityLogsListController', [
 								
 							});
 			};
+			
+			$scope.getLinkAction = function(activity){
+				var ret = "";
+				switch(activity.activityType){
+				case 1:
+				case 2:
+					ret = "/userDetails/"+activity.entityId;
+					break;
+				case 3:
+				case 4:
+				case 5:
+				case 6:
+				case 12:
+				case 13:
+				case 16:
+					ret = "/discuss/"+activity.entityId;
+					break;
+				case 7:
+				case 8:
+				case 9:
+				case 10:
+					var arr = activity.details.match(/.*(reply id = )(.*)\s/);
+					if(arr && arr.length >= 3){
+						ret = "/comment/"+arr[2];
+					}
+					break;
+				}
+				if(ret != ""){
+					$location.url(ret);
+				}else{
+					alert("Sorry, No action specified.");
+				}
+			}
 
 			$scope.postsByUser(0, 10);
 

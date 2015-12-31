@@ -292,3 +292,35 @@ var user = adminServices.factory('User', function ($resource) {
         put: {method: 'PUT', params: {userId: '@id'}}
     })
 });
+
+
+adminServices.factory('UserSearch', function($resource) {
+	return $resource('/byadmin/api/v1/userSearch', {}, {
+		searchUser : {
+			method : 'GET',
+			isArray: true
+		}
+	})
+});
+
+adminServices.factory('UserDetailInfo', function($resource) {
+	return{
+		getBasicInfo: $resource('/byadmin/api/v1/userDetail/userInfo', {}, {
+	        query: { method: 'GET',isArray: false }
+	      }),
+      getProfileInfo: $resource('/byadmin/api/v1/userDetail/userProfileInfo', {}, {
+	        query: { method: 'GET',isArray: true }
+	      }),
+      getLastSessionInfo: $resource('/byadmin/api/v1/userDetail/lastSessionInfo', {}, {
+	        query: { method: 'GET',isArray: false }
+	      }),
+	 getLastActivityInfo: $resource('/byadmin/api/v1/userDetail/lastActivityInfo', {}, {
+	        query: { method: 'GET',isArray: false }
+	      }),
+	 getAllActivityInfo: $resource('/byadmin/api/v1/userDetail/activities', {}, {
+	        query: { method: 'GET',isArray: true }
+	      })
+	      
+	}
+});
+	

@@ -66,11 +66,10 @@
 				 userType = value.split("#")[1];
 				 userID = value.split("#")[2];
 				 hostName = location.host;
-				 console.log(value)
 				 if(value == 'null' || value == '' || text == 'null') {
-					 return '<div style="text-align: center; margin-top: 5px;" height="26" width="26"><a href="#">Anonymous</a></div>';
+					 return '<div style="text-align: center; margin-top: 5px;" height="26" width="26"><a href="#/userDetails/' + userID + '">Anonymous</a></div>';
 				 }else{
-				   return '<div style="text-align: center; margin-top: 5px;"><a href="http://' + hostName + '/#!/profile/'+ userType + '/' + userID + '">' + text + '</a></div>'
+				   return '<div style="text-align: center; margin-top: 5px;"><a href="#/userDetails/' + userID + '">' + text + '</a></div>'
 				 }
 			}
 
@@ -98,13 +97,9 @@
 				
 			}
 
-			var editrenderer = function (row, column, value) {
-                return '<div style="text-align: center; margin-top: 5px;"><a href="#/discuss/showedit/'+ value +'"><img src="../../../byadmin/img/edit.png" alt="edit" height="26" width="26"></a></div>'
-			}
-
-			var deleterenderer = function (row, column, value) {
-            	return '<div style="text-align: center; margin-top: 5px;"><a href="#/discuss/delete/'+ value +'"><img src="../../../byadmin/img/delete.png" alt="delete" height="26" width="26"></a></div>'
-			}
+			//var editrenderer = function (row, column, value) {
+            //    return '<div style="text-align: center; margin-top: 5px;"><a href="#/discuss/showedit/'+ value +'"><img src="../../../byadmin/img/edit.png" alt="edit" height="26" width="26"></a></div>'
+			//}
 
 			var dataAdapter = new $.jqx.dataAdapter(source, {
 				beforeSend : function(jqXHR) {
@@ -175,7 +170,7 @@
 					altrows: true,
 					columnsresize: true,
 					columns: [
-					  { text: 'Title', datafield: 'title', cellsrenderer:titlerenderer, width: 200, cellsalign:'center', align:'center' },
+					  { text: 'Title', datafield: 'title', cellsrenderer:titlerenderer, width: 300, cellsalign:'center', align:'center' },
 					  { text: 'Created By', datafield: 'username', cellsrenderer:userrenderer, width: 150, cellsalign:'center', align:'center' },
 					  { text: 'Date Created', datafield: 'createdAt', cellsformat: 'dd.MM.yyyy  HH:mm:ss', width: 150, cellsalign:'center', align:'center' },
 					  { text: 'Status', datafield: 'status', cellsrenderer:statusrenderer, width: 100, cellsalign:'center', align:'center' },
@@ -183,9 +178,7 @@
 					  { text: 'Announcement', datafield: 'promotion', cellsrenderer:promotionrenderer, width: 100, cellsalign:'center', align:'center' },
 					  { text: 'Comments', datafield: 'comments', cellsrenderer:commentsrenderer, width: 80, cellsalign:'center', align:'center' },
 					  { text: 'Likes', datafield: 'likesCount', width: 80, cellsalign:'center', align:'center' },
-					  { text: 'Shares', datafield: 'shareCount', width: 80, cellsalign:'center', align:'center' },
-					  { text: 'Edit', datafield: 'id', cellsrenderer: editrenderer, minwidth: 50, cellsalign:'center', align:'center' },
-					  { text: 'Delete', datafield: 'id1', cellsrenderer: deleterenderer, minwidth: 50, cellsalign:'center', align:'center' }
+					  { text: 'Shares', datafield: 'shareCount', width: 80, cellsalign:'center', align:'center' }
 
 					]
 				});
@@ -205,7 +198,7 @@
 					altrows: true,
 					columnsresize: true,
 					columns: [
-					  { text: 'Title', datafield: 'text', cellsrenderer:blurbrenderer, width: 200, cellsalign:'center', align:'center' },
+					  { text: 'Title', datafield: 'text', cellsrenderer:blurbrenderer, width: 350, cellsalign:'center', align:'center' },
 					  { text: 'Created By', datafield: 'username', cellsrenderer:userrenderer, width: 150, cellsalign:'center', align:'center' },
 					  { text: 'Date Created', datafield: 'createdAt', cellsformat: 'dd.MM.yyyy  HH:mm:ss', width: 150, cellsalign:'center', align:'center' },
 					  { text: 'Status', datafield: 'status', cellsrenderer:statusrenderer, width: 150, cellsalign:'center', align:'center' },
@@ -213,9 +206,7 @@
 					  { text: 'Announcement', datafield: 'promotion', cellsrenderer:promotionrenderer, width: 100, cellsalign:'center', align:'center' },
 					  { text: 'Answers', datafield: 'comments', cellsrenderer:commentsrenderer, width: 80, cellsalign:'center', align:'center' },
 					  { text: 'Likes', datafield: 'likesCount', width: 50, cellsalign:'center', align:'center' },
-					  { text: 'Shares', datafield: 'shareCount', width: 50, cellsalign:'center', align:'center' },
-					  { text: 'Edit', datafield: 'id', cellsrenderer: editrenderer, minwidth: 50, cellsalign:'center', align:'center' },
-					  { text: 'Delete', datafield: 'id1', cellsrenderer: deleterenderer, minwidth: 50, cellsalign:'center', align:'center' }
+					  { text: 'Shares', datafield: 'shareCount', width: 50, cellsalign:'center', align:'center' }
 					]
             	});
             }
@@ -229,25 +220,6 @@
 	{{discuss.discussType == 'Q' && 'Questions' || discuss.discussType == 'A' && 'Articles' || 'Posts'}} <a class="btn btn-primary pull-right" href="#/discuss/new/{{discuss.discussType}}"><i
 		class="icon-plus-sign icon-white"></i> Create New {{discuss.discussType == 'Q' && 'Question' || discuss.discussType == 'A' && 'Article' || 'Post'}}</a>
 </h2>
-
-<!--
-<table class="table table-striped">
-	<th>Title</th>
-	<th>Date Created</th>
-	<th>Status</th>
-	<th>Edit</th>
-	<th>Delete</th>
-	<tr ng-repeat="discuss in discuss">
-		<td><a href="#/discuss/{{discuss.id}}">{{discuss.title}}</a></td>
-		<td>{{discuss.createdAt  | date:'yyyy-MM-dd HH:mm:ss'}}</td>
-		<td> {{discuss.status == 0 && 'Un-published' || 'Published'}}</td>
-
-		<td><a href="#/discuss/showedit/{{discuss.id}}"><img src="../../../byadmin/img/edit.png" alt="edit" height="26" width="26"></a></td>
-		<td><a href="#/discuss/delete/{{discuss.id}}"><img src="../../../byadmin/img/delete.png" alt="delete" height="26" width="26"></a></td>
-	</tr>
-</table>
--->
-
 
 <div id='jqxWidget' style="font-size: 13px; font-family: Verdana; float: left;">
         <div id="jqxgrid"></div>

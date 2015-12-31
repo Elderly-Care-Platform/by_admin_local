@@ -1,0 +1,36 @@
+<div style="font-weight: 900;">
+	<a ng-click="toggleDisplay()"
+		ng-class="viewDisplayStatus !== true ? 'icon-plus' : 'icon-minus'"></a>&nbsp;All
+	Activities
+</div>
+
+<div ng-if="viewDisplayStatus == true">
+	<img alt="loading" src="../../../byadmin/img/loading.gif"
+		ng-if="status == 'loading'">
+	<table ng-if="allActivityData.length > 0" class="table table-bordered margin-top-20"
+		ng-if="allActivityData && allActivityData.length > 0">
+		<thead>
+			<tr>
+				<th>Time</th>
+				<th>ActivityType</th>
+				<th>Operation</th>
+				<th>Title</th>
+
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="activity in allActivityData">
+				<td style="min-width: 200px;">{{activity.activityTime |
+					date:'medium'}}</td>
+				<td>{{actionType[activity.activityType]}}<a
+					ng-click="getLinkAction(activity)"><img
+						src="../../../byadmin/img/goto.png" alt="edit" height="26"
+						width="26"></a></td>
+				<td>{{crudTypes[activity.crudType]}}</td>
+				<td>{{activity.titleToDisplay}}</td>
+			</tr>
+		</tbody>
+	</table>
+	<div ng-if="!allActivityData || allActivityData.length == 0">No Activities Done So Far!!!!</div>
+
+</div>
