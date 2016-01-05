@@ -76,8 +76,7 @@ public class UserController {
 				if (!Util.isEmpty(loginRequest.getEmail())
 						&& !Util.isEmpty(loginRequest.getPassword())) {
 					q.addCriteria(Criteria.where("email")
-							.is(loginRequest.getEmail()).and("password")
-							.is(loginRequest.getPassword()).and("isActive")
+							.is(loginRequest.getEmail()).and("isActive")
 							.is("Active"));
 				} else {
 					System.out.println("No such user exist");
@@ -85,41 +84,43 @@ public class UserController {
 					return BYGenericResponseHandler.getResponse(blankUser);
 				}
 			} else if (loginRequest.getUserIdType() == BYConstants.REGISTRATION_TYPE_PHONE) {
-				if (!Util.isEmpty(loginRequest.getPhoneNumber())
-						&& !Util.isEmpty(loginRequest.getPassword())) {
-					q.addCriteria(Criteria.where("phoneNumber")
-							.is(loginRequest.getPhoneNumber()).and("password")
-							.is(loginRequest.getPassword()).and("isActive")
-							.is("Active"));
-				} else {
-					System.out.println("No such user exist");
-					LoginResponse blankUser = getBlankUser("UserName or password can't be left blank");
-					return BYGenericResponseHandler.getResponse(blankUser);
-				}
+				killSession(req, res);
+				LoginResponse blankUser = getBlankUser("Only Email Users allowed");
+				return BYGenericResponseHandler.getResponse(blankUser);
 			}
 			User user = mongoTemplate.findOne(q, User.class);
 			if (null == user) {
 				logger.debug("User login failed with user email : "
 						+ loginRequest.getEmail());
 				killSession(req, res);
-				LoginResponse blankUser = getBlankUser("UserName or password can't be left blank");
+				LoginResponse blankUser = getBlankUser("User not found in system");
 				return BYGenericResponseHandler.getResponse(blankUser);
 			} else {
-				logger.debug("User logged in success for user email = "
-						+ loginRequest.getEmail());
-				Session session = createSession(req, res, user);
-				logger.debug("User exists :: userid = " + user.getId()
-						+ " :: username = " + user.getUserName());
-				LoginResponse response = new LoginResponse();
-				response.setSessionId(session.getSessionId());
-				response.setStatus("OK other user");
-				response.setId(session.getUserId());
-				response.setUserName(session.getUserName());
-				response.setUserRoleId(user.getUserRoleId());
-				return BYGenericResponseHandler.getResponse(response);
+				if (Util.isPasswordMatching(loginRequest.getPassword(),
+						user.getPassword())
+						&& ("SUPER_USER".equals(user.getUserRoleId()) || "EDITOR"
+								.equals(user.getUserRoleId()))) {
+					logger.debug("User logged in success for user email = "
+							+ loginRequest.getEmail());
+					Session session = createSession(req, res, user);
+					logger.debug("User exists :: userid = " + user.getId()
+							+ " :: username = " + user.getUserName());
+					LoginResponse response = new LoginResponse();
+					response.setSessionId(session.getSessionId());
+					response.setStatus("OK other user");
+					response.setId(session.getUserId());
+					response.setUserName(session.getUserName());
+					response.setUserRoleId(user.getUserRoleId());
+					return BYGenericResponseHandler.getResponse(response);
+				}else{
+					killSession(req, res);
+					LoginResponse blankUser = getBlankUser("User credentials doesn't match or user don't have sufficient permissions");
+					return BYGenericResponseHandler.getResponse(blankUser);
+				}
 			}
 
 		} catch (Exception e) {
+			killSession(req, res);
 			System.out.println("No such user exist");
 			LoginResponse blankUser = getBlankUser("UserName or password can't be left blank");
 			return BYGenericResponseHandler.getResponse(blankUser);
@@ -191,11 +192,11 @@ public class UserController {
 				logger.debug("trying changing the user name from "
 						+ newUser.getUserName() + " to " + user.getUserName());
 			}
-			if (null != newUser && user.getPassword() != null) {
+			if (null != newUser && !Util.isEmpty(user.getPassword())) {
 				if (!user.getPassword().equals(newUser.getPassword())) {
 					inValidateAllSessions(user.getId());
 				}
-				newUser.setPassword(user.getPassword());
+				newUser.setPassword(Util.getEncodedPwd(user.getPassword()));
 			}
 			newUser.setSocialSignOnId(user.getSocialSignOnId());
 			newUser.setSocialSignOnPlatform(user.getSocialSignOnPlatform());

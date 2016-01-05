@@ -7,11 +7,15 @@ adminControllers.controller('AdminUserCreateController', ['$scope', '$routeParam
 	  			 {
 	  				 return;
 	 }
+	  	$scope.customError = {
+	  		"passError":""	
+	  	};
      var userId = $routeParams.userId;
      	if(userId != null )
 	 	{
 	 		AdminUser.get({userId: userId},function(res){
 	 			$scope.user = res.data;
+	 			$scope.userPassword = "";
 	 			if($scope.user.regType ==null || $scope.user.regType == undefined){
 	 				$scope.user.regType = 0;
 	 			}
@@ -30,6 +34,18 @@ adminControllers.controller('AdminUserCreateController', ['$scope', '$routeParam
 	 		
 	 		
 	 		$scope.edituser = function () {
+	 			if($scope.userPassword != "" ){
+	 				if($scope.user.userRegType != 0){
+	 					$scope.customError.passError = "Password field is not consodered for this user type";
+	 					return;
+	 				}else if($scope.userPassword.length < 6){
+	 					$scope.customError.passError = "minimum length of password should be 6";
+	 					return;
+	 				}else{
+	 					$scope.user.password = $scope.userPassword;
+	 				}
+	 			}
+	 			
 	 			AdminUser.update($scope.user,function(res){
 		 			toastr.success("Edited User");
 	 				$location.path('/users/all');

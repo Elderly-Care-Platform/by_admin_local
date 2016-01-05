@@ -2,7 +2,8 @@ package com.beautifulyears.util;
 
 import javax.servlet.http.HttpServletRequest;
 
-import com.beautifulyears.constants.BYConstants;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
 import com.beautifulyears.constants.DiscussConstants;
 import com.beautifulyears.domain.User;
 import com.beautifulyears.exceptions.BYErrorCodes;
@@ -10,6 +11,8 @@ import com.beautifulyears.exceptions.BYException;
 
 public class Util {
 
+	private static final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+	
 	public static boolean isEmpty(String value) {
 		return value == null || value.length() == 0;
 	}
@@ -65,5 +68,22 @@ public class Util {
 			throw new BYException(BYErrorCodes.INTERNAL_SERVER_ERROR);
 
 		}
+	}
+	
+	public static String getEncodedPwd(String pwd){
+		String ret = null;
+		if(!Util.isEmpty(pwd)){
+			ret = passwordEncoder.encode(pwd);
+		}
+		return ret;
+	}
+	
+	public static boolean isPasswordMatching(String enteredPassword, String dbPassword){
+		boolean ret = true;
+		ret = passwordEncoder.matches(enteredPassword, dbPassword);
+		if(!ret){
+			throw new BYException(BYErrorCodes.USER_LOGIN_FAILED);
+		}
+		return ret;
 	}
 }

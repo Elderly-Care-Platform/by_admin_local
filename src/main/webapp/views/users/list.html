@@ -14,7 +14,8 @@
                         { name: 'userRoleId', type: 'string' },
 						{ name: 'id1', type: 'string' },
 						{ name: 'id', type: 'string' },
-						{ name: 'regType', type: 'number' },
+						{ name: 'userIdType', type: 'number' },
+						{ name: 'userRegType', type: 'number' },
 						{ name: 'phoneNumber', type: 'string' }
                     ],
                 url: url,
@@ -29,6 +30,19 @@
                 //return '<a href="#/users/showedit/'+ value +'"><img src="../../../byadmin/img/edit.png" alt="edit" height="26" width="26"></a>';
 				 return '<div style="text-align: center; margin-top: 5px;"><a href="#/userDetails/'+ value +'"><img src="../../../byadmin/img/goto.png" alt="edit" height="26" width="26"></a></div>'
 				}
+			
+			var userRegTypeRenderer = function(row,column,value){
+				var regType = "NULL";
+				if(value == 0){
+					regType="(0)FULL";
+				}else if(value == 1){
+					regType="(1)GUEST";
+				}else if(value == 2){
+					regType="(2)SOCIAL";
+				}
+				
+				return '<div style="text-align: center; margin-top: 5px;">'+regType+'</div>';
+			}
 
 			var dataAdapter = new $.jqx.dataAdapter(source, {
 				beforeSend : function(jqXHR) {
@@ -40,7 +54,7 @@
 				beforeLoadComplete: function (records) {
                         for (var i = 0; i < records.length; i++) {
                             records[i].id1= records[i].id;
-                            	if(records[i].regType == 1){
+                            	if(records[i].userIdType == 1){
                             		records[i].email = records[i].phoneNumber;
                             	}
                         };
@@ -64,7 +78,8 @@
                   { text: 'User Name', datafield: 'userName', width: 450, cellsalign:'center', align:'center' },
                   { text: 'Date Created', datafield: 'createdAt', cellsformat: 'dd.MM.yyyy HH:mm:ss', width: 200, cellsalign:'center', align:'center' },
                   { text: 'Email/Phone No.', datafield: 'email', width: 300, cellsalign:'center', align:'center' },
-                  { text: 'Role', datafield: 'userRoleId', maxwidth: 100, cellsalign:'center', align:'center' }
+                  { text: 'Role', datafield: 'userRoleId', maxwidth: 100, cellsalign:'center', align:'center' },
+                  { text: 'Reg. Type', datafield: 'userRegType', cellsrenderer: userRegTypeRenderer, maxwidth: 100, cellsalign:'center', align:'center' }
 				  
                 ]
             });
