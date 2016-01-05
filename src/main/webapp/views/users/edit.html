@@ -6,26 +6,40 @@
     <form name="userForm" ng-submit="edituser(userForm.$valid)" novalidate>
     
     	<div class="form-group">
-    		<label style="display: inline-block;"><strong>Registration Type</strong></label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    		<label style="display: inline-block;"><strong>USER REGISTRATION TYPE</strong></label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    		 <label style="display: inline-block; margin-right:20px;" ng-if="user.userRegType == 0">
+    			FULL
+  			</label>
+  			<label style="display: inline-block; margin-right:20px;" ng-if="user.userRegType == 1">
+    			GUEST
+  			</label>
+  			<label style="display: inline-block; margin-right:20px;" ng-if="user.userRegType == 2">
+    			SOCIAL
+  			</label>
+  			
+    	</div>
+    
+    	<div class="form-group">
+    		<label style="display: inline-block;"><strong>UserId Type</strong></label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     		 <label style="display: inline-block; margin-right:20px;">
-    			<input type="radio" ng-model="user.regType" ng-value=0 checked="checked">
+    			<input type="radio" ng-model="user.userIdType" ng-value=0 checked="checked">
     			Email
   			</label>
     		 <label style="display: inline-block;">
-   				 <input type="radio" ng-model="user.regType" ng-value=1>
+   				 <input type="radio" ng-model="user.userIdType" ng-value=1>
     				Phone Number
   			</label>
     	</div>
 
 
 		<!-- EMAIL -->
-		<div class="form-group" ng-class="{ 'has-error' : userForm.email.$invalid && !userForm.email.$pristine && submitted }" ng-if="user.regType==0">
+		<div class="form-group" ng-class="{ 'has-error' : userForm.email.$invalid && !userForm.email.$pristine && submitted }" ng-if="user.userIdType==0">
 			<label><strong>Email</strong></label>
 			<input type="email" name="email" class="form-control" ng-model="user.email" ng-required>
 			<span><p ng-show="userForm.email.$invalid && !userForm.email.$pristine" class="help-block">Enter a valid email.</p></span>
 		</div>
 
-		<div class="form-group"  ng-if="user.regType==1">
+		<div class="form-group"  ng-if="user.userIdType==1">
 			<label><strong>Phone Number</strong></label>
 			<input type="phoneNumber" name="phoneNumber" class="form-control" ng-model="user.phoneNumber" ng-required>
 			<span><p ng-show="userForm.phoneNumber.$invalid && !userForm.phoneNumber.$pristine" class="help-block">Enter a valid 10 digit phone number.</p></span>
@@ -42,10 +56,10 @@
         </div>
 
 		<!-- PASSWORD -->
-		<div class="form-group" ng-class="{ 'has-error' : userForm.password.$invalid && !userForm.password.$pristine }">
+		<div class="form-group" ng-class="{ 'has-error' : customError.passError != '' }">
 			<label><strong>Password*</strong></label>
-			<input type="password" name="password" class="form-control" ng-model="user.password" required>
-			<p ng-show="userForm.password.$invalid && !userForm.password.$pristine" class="help-block">Password is required.</p>
+			<input type="password" name="password" class="form-control" ng-model="userPassword" required>
+			<p ng-show="customError.passError != ''" class="help-block">{{customError.passError}}</p>
 		</div>
 
 		<!-- USER ACCOUNT TYPE -->

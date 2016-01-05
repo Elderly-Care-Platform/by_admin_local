@@ -13,24 +13,24 @@
     	<div class="form-group">
     		<label style="display: inline-block;"><strong>Registration Type</strong></label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     		 <label style="display: inline-block; margin-right:20px;">
-    			<input type="radio" ng-model="user.regType" ng-value=0 checked="checked">
+    			<input type="radio" ng-model="user.userIdType" ng-value=0 checked="checked">
     			Email
   			</label>
     		 <label style="display: inline-block;">
-   				 <input type="radio" ng-model="user.regType" ng-value=1>
+   				 <input type="radio" ng-model="user.userIdType" ng-value=1>
     				Phone Number
   			</label>
     	</div>
 
 
 		<!-- EMAIL -->
-		<div class="form-group" ng-class="{ 'has-error' : userForm.email.$invalid && !userForm.email.$pristine && submitted }" ng-if="user.regType==0">
+		<div class="form-group" ng-class="{ 'has-error' : userForm.email.$invalid && !userForm.email.$pristine && submitted }" ng-if="user.userIdType==0">
 			<label><strong>Email</strong></label>
 			<input type="email" name="email" class="form-control" ng-model="user.email" ng-required>
 			<span><p ng-show="userForm.email.$invalid && !userForm.email.$pristine" class="help-block">Enter a valid email.</p></span>
 		</div>
 
-		<div class="form-group"  ng-if="user.regType==1">
+		<div class="form-group"  ng-if="user.userIdType==1">
 			<label><strong>Phone Number</strong></label>
 			<input type="phoneNumber" name="phoneNumber" class="form-control" ng-model="user.phoneNumber" ng-required>
 			<span><p ng-show="userForm.phoneNumber.$invalid && !userForm.phoneNumber.$pristine" class="help-block">Enter a valid 10 digit phone number.</p></span>
