@@ -402,6 +402,32 @@ adminControllers.controller('AdminDiscussCreateController', ['$scope', '$http', 
             $location.path('/users/login');
             return;
         }
+        
+        function getDateObject(timestamp){
+        	var ret = {
+        			"y":"",
+        			"m":"",
+        			"d":"",
+        			"h":"",
+        			"mi":"",
+        			"s":"",
+        			"ms":""
+        	}
+        	var date = new Date(Number(timestamp));
+        	ret.y = date.getFullYear();
+        	ret.m = date.getMonth() + 1;
+        	ret.d = date.getDate();
+        	ret.h = date.getHours();
+        	ret.mi = date.getMinutes();
+        	ret.s = date.getSeconds();
+        	ret.ms = date.getMilliseconds();
+        	return ret;
+        }
+        
+        function getTimeStamp(dateObj){
+        	var date = new Date(dateObj.y,dateObj.m - 1,dateObj.d,dateObj.h,dateObj.mi,dateObj.s,dateObj.ms);
+        	return date.getTime();
+        }
 
         var segment = $location.path();
 
@@ -467,6 +493,7 @@ adminControllers.controller('AdminDiscussCreateController', ['$scope', '$http', 
         if (discussId != null) {
             AdminDiscuss.get({discussId: discussId}, function (res) {
                 $scope.currentDiscuss = res.data;
+                $scope.modifiedDate = getDateObject(res.data.lastModifiedAt);
                 $scope.currentDiscuss.newArticlePhotoFilename = "";
                 $scope.currentDiscuss.newArticlePhotoFilename = JSON.stringify($scope.currentDiscuss.articlePhotoFilename);
                 if ($scope.currentDiscuss.topicId) {
@@ -495,7 +522,7 @@ adminControllers.controller('AdminDiscussCreateController', ['$scope', '$http', 
 
                 }
 
-
+                $scope.currentDiscuss.lastModifiedAt = getTimeStamp($scope.modifiedDate);
                 $scope.currentDiscuss.text = htmlval;
                 $scope.currentDiscuss.status = $scope.currentDiscuss.status === true ? 1 : 0;
                 $scope.currentDiscuss.featured = $scope.currentDiscuss.featured === true ? 1 : 0;

@@ -84,7 +84,7 @@ public class AdminDiscussController {
 			newDiscuss.setArticlePhotoFilename(discuss
 					.getArticlePhotoFilename());
 			newDiscuss.setSystemTags(discuss.getSystemTags());
-			newDiscuss.setLastModifiedAt(new Date());
+			newDiscuss.setLastModifiedAt(discuss.getLastModifiedAt());	
 			newDiscuss.setText(discuss.getText());
 			newDiscuss.setContentType(discuss.getContentType());
 			newDiscuss.setLinkInfo(discuss.getLinkInfo());
