@@ -65,7 +65,15 @@
             <tr>
                 <td><label class="control-label" for="title"><strong>Modified Date</strong></label>
                 </td>
-                <td>{{currentDiscuss.lastModifiedAt}}</td>
+                <td>
+                	year <input ng-model="modifiedDate.y" style="max-width: 40px;">
+                	month <input ng-model="modifiedDate.m"  style="max-width: 40px;">
+                	day <input ng-model="modifiedDate.d"  style="max-width: 40px;">&nbsp;&nbsp;&nbsp;</br></br>
+                	hour <input ng-model="modifiedDate.h"  style="max-width: 40px;">
+                	min. <input ng-model="modifiedDate.mi"  style="max-width: 40px;">
+                	sec. <input ng-model="modifiedDate.s"  style="max-width: 40px;">
+                	ms <input ng-model="modifiedDate.ms"  style="max-width: 40px;">
+                </td>
             </tr>
 
             <tr>
