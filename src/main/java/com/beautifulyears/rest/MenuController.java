@@ -129,6 +129,7 @@ public class MenuController {
 				}
 			}
 			oldmenu.setChildren(menu.getChildren());
+			oldmenu.setHidden(menu.isHidden());
 			oldmenu.setOrderIdx(menu.getOrderIdx());
 			oldmenu.setDisplayMenuName(menu.getDisplayMenuName());
 			oldmenu.setLinkedMenuId(menu.getLinkedMenuId());
