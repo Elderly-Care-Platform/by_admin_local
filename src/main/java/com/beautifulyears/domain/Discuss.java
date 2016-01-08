@@ -60,7 +60,7 @@ public class Discuss {
 
 	private boolean isFeatured;
 
-	private boolean isPromotion;
+	private Boolean isPromotion;
 
 	private long shareCount = 0;
 
@@ -115,11 +115,11 @@ public class Discuss {
 		this.userProfile = userProfile;
 	}
 
-	public boolean isPromotion() {
+	public Boolean isPromotion() {
 		return isPromotion;
 	}
 
-	public void setPromotion(boolean isPromotion) {
+	public void setPromotion(Boolean isPromotion) {
 		this.isPromotion = isPromotion;
 	}
 

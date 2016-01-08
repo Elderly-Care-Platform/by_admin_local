@@ -109,6 +109,7 @@ adminControllers
 								$scope.error = false;
 								var menuResource = new Menu();
 								menuResource.orderIdx = $scope.newMenu.orderIdx;
+								menuResource.hidden = $scope.newMenu.hidden;
 								menuResource.displayMenuName = $scope.newMenu.displayMenuName;
 								menuResource.tags = $scope.allTags;
 								menuResource.module = $scope.newMenu.module;
@@ -208,6 +209,9 @@ adminControllers.controller('MenuViewController', [
 						title.href = "#/menu/editMenu/" + menu[i].id;
 						title.innerText = menu[i].orderIdx + " -> "
 								+ menu[i].displayMenuName;
+						if(menu[i].hidden == true){
+							title.innerText += " (Hidden) "
+						}
 						container.appendChild(mainLi);
 						if (menu[i].children.length > 0) {
 							var subMenu = document.createElement("ul");
@@ -326,6 +330,7 @@ adminControllers
 								var menuResource = new Menu();
 								menuResource.id = $scope.newMenu.id;
 								menuResource.orderIdx = $scope.newMenu.orderIdx;
+								menuResource.hidden = $scope.newMenu.hidden;
 								menuResource.displayMenuName = $scope.newMenu.displayMenuName;
 								menuResource.tags = $scope.allTags;
 								menuResource.module = $scope.newMenu.module;

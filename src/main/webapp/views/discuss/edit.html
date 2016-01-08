@@ -72,7 +72,9 @@
                 	hour <input ng-model="modifiedDate.h"  style="max-width: 40px;">
                 	min. <input ng-model="modifiedDate.mi"  style="max-width: 40px;">
                 	sec. <input ng-model="modifiedDate.s"  style="max-width: 40px;">
-                	ms <input ng-model="modifiedDate.ms"  style="max-width: 40px;">
+                	ms <input ng-model="modifiedDate.ms"  style="max-width: 40px;"></br></br>
+                	<input type="button" value="Copy Created Time" ng-click="copyDate('createAt')">
+                	<input type="button" value="Copy Current Time" ng-click="copyDate('now')">
                 </td>
             </tr>
 

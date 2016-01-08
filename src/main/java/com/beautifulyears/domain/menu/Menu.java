@@ -31,6 +31,7 @@ public class Menu {
 	private List<String> ancestorIds = new ArrayList<String>();
 	private String parentMenuId;
 	private String slug;
+	private Boolean isHidden = false;
 	private int orderIdx;
 
 	@DBRef
@@ -43,6 +44,14 @@ public class Menu {
 
 	public void setOrderIdx(int orderIdx) {
 		this.orderIdx = orderIdx;
+	}
+
+	public Boolean isHidden() {
+		return isHidden;
+	}
+
+	public void setHidden(Boolean isHidden) {
+		this.isHidden = isHidden;
 	}
 
 	public String getId() {

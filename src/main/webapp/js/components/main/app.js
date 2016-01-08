@@ -403,6 +403,17 @@ adminControllers.controller('AdminDiscussCreateController', ['$scope', '$http', 
             return;
         }
         
+        $scope.copyDate = function(copiedFrom){
+        	var timeStamp = "";
+        	if(copiedFrom == "createAt"){
+        		timeStamp = $scope.currentDiscuss.createdAt;
+        	}else if(copiedFrom == "now"){
+        		timeStamp = (new Date()).getTime();
+        	}
+        	
+        	$scope.modifiedDate = getDateObject(timeStamp);
+        }
+        
         function getDateObject(timestamp){
         	var ret = {
         			"y":"",
