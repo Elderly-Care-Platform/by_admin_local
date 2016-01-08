@@ -26,6 +26,7 @@ import com.beautifulyears.constants.ActivityLogConstants;
 import com.beautifulyears.constants.BYConstants;
 import com.beautifulyears.constants.DiscussConstants;
 import com.beautifulyears.domain.BySession;
+import com.beautifulyears.domain.HousingFacility;
 import com.beautifulyears.domain.LoginRequest;
 import com.beautifulyears.domain.LoginResponse;
 import com.beautifulyears.domain.Session;
@@ -291,9 +292,15 @@ public class UserController {
 		Query q = new Query();
 		q.addCriteria(Criteria.where("userId").is(userId));
 		User user = mongoTemplate.findOne(q, User.class);
-		UserProfile profile = mongoTemplate.findOne(q, UserProfile.class);
+		List<UserProfile> profiles = mongoTemplate.find(q, UserProfile.class);
+		List<HousingFacility> housings = mongoTemplate.find(q, HousingFacility.class);
 		mongoTemplate.remove(user);
-		mongoTemplate.remove(profile);
+		for(UserProfile profile : profiles ){
+			mongoTemplate.remove(profile);
+		}
+		for(HousingFacility housing : housings ){
+			mongoTemplate.remove(housing);
+		}
 		logHandler.addLog(user, ActivityLogConstants.CRUD_TYPE_DELETE, req);
 		return BYGenericResponseHandler.getResponse(null);
 	}
