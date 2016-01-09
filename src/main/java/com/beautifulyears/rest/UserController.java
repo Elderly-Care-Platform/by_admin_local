@@ -113,7 +113,7 @@ public class UserController {
 					response.setUserName(session.getUserName());
 					response.setUserRoleId(user.getUserRoleId());
 					return BYGenericResponseHandler.getResponse(response);
-				}else{
+				} else {
 					killSession(req, res);
 					LoginResponse blankUser = getBlankUser("User credentials doesn't match or user don't have sufficient permissions");
 					return BYGenericResponseHandler.getResponse(blankUser);
@@ -188,7 +188,9 @@ public class UserController {
 			logger.debug("EDIT USER");
 			boolean isUserNameChanged = false;
 			User newUser = userRepository.findOne(user.getId());
-			if (!newUser.getUserName().equals(user.getUserName())) {
+			if ((null == newUser.getUserName() && null != user.getUserName())
+					|| (null != newUser.getUserName() && !newUser.getUserName()
+							.equals(user.getUserName()))) {
 				isUserNameChanged = true;
 				logger.debug("trying changing the user name from "
 						+ newUser.getUserName() + " to " + user.getUserName());
@@ -293,12 +295,13 @@ public class UserController {
 		q.addCriteria(Criteria.where("userId").is(userId));
 		User user = mongoTemplate.findOne(q, User.class);
 		List<UserProfile> profiles = mongoTemplate.find(q, UserProfile.class);
-		List<HousingFacility> housings = mongoTemplate.find(q, HousingFacility.class);
+		List<HousingFacility> housings = mongoTemplate.find(q,
+				HousingFacility.class);
 		mongoTemplate.remove(user);
-		for(UserProfile profile : profiles ){
+		for (UserProfile profile : profiles) {
 			mongoTemplate.remove(profile);
 		}
-		for(HousingFacility housing : housings ){
+		for (HousingFacility housing : housings) {
 			mongoTemplate.remove(housing);
 		}
 		logHandler.addLog(user, ActivityLogConstants.CRUD_TYPE_DELETE, req);

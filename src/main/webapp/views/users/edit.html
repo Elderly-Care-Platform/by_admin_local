@@ -58,7 +58,7 @@
 		<!-- PASSWORD -->
 		<div class="form-group" ng-class="{ 'has-error' : customError.passError != '' }">
 			<label><strong>Password*</strong></label>
-			<input type="password" name="password" class="form-control" ng-model="userPassword" required>
+			<input type="password" name="password" class="form-control" ng-model="userPassword">
 			<p ng-show="customError.passError != ''" class="help-block">{{customError.passError}}</p>
 		</div>
 
