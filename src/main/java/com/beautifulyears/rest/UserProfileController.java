@@ -177,17 +177,70 @@ public class UserProfileController {
 			HttpServletRequest req, HttpServletResponse res) throws Exception {
 		LoggerUtil.logEntry();
 		UserProfile userProfile = null;
+
 		try {
 			if (userId != null) {
-				userProfile = this.userProfileRepository.findByUserId(userId);
+				userProfile = userProfileRepository.findByUserId(userId);
+				if (userProfile == null) {
+					logger.error("did not find any profile matching ID");
+					userProfile = new UserProfile();
+				} else {
+					logger.debug(userProfile.toString());
+				}
 			} else {
 				logger.error("invalid parameter");
+				throw new BYException(BYErrorCodes.MISSING_PARAMETER);
 			}
 
 		} catch (Exception e) {
-			logger.error("invalid parameter");
+			Util.handleException(e);
 		}
 		return BYGenericResponseHandler.getResponse(userProfile);
+	}
+	
+	/* This method allows the creation of a user profile */
+	@RequestMapping(method = { RequestMethod.POST }, value = { "/{userId}" }, consumes = { "application/json" })
+	@ResponseBody
+	public Object submitUserProfile(@RequestBody UserProfile userProfile,
+			HttpServletRequest req, HttpServletResponse res) throws Exception {
+
+		LoggerUtil.logEntry();
+		UserProfile profile = null;
+		User currentUser = null;
+		try {
+			if ((userProfile != null)) {
+				currentUser = Util.getSessionUser(req);
+//				if (null != currentUser
+//						&& SessionController.checkCurrentSessionFor(req,
+//								"SUBMIT_PROFILE")) {
+					if (userProfile.getUserId() != null
+							&& userProfile.getUserId().equals(
+									currentUser.getId())) {
+						if (this.userProfileRepository.findByUserId(userProfile
+								.getUserId()) == null) {
+							profile = new UserProfile();
+							profile.setUserId(currentUser.getId());
+							profile.setUserTypes(userProfile.getUserTypes());
+							userProfileRepository.save(profile);
+						} else {
+							throw new BYException(
+									BYErrorCodes.USER_ALREADY_EXIST);
+						}
+//					} else {
+//						throw new BYException(BYErrorCodes.USER_NOT_AUTHORIZED);
+//					}
+				} else {
+					throw new BYException(BYErrorCodes.USER_LOGIN_REQUIRED);
+				}
+			} else {
+				throw new BYException(BYErrorCodes.MISSING_PARAMETER);
+
+			}
+		} catch (Exception e) {
+			Util.handleException(e);
+		}
+		return BYGenericResponseHandler.getResponse(UserProfileResponse
+				.getUserProfileEntity(profile, currentUser));
 	}
 
 	/* @PathVariable(value = "userId") String userId */
@@ -197,68 +250,121 @@ public class UserProfileController {
 			@PathVariable(value = "userId") String userId,
 			HttpServletRequest req, HttpServletResponse res) throws Exception {
 
+		
 		LoggerUtil.logEntry();
 		UserProfile profile = null;
+		User currentUser = Util.getSessionUser(req);
 		try {
 			if ((userProfile != null) && (userId != null)) {
-				profile = userProfileRepository.findByUserId(userId);
+//				if (null != currentUser
+//						&& SessionController.checkCurrentSessionFor(req,
+//								"SUBMIT_PROFILE")) {
+					if (userProfile.getUserId().equals(currentUser.getId())) {
+						profile = userProfileRepository.findByUserId(userId);
 
-				if (profile != null) {
-					userProfile.getBasicProfileInfo()
-					.setShortDescription(
-						getShortDescription(userProfile));
-					profile.setUserTypes(userProfile.getUserTypes());
-					profile.setLastModifiedAt(new Date());
-					profile.setSystemTags(userProfile.getSystemTags());
-					profile.setStatus(userProfile.getStatus());
-					profile.setFeatured(userProfile.isFeatured());
-					profile.setVerified(userProfile.isVerified());
-					profile.setBasicProfileInfo(userProfile
-						.getBasicProfileInfo());
-					if (!Collections.disjoint(
-						profile.getUserTypes(),
-						new ArrayList<>(Arrays.asList(
-							UserTypes.INDIVIDUAL_CAREGIVER,
-							UserTypes.INDIVIDUAL_ELDER,
-							UserTypes.INDIVIDUAL_PROFESSIONAL,
-							UserTypes.INDIVIDUAL_VOLUNTEER)))) {
-						profile.setIndividualInfo(userProfile
-							.getIndividualInfo());
-					}
-					if (!Collections
-						.disjoint(
-						profile.getUserTypes(),
-						new ArrayList<>(
-							Arrays.asList(
-								UserTypes.INSTITUTION_SERVICES,
-								UserTypes.INDIVIDUAL_PROFESSIONAL)))) {
-						profile.setServiceProviderInfo(userProfile
-							.getServiceProviderInfo());
-					}
-						
-					userProfileRepository.save(profile);
+						if (profile != null) {
+							userProfile.getBasicProfileInfo()
+									.setShortDescription(
+											getShortDescription(userProfile));
+							profile.setLastModifiedAt(new Date());
+							profile.setSystemTags(userProfile.getSystemTags());
 
-					logger.info("User Profile update with details: "
-						+ profile.toString());
-				}else{
-					logger.debug("new user profile created");
-					User user = mongoTemplate.findById(profile, User.class);
-					if(user != null){
-						userProfile = new UserProfile();
-						userProfile.setUserId(user.getId());
-						userProfile.getBasicProfileInfo().setPrimaryEmail(user.getEmail());
-						userProfile.setVerified(userProfile.isVerified());
-					}
-							
+							profile.setBasicProfileInfo(userProfile
+									.getBasicProfileInfo());
+							if (!Collections.disjoint(
+									profile.getUserTypes(),
+									new ArrayList<>(Arrays.asList(
+											UserTypes.INDIVIDUAL_CAREGIVER,
+											UserTypes.INDIVIDUAL_ELDER,
+											UserTypes.INDIVIDUAL_PROFESSIONAL,
+											UserTypes.INDIVIDUAL_VOLUNTEER)))) {
+								profile.setIndividualInfo(userProfile
+										.getIndividualInfo());
+							} 
+
+							if (profile.getUserTypes().contains(
+									UserTypes.INSTITUTION_SERVICES)
+									|| profile.getUserTypes().contains(
+											UserTypes.INSTITUTION_BRANCH)) {
+								profile.setServiceProviderInfo(userProfile
+										.getServiceProviderInfo());
+								List<UserProfile> branchInfo = saveBranches(
+										userProfile.getServiceBranches(),
+										userId);
+								profile.setServiceBranches(branchInfo);
+
+							} else if (profile.getUserTypes().contains(
+									UserTypes.INDIVIDUAL_PROFESSIONAL)) {
+								profile.setServiceProviderInfo(userProfile
+										.getServiceProviderInfo());
+							} else if (profile.getUserTypes().contains(
+									UserTypes.INSTITUTION_HOUSING)) {
+								profile.setFacilities(HousingController
+										.addFacilities(
+												userProfile.getFacilities(),
+												currentUser));
+							}
+
+							userProfileRepository.save(profile);
+							logger.info("User Profile update with details: "
+									+ profile.toString());
+						} else {
+							throw new BYException(
+									BYErrorCodes.USER_PROFILE_DOES_NOT_EXIST);
+						}
+
+//					} else {
+//						throw new BYException(BYErrorCodes.USER_NOT_AUTHORIZED);
+//					}
+				} else {
+					throw new BYException(BYErrorCodes.USER_LOGIN_REQUIRED);
 				}
-			} else {
-				throw new BYException(BYErrorCodes.NO_CONTENT_FOUND);
+			}
+
+			else {
+				throw new BYException(BYErrorCodes.MISSING_PARAMETER);
 			}
 		} catch (Exception e) {
-			logger.error("error ");
+			Util.handleException(e);
 		}
-		
-		return BYGenericResponseHandler.getResponse(profile);
+
+		return BYGenericResponseHandler.getResponse(UserProfileResponse
+				.getUserProfileEntity(profile, currentUser));
+	}
+	
+	private List<UserProfile> saveBranches(List<UserProfile> branchInfo,
+			String userId) {
+		for (UserProfile branch : branchInfo) {
+			if (!branch.getUserTypes().contains(UserTypes.INSTITUTION_BRANCH)) {
+				throw new BYException(BYErrorCodes.MISSING_PARAMETER);
+			}
+		}
+		List<UserProfile> updateBranchInfo = new ArrayList<UserProfile>();
+		for (UserProfile branch : branchInfo) {
+			UserProfile newBranch = new UserProfile();
+			if (null == branch.getId()) {
+				newBranch.setUserId(userId);
+				newBranch.setLastModifiedAt(new Date());
+				newBranch.setBasicProfileInfo(branch.getBasicProfileInfo());
+				newBranch.setIndividualInfo(branch.getIndividualInfo());
+				newBranch.setServiceProviderInfo(branch
+						.getServiceProviderInfo());
+				newBranch.setSystemTags(branch.getSystemTags());
+				newBranch.setTags(branch.getTags());
+				newBranch.setUserTags(branch.getUserTags());
+				ArrayList<Integer> list = new ArrayList<Integer>();
+				list.add(UserTypes.INSTITUTION_BRANCH);
+				newBranch.setUserTypes(list);
+				branch = newBranch;
+			} else {
+				branch.setUserId(userId);
+				branch.setLastModifiedAt(new Date());
+			}
+
+			mongoTemplate.save(branch);
+			updateBranchInfo.add(branch);
+		}
+		return updateBranchInfo;
 	}
 	
 	private String getShortDescription(UserProfile profile) {

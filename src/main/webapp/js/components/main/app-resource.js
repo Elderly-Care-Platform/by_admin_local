@@ -319,15 +319,14 @@ adminServices.factory('UserDetailInfo', function($resource) {
 	      }),
 	 getAllActivityInfo: $resource('/byadmin/api/v1/userDetail/activities', {}, {
 	        query: { method: 'GET',isArray: true }
-	      }),
-	 postProfileInfo: $resource('/byadmin/api/v1/userDetail/userProfileInfo', {}, {
-	        query: { method: 'POST',isArray: true }
-	      }),
-	 putProfileInfo: $resource('/byadmin/api/v1/userDetail/userProfileInfo', {}, {
-	        query: { method: 'PUT',isArray: true }
-	      })
-	      
+	      })	      
 	}
 });
 
-	
+adminServices.factory('UserProfile', function ($resource) {
+    return $resource('/byadmin/api/v1/userProfile/:userId', {}, {
+        get: {method: 'GET', params: {}},
+        post: {method: 'POST', params: {}},
+        update: {method: 'PUT', params: {}}
+    })
+});

@@ -15,6 +15,7 @@ public class UserTypes{
 	public static final int INSTITUTION_PRODUCTS = 5;
 	public static final int INSTITUTION_NGO = 6;
 	public static final int INDIVIDUAL_PROFESSIONAL = 7;
+	public static final int INSTITUTION_BRANCH = 8;
 	
 		
 }

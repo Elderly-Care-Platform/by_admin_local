@@ -4,9 +4,9 @@ adminControllers
 			'$scope',
 			'$routeParams',
 			'$location',
-			'UserDetailInfo',
+			'UserProfile',
 			function($scope, $routeParams, $location,
-				UserDetailInfo) {
+					UserProfile) {
 				if (localStorage.getItem("ADMIN_USER_ROLE") != 'SUPER_USER') {
 					return;
 				}
@@ -21,13 +21,12 @@ adminControllers
 
 				function showUserTypes() {
 					if (!$scope.profileData) {
-						UserDetailInfo.getProfileInfo.query({
-							"userId": $scope.userId
-						}, function(res) {
-							$scope.userProfileInfo = res;
+						
+						UserProfile.get({"userId": $scope.userId}, function(res) {
+							$scope.userProfileInfo = res.data;
 							$scope.state = "loaded";
-							if($scope.userProfileInfo[0]){
-								$scope.userType = $scope.userProfileInfo[0].userTypes;
+							if($scope.userProfileInfo){
+								$scope.userType = $scope.userProfileInfo.userTypes;
 							} else{
 								$scope.userType = [];
 							}							
@@ -35,8 +34,8 @@ adminControllers
 						}, function(err) {
 							$scope.state = "error";
 						});
-					}
-				}
+	            };
+			}
 
 				$scope.userCategory = "";
 				$scope.individualUserType = [{
@@ -165,9 +164,9 @@ adminControllers
 				}
 
 				$scope.submit = function() {
-					if ($scope.userType.length > 0 && $scope.userProfileInfo[0].userTypes.length == 0) {
-						$scope.userProfileInfo[0].userTypes = $scope.userType;
-						UserDetailInfo.postProfileInfo.query({
+					if ($scope.userType.length > 0 && $scope.userProfileInfo.userTypes.length == 0) {
+						$scope.userProfileInfo.userTypes = $scope.userType;
+						UserProfile.post({
 							"userId": $scope.userId
 						}, $scope.userProfileInfo, function(res) {
 							console.log("success");
@@ -176,9 +175,9 @@ adminControllers
 							console.log("error");
 						});
 					}
-					if ($scope.userType.length > 0 && $scope.userProfileInfo[0].userTypes.length > 0) {
-						$scope.userProfileInfo[0].userTypes = $scope.userType;
-						UserDetailInfo.putProfileInfo.query({
+					if ($scope.userType.length > 0 && $scope.userProfileInfo.userTypes.length > 0) {
+						$scope.userProfileInfo.userTypes = $scope.userType;
+						UserProfile.put({
 							"userId": $scope.userId
 						}, $scope.userProfileInfo, function(res) {
 							console.log("success");
