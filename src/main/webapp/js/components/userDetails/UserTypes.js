@@ -164,27 +164,29 @@ adminControllers
 				}
 
 				$scope.submit = function() {
-					if ($scope.userType.length > 0 && $scope.userProfileInfo.userTypes.length == 0) {
+					
+					if ($scope.userType.length > 0 && $scope.userProfileInfo.userTypes.length > 0) {
 						$scope.userProfileInfo.userTypes = $scope.userType;
-						UserProfile.post({
+						UserProfile.update({
 							"userId": $scope.userId
 						}, $scope.userProfileInfo, function(res) {
 							console.log("success");
-							showUserTypes();
+							$location.path('/userDetails/' + $scope.userId);
 						}, function(err) {
 							console.log("error");
 						});
 					}
-					if ($scope.userType.length > 0 && $scope.userProfileInfo.userTypes.length > 0) {
+					if ($scope.userType.length > 0 && $scope.userProfileInfo.userTypes.length == 0) {
 						$scope.userProfileInfo.userTypes = $scope.userType;
-						UserProfile.put({
+						$scope.userProfileInfo.userId = $scope.userId;
+						UserProfile.post({
 							"userId": $scope.userId
 						}, $scope.userProfileInfo, function(res) {
 							console.log("success");
-							showUserTypes();
+							$location.path('/userDetails/' + $scope.userId);
 						}, function(err) {
 							console.log("error");
-						});
+						});			
 					}
 				}
 
