@@ -319,8 +319,15 @@ adminServices.factory('UserDetailInfo', function($resource) {
 	      }),
 	 getAllActivityInfo: $resource('/byadmin/api/v1/userDetail/activities', {}, {
 	        query: { method: 'GET',isArray: true }
+	      }),
+	 postProfileInfo: $resource('/byadmin/api/v1/userDetail/userProfileInfo', {}, {
+	        query: { method: 'POST',isArray: true }
+	      }),
+	 putProfileInfo: $resource('/byadmin/api/v1/userDetail/userProfileInfo', {}, {
+	        query: { method: 'PUT',isArray: true }
 	      })
 	      
 	}
 });
+
 	

@@ -55,6 +55,9 @@ byAdminApp.config(['$routeProvider',
       
       .when('/users/search', {templateUrl: 'views/userDetails/userAdvanceSearch.html', controller: 'UserSearchController'})
       .when('/userDetails/:userId', {templateUrl: 'views/userDetails/userMasterDetail.html', controller: 'UserDetailController'})
+
+      .when('/userDetailType/:userId', {templateUrl: 'views/userDetails/UserTypes.html', controller: 'UserDetailController'})
+      .when('/userDetailProfile/:userId', {templateUrl: 'views/userDetails/UserProfileDetail.html', controller: 'UserDetailController'})
       
       ;
     //?????$routeProvider.otherwise({redirectTo: '/users/login'});
