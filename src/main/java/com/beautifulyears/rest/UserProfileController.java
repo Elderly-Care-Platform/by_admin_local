@@ -213,13 +213,14 @@ public class UserProfileController {
 //				if (null != currentUser
 //						&& SessionController.checkCurrentSessionFor(req,
 //								"SUBMIT_PROFILE")) {
-					if (userProfile.getUserId() != null
-							&& userProfile.getUserId().equals(
-									currentUser.getId())) {
+//					if (userProfile.getUserId() != null
+//							&& userProfile.getUserId().equals(
+//									currentUser.getId())) {
 						if (this.userProfileRepository.findByUserId(userProfile
 								.getUserId()) == null) {
 							profile = new UserProfile();
-							profile.setUserId(currentUser.getId());
+							profile.setUserId(userProfile
+									.getUserId());
 							profile.setUserTypes(userProfile.getUserTypes());
 							userProfileRepository.save(profile);
 						} else {
@@ -229,9 +230,9 @@ public class UserProfileController {
 //					} else {
 //						throw new BYException(BYErrorCodes.USER_NOT_AUTHORIZED);
 //					}
-				} else {
-					throw new BYException(BYErrorCodes.USER_LOGIN_REQUIRED);
-				}
+//				} else {
+//					throw new BYException(BYErrorCodes.USER_LOGIN_REQUIRED);
+//				}
 			} else {
 				throw new BYException(BYErrorCodes.MISSING_PARAMETER);
 
