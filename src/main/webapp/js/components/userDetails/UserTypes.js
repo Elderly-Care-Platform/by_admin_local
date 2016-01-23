@@ -171,7 +171,7 @@ adminControllers
 							"userId": $scope.userId
 						}, $scope.userProfileInfo, function(res) {
 							console.log("success");
-							$location.path('/userDetails/' + $scope.userId);
+							$location.path('/userDetailProfile/' + $scope.userId);
 						}, function(err) {
 							console.log("error");
 						});
@@ -183,13 +183,16 @@ adminControllers
 							"userId": $scope.userId
 						}, $scope.userProfileInfo, function(res) {
 							console.log("success");
-							$location.path('/userDetails/' + $scope.userId);
+							$location.path('/userDetailProfile/' + $scope.userId);
 						}, function(err) {
 							console.log("error");
 						});			
 					}
 				}
 
+				$scope.cancel = function() {
+					$location.path('/userDetails/' + $scope.userId);
+				}
 
 
 			}

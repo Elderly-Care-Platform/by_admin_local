@@ -55,6 +55,8 @@ byAdminApp.run(function ($rootScope, $location, SessionIdService, BYMenu, $http)
 
     var mainMenu = null;
 
+    $rootScope.menuCategoryMapByName = {};
+
     function createMenuCategoryMap(categories) {
         angular.forEach(categories, function (category, index) {
             $rootScope.menuCategoryMap[category.id] = category;
@@ -79,7 +81,9 @@ byAdminApp.run(function ($rootScope, $location, SessionIdService, BYMenu, $http)
                         }
                     }
                 }
-            } else if (category.module === 1) {  //Services Menus
+            } else if (category.module === 1) {  
+
+            //Services Menus
                 //If it is child category then adding first ancestor of the category in the map, if the category is of service module
                 if (category.ancestorIds.length > 0) {
                     $rootScope.serviceCategoryMap[category.ancestorIds[0]] = $rootScope.menuCategoryMap[category.ancestorIds[0]];
@@ -93,6 +97,9 @@ byAdminApp.run(function ($rootScope, $location, SessionIdService, BYMenu, $http)
             if (category.children.length > 0) {
                 createMenuCategoryMap(category.children);
             }
+
+
+            $rootScope.menuCategoryMapByName[category.displayMenuName] = category;
         });
     }
 

@@ -1,0 +1,550 @@
+<div class="row indvspacing" ng-controller="regIndividualCtrl">
+    <form class="third-register-page grayRegisterBgLight" name="individualForm" novalidate style="background:transparent;" ng-init="initIndvRegData()">
+        <div class="col-md-12 whiteBg register-page padding20 borderShadow margin-bottom-20 indvBorderRadius" style="padding-bottom:15px;">
+            <div class="addBasicInfo">Basic Info</div>
+            <div class="row margin-bottom-20  register-page">
+                <div class="col-md-5">
+                    I am
+                </div>
+                <div class="col-md-7 no-padding-right register-page">
+                    <select name="mySelect" class="form-control grayBgLogin" ng-options="option for option in regConfig.salutations track by option" ng-model="individualInfo.salutation" ng-change="updateGenderOption()">
+                    </select>
+                </div>
+            </div>
+
+            <div class="row margin-bottom-20  register-page" ng-if="regConfig.showGenderOptions[individualInfo.salutation].length > 1">
+                <div class="col-md-5 col-xs-3">
+                    Gender
+                </div>
+                <div class="col-md-7 col-xs-9 no-padding-right register-page">
+                    Male
+                    <input type="radio" name="gender" class="radioCheckbox" value="1" ng-model="individualInfo.gender" /> Female
+                    <input type="radio" name="gender" class="radioCheckbox" value="0" ng-model="individualInfo.gender" />
+                </div>
+            </div>
+
+            <div class="row margin-bottom-20  register-page">
+                <div class="col-md-5 required">
+                    My first name is
+                </div>
+                <div class="col-md-7 no-padding-right register-page">
+                    <input type="text" class="username-textbox textbox name-textbox" ng-model="basicProfileInfo.firstName" required name="firstName" />
+                    <span ng-show="individualForm.firstName.$invalid && submitted" class="errorRed">Please enter your first name</span>
+                </div>
+            </div>
+
+            <div class="row margin-bottom-20  register-page">
+                <div class="col-md-5">
+                    My last name is
+                </div>
+                <div class="col-md-7 no-padding-right register-page">
+                    <input type="text" class="username-textbox textbox name-textbox" ng-model="individualInfo.lastName" name="lastName" />
+                </div>
+            </div>
+
+            <div class="row margin-bottom-40  register-page">
+                <div class="col-md-5">
+                    I am
+                </div>
+                <div class="col-md-7 no-padding-right register-page">
+                    <select name="workingStatus" class="form-control grayBgLogin" ng-options="option for option in regConfig.occupation track by option" ng-model="individualInfo.occupation">
+                    </select>
+                    <!--<select  >-->
+                    <!--<option  value="0">Working</option>-->
+                    <!--</select>-->
+                </div>
+            </div>
+
+            <div class="row no-padding margin-bottom-20 marginleft0">
+                <div class="col-md-12 no-padding fontSizeIndi  list-head dp-block">
+                    My contact details
+                </div>
+
+                <div class="col-md-12 no-padding bg-gray-h1">
+                    <div class="bg-green-h2" style="width: 156px;"></div>
+                </div>
+            </div>
+
+            <div class="row margin-bottom-20  register-page">
+                <div class="col-md-5">
+                    Country
+                </div>
+                <div class="col-md-7 no-padding-right register-page">
+                    <input type="text" class="username-textbox textbox" ng-model="basicProfileInfo.primaryUserAddress.country" />
+                </div>
+            </div>
+
+            <div class="row margin-bottom-20  register-page">
+                <div class="col-md-5">
+                    Zip
+                </div>
+                <div class="col-md-7 no-padding-right register-page">
+                    <input type="text" class="username-textbox textbox" ng-model="basicProfileInfo.primaryUserAddress.zip" style="width:50%;" />
+                    <input type="button" class="btn btn-success pull-right register-btn" value="Get address" style="padding:4px 12px;" ng-click="getLocationByPincode($event, address)">
+                </div>
+            </div>
+
+            <div class="row margin-bottom-20  register-page">
+                <div class="col-md-5">
+                    City
+                </div>
+                <div class="col-md-7 no-padding-right register-page">
+                    <input type="text" class="username-textbox textbox" ng-model="basicProfileInfo.primaryUserAddress.city" />
+                </div>
+            </div>
+
+            <div class="row margin-bottom-20 darkBgwithText ">
+                This information will be private
+            </div>
+
+            <div class="row margin-bottom-0 marginLeftMinus5 register-page">
+                <div class="col-md-12 margin-top-20 margin-bottom-20  register-page">
+                    <div class="col-md-5 no-padding">Locality</div>
+                    <div class="col-md-7 no-padding register-page">
+                        <input type="text" ng-model="basicProfileInfo.primaryUserAddress.locality" class="name-textbox textbox" ng-google-location options="googleLocationOptions" obj="address" callback="addressCallback" id="addressLocality" placeholder="Locality" />
+                    </div>
+                </div>
+
+                <div class="col-md-12 margin-bottom-10  register-page">
+                    <div class="col-md-5 no-padding">Address detail</div>
+                    <div class="col-md-7 no-padding register-page">
+                        <textarea class="textbox " rows="3" ng-model="basicProfileInfo.primaryUserAddress.streetAddress"></textarea>
+                    </div>
+                </div>
+
+                <div class="col-md-12 margin-bottom-20  register-page">
+                    <div class="col-md-5 no-padding">Phone number</div>
+                    <div class="col-md-7 no-padding register-page">
+                        <input type="text" class="username-textbox textbox" name="primaryTel" ng-model="basicProfileInfo.primaryPhoneNo" placeholder="Telephone number" ng-pattern="/^[+\d-]*\d[\d-]$/" maxlength="17" minlength="10">
+                        <span ng-show="(individualForm.primaryTel.$invalid || individualForm.primaryTel.$error.pattern) && submitted" class="errorRed">Not a valid number!</span>
+                    </div>
+                </div>
+
+                <div class="col-md-12 margin-bottom-20  register-page" ng-repeat="number in basicProfileInfo.secondaryPhoneNos track by $index">
+                    <div class="col-md-5 no-padding">
+                        Additional Phone Number
+                    </div>
+                    <div class="col-md-7 no-padding register-page">
+                        <input type="text" class="username-textbox textbox" name="{{'tel'+$index}}" ng-model="basicProfileInfo.secondaryPhoneNos[$index]" placeholder="Telephone number" ng-pattern="/^[+\d-]*\d[\d-]$/" maxlength="17" minlength="10" />
+
+                        <span ng-show="(individualForm.{{'tel'+$index}}.$invalid || individualForm.{{'tel'+$index}}.$error.pattern) && submitted" class="errorRed">Not a valid number!</span>
+                    </div>
+                </div>
+
+                <div class="col-md-12 add-phone margin-bottom-10  register-page" style="margin-top:-10px;">
+                    <div class="col-md-5 no-padding"></div>
+                    <div class="col-md-7 no-padding register-page">
+                        <a class="add-phone" ng-click="addPhoneNumber()">+ add another phone number</a>
+                    </div>
+                </div>
+
+                <div class="col-md-12 margin-bottom-20  register-page">
+                    <div class="col-md-5 no-padding">Email ID</div>
+                    <div class="col-md-7 no-padding register-page">
+                        <input type="email" class="username-textbox textbox" name="primaryEmail" ng-model="basicProfileInfo.primaryEmail" placeholder="Email" />
+                        <span ng-show="individualForm.primaryEmail.$error.email && submitted" class="errorRed">
+                            Not valid Email!
+                        </span>
+                    </div>
+                </div>
+
+                <div class="col-md-12 margin-bottom-20 register-page" ng-repeat="email in basicProfileInfo.secondaryEmails track by $index">
+                    <div class="col-md-5 no-padding">
+                        Additional Email ID
+                    </div>
+                    <div class="col-md-7 no-padding register-page">
+                        <input type="email" class="username-textbox textbox" name="{{'email'+$index}}" ng-model="basicProfileInfo.secondaryEmails[$index]" placeholder="Email" />
+                        <span ng-show="individualForm.{{'email'+$index}}.$error.email && submitted" class="errorRed">Not valid Email!</span>
+                    </div>
+                </div>
+
+                <div class="col-md-12 add-email margin-bottom-30  register-page" style="margin-top:-10px;">
+                    <div class="col-md-5 no-padding"></div>
+                    <div class="col-md-7 no-padding register-page">
+                        <a class="add-email" ng-click="addEmail()">+ add another email id</a>
+                    </div>
+                </div>
+
+                <div ng-if="!curiousUser">
+                    <div class="col-md-12 margin-bottom-20">
+                        <div class="col-md-12 no-padding fontSizeIndi  list-head dp-block">
+                            I have
+                        </div>
+
+                        <div class="col-md-12 no-padding bg-gray-h1">
+                            <div class="bg-green-h2" style="width: 76px;"></div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12 margin-bottom-0 register-page">
+                        <div class="col-md-5 no-padding">Emotional challenges</div>
+                        <div class="col-md-7 no-padding register-page">
+                            <div class="panel-group acc-v1" id="accord-emotional-issue">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading" data-toggle="collapse" data-parent="#accord-emotional-issue" href="#emotional-issues" onclick="return false;">
+                                        <h4 class="panel-title by_editor_ParentCategories">
+                                            <a ng-if="individualInfo.emotionalIssues.length==0" class="accordion-toggle collapsed by-reg-toggle"
+                                               style="padding: 2px 11px;">
+                                                None
+                                            </a>
+
+                                            <a ng-if="individualInfo.emotionalIssues.length > 0 && $index < 3"
+                                               ng-repeat="issue in individualInfo.emotionalIssues"
+                                               class="accordion-toggle collapsed by-reg-toggle list-inline"
+                                               style="padding: 2px 11px;width:auto">
+                                                {{issue}}
+                                                <span ng-if="individualInfo.emotionalIssues.length-1 > $index ">,</span>
+                                            </a>
+
+                                            <a class="triangle-down collapsed by-reg-triangle"
+                                               style="padding: 2px 11px;"></a>
+                                        </h4>
+                                    </div>
+                                    <div id="emotional-issues" class="col-md-12 whiteBg by_editor_SubCategories by_reg_SubCategories panel-collapse collapse">
+                                        <div class="panel-body col-md-12" ng-repeat="option in emotional_challenges">
+                                            <input type="checkbox" ng-click="selectEmotionalIssue(option)" ng-checked="individualInfo.emotionalIssues && individualInfo.emotionalIssues.indexOf(option) !== -1">
+                                            <span style="line-height: 23px;">{{option}}</span>
+                                        </div>
+                                    </div>
+                                    <div style="clear:both"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12 margin-bottom-0 register-page">
+                        <div class="col-md-5 no-padding">Medical issues</div>
+                        <div class="col-md-7 no-padding register-page">
+                            <!--<dropdown-multiselect class="col-md-12 no-padding register-page form-control grayBgLogin" pre-selected="member.roles" ng-model="selected_items" options="medicalIssuesOptions"></dropdown-multiselect>-->
+                            <div class="panel-group acc-v1" id="accord-medical-issue">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading" data-toggle="collapse" data-parent="#accord-medical-issue" href="#medical-issues" onclick="return false;">
+                                        <h4 class="panel-title by_editor_ParentCategories">
+                                            <a ng-if="selectedMedicalIssues.length==0" class="accordion-toggle collapsed by-reg-toggle"
+                                               style="padding: 2px 11px;">
+                                                None
+                                            </a>
+
+                                            <a ng-if="selectedMedicalIssues.length > 0 && $index < 3"
+                                                  ng-repeat="issue in selectedMedicalIssues"
+                                                  class="accordion-toggle collapsed by-reg-toggle list-inline"
+                                                  style="padding: 2px 11px;width:auto">
+                                                {{$root.menuCategoryMap[issue].displayMenuName}}
+                                                <span ng-if="selectedMedicalIssues.length-1 > $index ">,</span>
+                                            </a>
+
+                                            <a class="triangle-down collapsed by-reg-triangle"
+                                               style="padding: 2px 11px;"></a>
+                                        </h4>
+                                    </div>
+                                    <div id="medical-issues" class="col-md-12 whiteBg by_editor_SubCategories by_reg_SubCategories panel-collapse collapse">
+                                        <div class="panel-body col-md-12" ng-repeat="option in medicalIssuesOptions">
+                                            <input type="checkbox" ng-click="selectMedicalIssue(option)" ng-checked="selectedMedicalIssues && selectedMedicalIssues.indexOf(option.id) > -1">
+                                            <span style="line-height: 23px;">{{option.displayMenuName}}</span>
+                                        </div>
+                                    </div>
+                                    <div style="clear:both"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12 margin-bottom-20  register-page">
+                        <div class="col-md-5 no-padding">Other difficulties</div>
+                        <div class="col-md-7 no-padding register-page">
+                            <input type="text" class="username-textbox textbox" ng-model="individualInfo.otherIssues[0]" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-12 whiteBg register-page padding20 borderShadow margin-bottom-20 indvBorderRadius">
+            <div class="addBasicInfo">About myself</div>
+
+            <div class="row margin-bottom-20 darkBgwithText ">
+                This information will be private
+            </div>
+
+            <div class="row margin-bottom-20 marginLeftMinus5 register-page">
+
+                <div class="col-md-12 margin-top-20 margin-bottom-20  register-page">
+                    <div class="col-md-5 no-padding">My birthday</div>
+                    <div class="col-md-7 no-padding register-page">
+                        <input id="datepicker" readonly type="text" ng-model="individualInfo.dob" class="username-textbox textbox" placeholder="mm/dd/yyyy" />
+                    </div>
+                </div>
+                <!--<div class="col-md-12 margin-bottom-20  register-page">-->
+                <!--<div class="col-md-5 no-padding"></div>-->
+                <!--<div class="col-md-7 no-padding register-page">-->
+                <!--<a>+ add another significant date</a>-->
+                <!--</div>-->
+                <!--</div>-->
+
+                <div class="col-md-12 margin-bottom-20 register-page">
+                    <div class="col-md-5 no-padding">I am</div>
+                    <div class="col-md-7 no-padding register-page">
+                        <select name="marryStatus" class="form-control grayBgLogin" ng-options="option for option in regConfig.maritalStatus track by option" ng-model="individualInfo.maritalStatus">
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row margin-bottom-10  register-page">
+                <div class="col-md-5">
+                    I speak
+                </div>
+                <div class="col-md-7 no-padding-right register-page" ng-if="languages.length > 0">
+                    <input type="text" class="name-textbox textbox  margin-bottom-20" obj="lang" auto-complete options="langAutoComOptions" on-select-callback="langSelectCallback" on-change-callback="langSelectCallback" ng-repeat="lang in selectedLanguages" ng-model="lang" />
+
+                    <input ng-if="showAddNewLang" id="langField" type="text" class="name-textbox textbox" auto-complete options="langAutoComOptions" ng-model="userText" obj="userText" on-select-callback="langSelectCallback" on-change-callback="langSelectCallback" placeholder="type your language here, e.g. English" />
+
+                </div>
+            </div>
+
+            <div class="row margin-bottom-20 register-page" ng-if="!showAddNewLang">
+                <div class="col-md-5"></div>
+                <div class="col-md-7 no-padding-right register-page add-lang">
+                    <a class="add-lang" ng-click="addLangField()">+ another language </a>
+                </div>
+            </div>
+
+            <div class="row margin-bottom-20 darkBgwithText ">
+                This information would allow us to identify interesting (online and offline) activities that would appeal to you. As well as put you in touch with like-minded people, should you be inclined to make new friends
+
+               
+            </div>
+
+            <div class="row margin-bottom-0  register-page">
+                <div class="col-md-5">
+                    My hobbies
+                </div>
+                <div class="col-md-7 no-padding-right register-page">
+                    <div class="panel-group acc-v1" id="accord-hobbies">
+                        <div class="panel panel-default">
+                            <div class="panel-heading" data-toggle="collapse" data-parent="#accord-hobbies" href="#hobbies" onclick="return false;">
+                                <h4 class="panel-title by_editor_ParentCategories">
+                                    <a ng-if="selectedHobbies.length==0" class="accordion-toggle collapsed by-reg-toggle"
+                                       style="padding: 2px 11px;">
+                                        None
+                                    </a>
+
+                                    <a ng-if="selectedHobbies.length > 0 && $index < 3"
+                                       ng-repeat="hobby in selectedHobbies"
+                                       class="accordion-toggle collapsed by-reg-toggle list-inline"
+                                       style="padding: 2px 11px;width:auto">
+                                        {{$root.menuCategoryMap[hobby].displayMenuName}}
+                                        <span ng-if="selectedHobbies.length-1 > $index ">,</span>
+                                    </a>
+                                    <a class="triangle-down collapsed by-reg-triangle" style="padding: 2px 11px;"></a>
+                                </h4>
+                            </div>
+                            <div id="hobbies" class="col-md-12 whiteBg by_editor_SubCategories by_reg_SubCategories panel-collapse collapse">
+                                <div class="panel-body col-md-12" ng-repeat="option in hobbiesOptions" ng-if="option.children.length === 0">
+                                    <input type="checkbox" ng-click="selectHobbies(option)" ng-checked="selectedHobbies && selectedHobbies.indexOf(option.id) !== -1">
+                                    <span style="line-height: 23px;">{{option.displayMenuName}} </span>
+                                </div>
+                                <!--  
+                                <div class="panel-body col-md-12" ng-repeat="option in hobbiesOptions" ng-if="option.children.length > 0">
+                                    <span style="line-height: 23px;">{{option.displayMenuName}} </span>
+                                    <div ng-repeat="option in option.children">
+                                     <input type="checkbox" ng-click="selectHobbies(option)"
+                                           ng-checked="selectedHobbies && selectedHobbies.indexOf(option.id) !== -1">
+                                    <span style="line-height: 23px;">{{option.displayMenuName}}</span>
+                                    </div>
+                                </div>-->
+                                <div class="panel-body col-md-12" style="padding:0px !important;" ng-repeat="option in hobbiesOptions" ng-if="option.children.length > 0">
+
+                                    <div id="#accordion2">
+
+                                        <div style="width:100%; line-height:23px; text-transform:none;  cursor:pointer;padding: 3px 10px 3px 10px;" data-toggle="collapse" data-parent="#accordion2" data-target={{ "#collapse"+option.id}}>{{option.displayMenuName}}
+                                            <a class="triangle-down" style="margin-top: 7px; margin-right: 0px;"></a>
+                                        </div>
+
+                                        <div class="collapse" id={{ "collapse"+option.id}} style="margin-left:8px;">
+                                            <span ng-repeat="option in option.children">
+                                                <div class="clearfix" style="height:5px;"></div>
+                                             <input
+                                                type="checkbox" ng-click="selectHobbies(option)"
+                                                ng-checked="selectedHobbies && selectedHobbies.indexOf(option.id) !== -1">
+                                                <span>{{option.displayMenuName}}</span>
+                                            <div class="clearfix" style="height:5px;"></div>
+                                            </span>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div style="clear:both"></div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="row margin-bottom-20  register-page">
+                <div class="col-md-5">
+
+                </div>
+                <div class="col-md-7 no-padding-right register-page" style="margin-top:-10px;">
+                    <input ng-if="showOtherHobbies || individualInfo.otherHobbies.length > 0" type="text" class="name-textbox textbox" ng-model="individualInfo.otherHobbies[0]" />
+                    <i><a ng-if="!showOtherHobbies && individualInfo.otherHobbies.length == 0"
+                          ng-click="showOtherHobby()">+ other</a></i>
+                </div>
+            </div>
+
+            <div class="row margin-bottom-0  register-page">
+                <div class="col-md-5">
+                    Topic of interests
+                </div>
+                <div class="col-md-7 no-padding-right register-page">
+                    <div class="panel-group acc-v1" id="accord-interest">
+                        <div class="panel panel-default">
+                            <div class="panel-heading" data-toggle="collapse" data-parent="#accord-hobbies" href="#interests" onclick="return false;">
+                                <h4 class="panel-title by_editor_ParentCategories">
+                                    <a ng-if="selectedInterests.length==0" class="accordion-toggle collapsed by-reg-toggle"
+                                       style="padding: 2px 11px;">
+                                        None
+                                    </a>
+
+                                    <a ng-if="selectedInterests.length > 0 && $index < 3"
+                                       ng-repeat="interest in selectedInterests"
+                                       class="accordion-toggle collapsed by-reg-toggle list-inline"
+                                       style="padding: 2px 11px;width:auto">
+                                        {{$root.menuCategoryMap[interest].displayMenuName}}
+                                        <span ng-if="selectedInterests.length-1 > $index ">,</span>
+                                    </a>
+                                    <a class="triangle-down collapsed by-reg-triangle" style="padding: 2px 11px;"></a>
+                                </h4>
+                            </div>
+                            <div id="interests" class="col-md-12 whiteBg by_editor_SubCategories by_reg_SubCategories panel-collapse collapse">
+                                <div class="panel-body col-md-12" ng-repeat="option in interestsOptions">
+                                    <input type="checkbox" ng-click="selectTopicOfInterest(option)" ng-checked="selectedInterests && selectedInterests.indexOf(option.id) !== -1">
+                                    <span style="line-height: 23px;">{{option.displayMenuName}}</span>
+                                </div>
+                            </div>
+                            <div style="clear:both"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row margin-bottom-20  register-page">
+                <div class="col-md-5">
+
+                </div>
+                <div class="col-md-7 no-padding-right register-page" style="margin-top:-10px;">
+                    <input ng-if="showOtherInterest || individualInfo.otherInterests.length > 0" type="text" class="name-textbox textbox" ng-model="individualInfo.otherInterests[0]" />
+                    <i><a ng-if="!showOtherInterest && individualInfo.otherInterests.length == 0"
+                          ng-click="showOtherIntrst()">+ other</a></i>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="col-md-12 whiteBg register-page padding20 borderShadow margin-bottom-20 indvBorderRadius">
+            <div class="addBasicInfo">My story</div>
+
+            <div class="row margin-bottom-20 darkBgwithText ">
+                Please tell us more about yourself. We would like to know what kind of a person you are. What is your life story? How are you coping with your challenges? And what others could learn from your experience.
+            </div>
+
+            <div class="row marginleftMinu4 margin-bottom-20 no-padding register-page byEditor" style="border:1px solid #ccc;">
+                <textarea class="textbox" rows="3" id="registrationDescription" ng-model="basicProfileInfo.description"></textarea>
+
+                <div class="clearfix"></div>
+            </div>
+            <div class="clearfix"></div>
+
+            <div class="row no-padding margin-bottom-20 margin-top-20 marginleft0">
+                <div class="col-md-12 no-padding fontSizeIndi  list-head dp-block">
+                    Profile picture
+                </div>
+
+                <div class="col-md-12 no-padding bg-gray-h1">
+                    <div class="bg-green-h2" style="width: 156px;"></div>
+                </div>
+            </div>
+
+            <div class="row margin-bottom-20 darkBgwithText ">
+                Please upload your profile picture or select avatar
+            </div>
+
+
+            <div class="no-padding margin-bottom-20 register-page by_editor_post_divider" style="text-align:left;">
+                <div class="by-reg-gallery" ng-if="basicProfileInfo.profileImage && profileImage.length===0">
+                    <img class="by-reg-image" ng-if="basicProfileInfo.profileImage.thumbnailImage" ng-src="{{basicProfileInfo.profileImage.thumbnailImage}}" />
+
+                    <!--<img class="by-reg-image" ng-if="!basicProfileInfo.profileImage.thumbnailImage"-->
+                    <!--ng-src="{{basicProfileInfo.profileImage}}"/>-->
+                    <a class="image-fav" ng-if="!profileImage.loading" ng-click="deleteProfileImage()"></a>
+                </div>
+                <div class="by-reg-gallery" ng-repeat="img in profileImage">
+                    <img class="by-reg-image" ng-src="{{img.thumbnailImage}}" />
+                    <a class="image-fav" ng-if="!img.loading" ng-click="deleteProfileImage()"></a>
+                    <a class="by-reg-loadingImage" ng-if="img.loading"></a>
+                </div>
+                <div class="by-reg-uploadLabel" style="text-align:left; width:200px;">
+                    <label class="myLabel" style="background:#ececec;">
+                        <input id="inputImage2" type="file" accept="image/*" load-image="profileImage" resize-max-height="300" resize-max-width="250" resize-quality="0.7" class="btn btn-success register-btn" />
+                        <img src="img/photo.png" width="100%" />
+                        <span style="float: right;max-width: 130px; margin-left: 10px; text-align: left; line-height:17px; color:#000;">
+                            Upload your <br/>profile picture
+                        </span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="row margin-bottom-20">
+                <div class="col-md-2 col-xs-2 col-sm-2 profilePictureIndi" ng-click="selectDefaultImage(avatar.detail)" ng-repeat="avatar in regConfig.defaultAvatars[individualInfo.gender]">
+                    <img ng-src="{{avatar.reg}}" width="100%" alt="">
+                    <br/>
+                    <input type="button" value="select" load-image="profileImage" />
+                </div>
+            </div>
+
+
+            <div class="row no-padding margin-bottom-20 marginleft0">
+                <div class="col-md-12 no-padding fontSizeIndi  list-head dp-block">
+                    Gallery pictures
+                </div>
+
+                <div class="col-md-12 no-padding bg-gray-h1">
+                    <div class="bg-green-h2" style="width: 156px;"></div>
+                </div>
+            </div>
+
+            <div class="row margin-bottom-20 darkBgwithText ">
+                Please upload pictures from your photo gallery
+            </div>
+
+
+            <div class="no-padding  register-page by_editor_post_divider" style="text-align:left;">
+                <div class="by-reg-gallery" ng-repeat="img in basicProfileInfo.photoGalleryURLs">
+                    <img class="by-reg-image" ng-src="{{img.thumbnailImage}}" />
+                    <a class="image-fav" ng-click="deleteGalleryImage(img)"></a>
+                </div>
+                <div class="by-reg-gallery" ng-repeat="img in galleryImages">
+                    <img class="by-reg-image" ng-src="{{img.thumbnailImage}}" />
+                    <a class="image-fav" ng-if="!img.loading" ng-click="deleteGalleryImage(img)"></a>
+                    <a class="by-reg-loadingImage" ng-if="img.loading"></a>
+                </div>
+                <div class="by-reg-uploadLabel" style="text-align:left; width:250px;">
+                    <label class="myLabel" style="background:#ececec">
+                        <input id="inputImage4" type="file" accept="image/*" multiple load-image="galleryImages" resize-max-height="300" resize-max-width="250" resize-quality="0.7" class="btn btn-success register-btn" imgArray="$parent.galleryImages" /> <img src="img/photo.png" width="100%" /> <span style="float: right; max-width: 180px; margin-left: 10px; text-align: left; line-height: 17px; color: #000;">
+                            Upload multiple<br/> photos for your gallery
+                    </span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-md-12 no-padding margin-top-0 margin-bottom-20">
+            <input type="button" value="Done" class="nextButton by_btn_submit" ng-click="postUserProfile(individualForm)" />
+            <input type="button" value="Previous" class="nextButton by_btn_submit" ng-click="cancel();" />
+            <div class="clearfix"></div>
+        </div>
+
+    </form>
+
+</div>
