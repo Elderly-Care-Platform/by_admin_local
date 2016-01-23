@@ -1,0 +1,53 @@
+<div class="container-fluid margin-top-20" ng-controller="UserTypesCtrl">
+	<div id="wrapper" class="row-fluid" ng-init="displayUserTypes();">
+		<img alt="loading" src="../../../byadmin/img/loading.gif"
+			ng-if="status == 'loading'">
+		<form>
+			<div class="by_userType">
+				<div class="by_userTypeHead">I am an Individual</div>
+				<div class="by-reg-user-type"
+					ng-repeat="type in individualUserType">
+					<label>{{type.value}} <input type="checkbox"
+						class="checkBoxOne" id="{{type.key}}" ng-model="type.selected"
+						ng-change="selectUserType(this)" ng-checked="userType.indexOf(type.key) > -1" />
+					</label>
+					<div class="clearfix"></div>
+				</div>
+			</div>
+			<div class="by_userType">
+				<div  ng-repeat="type in profUserType">
+					<label >{{type.value}} 
+					<input type="checkbox" class="checkBoxTwo" id="{{type.key}}"
+						ng-model="type.selected" ng-change="selectUserType(this)" ng-checked="userType.indexOf(type.key) > -1" />
+					</label>
+					<div class="clearfix"></div>
+				</div>
+			</div>
+			<div class="by_userType">
+				<div class="by_userTypeHead">I represent an Institution. We provide:</div>
+				<div 
+					ng-repeat="type in housingUserType">
+					<label>{{type.value}} <input type="checkbox"
+						class="checkBoxTwo" id="{{type.key}}" ng-model="type.selected"
+						ng-change="selectUserType(this)"  ng-checked="userType.indexOf(type.key) > -1"/>
+					</label>
+					<div class="clearfix"></div>
+				</div>
+				<div 
+					ng-repeat="type in institutionUserType">
+					<label>{{type.value}} <input type="checkbox"
+						class="checkBoxTwo" id="{{type.key}}" ng-model="type.selected"
+						ng-change="selectUserType(this)" ng-checked="userType.indexOf(type.key) > -1"/>
+					</label>
+					<div class="clearfix"></div>
+				</div>
+			</div>
+			<div class="col-md-12 no-padding margin-top-0 margin-bottom-20">
+				<input type="button" value="Next" class="nextButton" ng-click="submit()"/>
+				<input type="button" value="Previous" class="nextButton" ng-click="cancel()"/>
+				<div class="clearfix"></div>
+			</div>
+
+		</form>
+	</div>
+</div>

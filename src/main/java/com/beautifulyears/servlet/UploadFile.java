@@ -3,23 +3,25 @@ package com.beautifulyears.servlet;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 import javax.imageio.ImageIO;
+import javax.imageio.ImageReader;
+import javax.imageio.stream.ImageInputStream;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import net.coobird.thumbnailator.Thumbnails;
 
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileItemFactory;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.log4j.Logger;
+import org.imgscalr.Scalr;
 
 import com.beautifulyears.constants.BYConstants;
 
@@ -79,29 +81,24 @@ public class UploadFile extends HttpServlet {
 						if (null != request.getParameter("transcoding")
 								&& true == Boolean.valueOf(request
 										.getParameter("transcoding"))) {
-							resizeImage(newFile, TITLE_IMG_WIDTH,
-									TITLE_IMG_HEIGHT, uploadDir, fname,
-									extension);
+							if (isAnimatedGif(newFile)) {
+								File titleImage = new File(uploadDir + File.separator + fname + "_" + TITLE_IMG_WIDTH
+										+ "_" + TITLE_IMG_HEIGHT + "." + extension);
+								Files.copy(newFile.toPath(), titleImage.toPath());
+								
+								File thumbnail = new File(uploadDir + File.separator + fname + "_" + THUMBNAIL_IMG_WIDTH
+										+ "_" + THUMBNAIL_IMG_HEIGHT + "." + extension);
+								Files.copy(newFile.toPath(), thumbnail.toPath());
+							}else {
+								resizeImage(newFile, TITLE_IMG_WIDTH,
+										TITLE_IMG_HEIGHT, uploadDir, fname,
+										extension);
 
-							// BufferedImage resizeImageJpg =
-							// resizeImage(newFile,
-							// TITLE_IMG_WIDTH, TITLE_IMG_HEIGHT);
-							// ImageIO.write(resizeImageJpg, "jpg", new File(
-							// uploadDir + File.separator + fname + "_"
-							// + TITLE_IMG_WIDTH + "_"
-							// + TITLE_IMG_HEIGHT + "."
-							// + extension));
-							// resizeImageJpg = resizeImage(newFile,
-							// THUMBNAIL_IMG_WIDTH, THUMBNAIL_IMG_HEIGHT);
-							//
-							// ImageIO.write(resizeImageJpg, "jpg", new File(
-							// uploadDir + File.separator + fname + "_"
-							// + THUMBNAIL_IMG_WIDTH + "_"
-							// + THUMBNAIL_IMG_HEIGHT + "."
-							// + extension));
-							resizeImage(newFile, THUMBNAIL_IMG_WIDTH,
-									THUMBNAIL_IMG_HEIGHT, uploadDir, fname,
-									extension);
+								resizeImage(newFile, THUMBNAIL_IMG_WIDTH,
+										THUMBNAIL_IMG_HEIGHT, uploadDir, fname,
+										extension);
+							}
+							
 						}
 
 						if (null != request.getParameter("type")
@@ -148,6 +145,23 @@ public class UploadFile extends HttpServlet {
 		}
 	}
 
+	private boolean isAnimatedGif(File f) {
+		ImageReader is = ImageIO.getImageReadersBySuffix("GIF").next();
+		ImageInputStream iis;
+		boolean isAnimatedGif = false;
+		try {
+			iis = ImageIO.createImageInputStream(f);
+			is.setInput(iis);
+			int images = is.getNumImages(true);
+			if (images > 1) {
+				isAnimatedGif = true;
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return isAnimatedGif;
+	}
+
 	private void resizeImage(File newFile, int width, int height,
 			String uploadDir, UUID fname, String extension) throws IOException {
 
@@ -181,17 +195,27 @@ public class UploadFile extends HttpServlet {
 			newWidth = 0;
 		}
 		if (newHeight != 0 && newWidth != 0) {
-			Thumbnails
-			.of(newFile)
-			.size(newWidth, newHeight)
-			.toFile(uploadDir + File.separator + fname + "_" + width + "_"
-					+ height + "." + extension);
-		}else{
-			ImageIO.write(image, "jpg", new File(
-					 uploadDir + File.separator + fname + "_" + width + "_"
-								+ height + "." + extension));
+			BufferedImage thumbnail = Scalr.resize(image,
+					Scalr.Method.ULTRA_QUALITY, Scalr.Mode.FIT_TO_WIDTH,
+					newWidth, newHeight, Scalr.OP_ANTIALIAS);
+			File f = new File(uploadDir + File.separator + fname + "_" + width
+					+ "_" + height + "." + extension);
+			ImageIO.write(thumbnail, extension, f);
+
+			// Thumbnails
+			// .of(newFile)
+			// .size(newWidth, newHeight)
+			// .toFile(uploadDir + File.separator + fname + "_" + width + "_"
+			// + height + "." + extension);
+		} else {
+			BufferedImage thumbnail = Scalr.resize(image,
+					Scalr.Method.ULTRA_QUALITY, Scalr.Mode.FIT_TO_WIDTH, width,
+					height, Scalr.OP_ANTIALIAS);
+			File f = new File(uploadDir + File.separator + fname + "_" + width
+					+ "_" + height + "." + extension);
+			ImageIO.write(thumbnail, extension, f);
 		}
-		
+
 	}
 
 	// private static BufferedImage resizeImage(File originalImage, int

@@ -1,16 +1,11 @@
-<script type="text/javascript">
-
-</script>
-
+<script type="text/javascript"></script>
 <div class="container-fluid">
     <div id="wrapper" class="row-fluid">
         <h3 class='menu'>Edit {{currentDiscuss.discussType == 'A' &&
             'Article' || currentDiscuss.discussType == 'Q' && 'Question' ||
-            'Post'}}</h3>
-
+            'Post'}}
+        </h3>
         <div class="alert alert-error" ng-show="error">{{errorMessage}}</div>
-
-
         <table style="width: 900px;">
             <tr ng-if="currentDiscuss.discussType == 'P'">
                 <td><label class="control-label" for="title"><strong>Title</strong></label>
@@ -20,81 +15,71 @@
             <tr ng-if="currentDiscuss.discussType == 'P' && currentDiscuss.linkInfo != undefined">
                 <td colspan="2">
                     <div ng-include="'views/discuss/common/ShareLinkEditor.html'" ng-if="currentDiscuss.linkInfo"
-                         ng-init="linkInfo=currentDiscuss.linkInfo"></div>
+                        ng-init="linkInfo=currentDiscuss.linkInfo"></div>
                 </td>
             </tr>
-
-
             <tr ng-if="currentDiscuss.discussType == 'P'">
                 <td><label class="control-label" for="title"><strong>Title Photo</strong></label></td>
                 <td>
                     <form id="UploadImage12" action="UploadFile" method="post" enctype="multipart/form-data">
                         <label class="myLabel"
-                               ng-style="{'background-image': 'url({{ currentDiscuss.articlePhotoFilename.original }})'}">
-                            <input name="sp" id="sp" type="file" required onchange="javascript:uploadImage(this)"/>
-							<span>Please upload<br> your main <br>photo (optional)
-							</span>
+                            ng-style="{'background-image': 'url({{ currentDiscuss.articlePhotoFilename.original }})'}">
+                        <input name="sp" id="sp" type="file" required onchange="javascript:uploadImage(this)"/>
+                        <span>Please upload<br> your main <br>photo (optional)
+                        </span>
                         </label>
                     </form>
                     <input type="text" id="articleTitleImage" ng-model="currentDiscuss.newArticlePhotoFilename" value=""
-                           style="display: none" onchange="javascript:previewImage(this)"/>
+                        style="display: none" onchange="javascript:previewImage(this)"/>
                 </td>
             </tr>
-
             <tr>
                 <td><label class="control-label" for="title"><strong>Withdraw</strong></label>
                 </td>
                 <td><input type="checkbox" ng-model="currentDiscuss.status" name="status"
-                           ng-checked="currentDiscuss.status" id="status" style="vertical-align: top;"></td>
+                    ng-checked="currentDiscuss.status" id="status" style="vertical-align: top;"></td>
             </tr>
-
             <tr>
                 <td><label class="control-label" for="title"><strong>Featured</strong></label>
                 </td>
                 <td><input type="checkbox" ng-model="currentDiscuss.featured" name="featured"
-                           ng-checked="currentDiscuss.featured" id="featured" style="vertical-align: top;"></td>
+                    ng-checked="currentDiscuss.featured" id="featured" style="vertical-align: top;"></td>
             </tr>
-
             <tr>
                 <td><label class="control-label" for="title"><strong>Announcement</strong></label>
                 </td>
                 <td><input type="checkbox" ng-model="currentDiscuss.promotion" name="promotion"
-                           ng-checked="currentDiscuss.promotion" id="promotion" style="vertical-align: top;"></td>
+                    ng-checked="currentDiscuss.promotion" id="promotion" style="vertical-align: top;"></td>
             </tr>
-            
             <tr>
                 <td><label class="control-label" for="title"><strong>Modified Date</strong></label>
                 </td>
                 <td>
-                	year <input ng-model="modifiedDate.y" style="max-width: 40px;">
-                	month <input ng-model="modifiedDate.m"  style="max-width: 40px;">
-                	day <input ng-model="modifiedDate.d"  style="max-width: 40px;">&nbsp;&nbsp;&nbsp;</br></br>
-                	hour <input ng-model="modifiedDate.h"  style="max-width: 40px;">
-                	min. <input ng-model="modifiedDate.mi"  style="max-width: 40px;">
-                	sec. <input ng-model="modifiedDate.s"  style="max-width: 40px;">
-                	ms <input ng-model="modifiedDate.ms"  style="max-width: 40px;"></br></br>
-                	<input type="button" value="Copy Created Time" ng-click="copyDate('createAt')">
-                	<input type="button" value="Copy Current Time" ng-click="copyDate('now')">
+                    year <input ng-model="modifiedDate.y" style="max-width: 40px;">
+                    month <input ng-model="modifiedDate.m"  style="max-width: 40px;">
+                    day <input ng-model="modifiedDate.d"  style="max-width: 40px;">&nbsp;&nbsp;&nbsp;</br></br>
+                    hour <input ng-model="modifiedDate.h"  style="max-width: 40px;">
+                    min. <input ng-model="modifiedDate.mi"  style="max-width: 40px;">
+                    sec. <input ng-model="modifiedDate.s"  style="max-width: 40px;">
+                    ms <input ng-model="modifiedDate.ms"  style="max-width: 40px;"></br></br>
+                    <input type="button" value="Copy Created Time" ng-click="copyDate('createAt')">
+                    <input type="button" value="Copy Current Time" ng-click="copyDate('now')">
                 </td>
             </tr>
-
             <tr>
                 <td colspan="2">
                     <div class="controls">
                         <a id="edit_text">Edit Text</a>
                     </div>
-
                     <div class="control-group">
                         <label class="control-label" for="text"></label>
-
                         <div class="controls byEditor" id="mce">
                             <textarea data-ui-tinymce id="edittext" name="edittext"
-                                      ng-model="currentDiscuss.text"></textarea>
+                                ng-model="currentDiscuss.text"></textarea>
                         </div>
                     </div>
                 </td>
             </tr>
-
             <tr>
                 <td colspan="2">
                     <div class="col-md-12 no-padding margin-bottom-35">
@@ -102,89 +87,73 @@
                             <div class="panel panel-default by_accordian" ng-repeat="category in $root.mainMenu">
                                 <div class="panel-heading">
                                     <h4 class="panel-title by_editor_ParentCategories" ng-if="category.children.length <= 0">
-                                        <!--<label ng-if="category.parentMenuId">-->
-                                            <!--{{$root.menuCategoryMap[category.parentMenuId].displayMenuName + " >> " +-->
-                                            <!--category.displayMenuName}}-->
-                                            <!--<input type="checkbox" ng-click="selectTag($event, category)"-->
-                                                   <!--value="{{category.id}}" ng-checked="selectedMenuList[category.id] != undefined">-->
-                                        <!--</label>-->
                                         <label>
-                                            {{category.displayMenuName}}
-                                            <input type="checkbox" ng-click="selectTag($event, category)"
-                                                   value="{{category.id}}" ng-checked="selectedMenuList[category.id] != undefined">
+                                        {{category.displayMenuName}}
+                                        <input type="checkbox" ng-click="selectTag($event, category)"
+                                            value="{{category.id}}" ng-checked="selectedMenuList[category.id] != undefined">
                                         </label>
                                     </h4>
                                     <h4 class="panel-title by_editor_ParentCategories" ng-if="category.children.length > 0">
                                         <input type="checkbox" ng-click="selectTag($event, category)"
-                                               value="{{category.id}}" ng-checked="selectedMenuList[category.id] != undefined">
+                                            value="{{category.id}}" ng-checked="selectedMenuList[category.id] != undefined">
                                         <a class="accordion-toggle collapsed" data-toggle="collapse"
-                                           data-parent="#accordion-1" href={{"#"+category.id}} onclick="return false;">
-                                            {{category.displayMenuName}}
+                                            data-parent="#accordion-1" href={{"#"+category.id}} onclick="return false;">
+                                        {{category.displayMenuName}}
                                         </a>
                                         <a ng-if="category.children.length > 0" class="triangle-down accordion-toggle collapsed"
                                             data-toggle="collapse" data-parent="#accordion-1" href={{"#"+category.id}}
                                             onclick="return false;"></a>
-                                        <!--<a ng-if="category.parentMenuId"-->
-                                        <!--class="accordion-toggle collapsed" data-toggle="collapse"-->
-                                        <!--data-parent="#accordion-1" href={{"#"+category.id}} onclick="return false;">-->
-                                        <!--{{$root.menuCategoryMap[category.parentMenuId].displayMenuName+ " >> " +-->
-                                        <!--category.displayMenuName}} </a> -->
                                     </h4>
                                 </div>
-                                <div id={{category.id}} class="col-md-12 whiteBg by_editor_SubCategories panel-collapse collapse" id="accordion-2">
+                                <div id="{{category.id}}" class="col-md-12 whiteBg by_editor_SubCategories panel-collapse collapse" id="accordion-2">
                                     <div ng-repeat="category1 in category.children" ng-if="category1.module===0" class="panel-body col-md-12">
                                         <input type="checkbox" ng-click="selectTag($event, category1)"
-                                               value="{{category1.id}}" ng-checked="selectedMenuList[category1.id] != undefined">
+                                            value="{{category1.id}}" ng-checked="selectedMenuList[category1.id] != undefined">
                                         <a class="accordion-toggle collapsed" data-toggle="collapse"
-                                           data-parent="#accordion-2" href={{"#"+category1.id}} onclick="return false;">
-                                            {{category1.displayMenuName}}
+                                            data-parent="#accordion-2" href={{"#"+category1.id}} onclick="return false;">
+                                        {{category1.displayMenuName}}
                                         </a>
                                         <a ng-if="category1.children.length > 0" class="triangle-down accordion-toggle collapsed"
-                                           data-toggle="collapse" data-parent="#accordion-2" href={{"#"+category1.id}}
-                                           onclick="return false;"></a>
-
-                                        <!--<h4>-->
-                                            <!--<input type="checkbox"-->
-                                                   <!--ng-click="selectTag($event, category1)"-->
-                                                   <!--value={{category1.id}}-->
-                                                   <!--ng-checked="selectedMenuList[category1.id] != undefined">-->
-                                            <!--<span>{{category1.displayMenuName}}</span>-->
-                                            <!--<a class="triangle-down accordion-toggle collapsed" ng-if="category1.children.length > 0"-->
-                                               <!--data-toggle="collapse" data-parent="#accordion-2" href={{"#"+category1.id}}-->
-                                               <!--onclick="return false;"></a>-->
-                                        <!--</h4>-->
-
-                                        <div id={{category1.id}} ng-if="category1.children.length > 0"
-                                             class="col-md-12 whiteBg by_editor_SubCategories panel-collapse collapse" id="accordion-3">
+                                            data-toggle="collapse" data-parent="#accordion-2" href={{"#"+category1.id}}
+                                            onclick="return false;"></a>
+                                        <div id="{{category1.id}}" ng-if="category1.children.length > 0"
+                                            class="col-md-12 whiteBg by_editor_SubCategories panel-collapse collapse" id="accordion-3">
                                             <div ng-repeat="category2 in category1.children" ng-if="category2.module===0" class="panel-body col-md-12" >
                                                 <input type="checkbox" ng-click="selectTag($event, category2)"
-                                                       value="{{category2.id}}" ng-checked="selectedMenuList[category2.id] != undefined">
+                                                    value="{{category2.id}}" ng-checked="selectedMenuList[category2.id] != undefined">
                                                 <a class="accordion-toggle collapsed" data-toggle="collapse"
-                                                   data-parent="#accordion-3" href={{"#"+category2.id}} onclick="return false;">
-                                                    {{category2.displayMenuName}}
+                                                    data-parent="#accordion-3" href={{"#"+category2.id}} onclick="return false;">
+                                                {{category2.displayMenuName}}
                                                 </a>
                                                 <a ng-if="category2.children.length > 0" class="triangle-down accordion-toggle collapsed"
-                                                   data-toggle="collapse" data-parent="#accordion-3" href={{"#"+category2.id}}
-                                                   onclick="return false;"></a>
-
-                                                <!--<h4>-->
-                                                    <!--<input type="checkbox" ng-click="selectTag($event, category2)"-->
-                                                           <!--value={{category2.id}} ng-checked="selectedMenuList[category2.id] != undefined">-->
-                                                    <!--<span>{{category2.displayMenuName}}</span>-->
-                                                    <!--<a class="triangle-down accordion-toggle collapsed" ng-if="category2.children.length > 0"-->
-                                                       <!--data-toggle="collapse" data-parent="#accordion-2" href={{"#"+category2.id}}-->
-                                                       <!--onclick="return false;"></a>-->
-                                                <!--</h4>-->
-
-                                                <div ng-if="category2.children.length > 0" id={{category2.id}}
-                                                     class="col-md-12 whiteBg by_editor_SubCategories panel-collapse collapse">
+                                                    data-toggle="collapse" data-parent="#accordion-3" href={{"#"+category2.id}}
+                                                    onclick="return false;"></a>
+                                                <div ng-if="category2.children.length > 0" id="{{category2.id}}"
+                                                    class="col-md-12 whiteBg by_editor_SubCategories panel-collapse collapse" id="accordion-4">
                                                     <div ng-repeat="category3 in category2.children"
-                                                         ng-if="category3.module===0" class="panel-body col-md-12">
+                                                        ng-if="category3.module===0" class="panel-body col-md-12">
                                                         <input type="checkbox"
-                                                               ng-click="selectTag($event, category3)"
-                                                               value={{category3.id}}
-                                                               ng-checked="selectedMenuList[category3.id] != undefined">
-                                                        <span>{{category3.displayMenuName}}</span>
+                                                            ng-click="selectTag($event, category3)"
+                                                            value={{category3.id}}
+                                                            ng-checked="selectedMenuList[category3.id] != undefined"> 
+                                                        <a class="accordion-toggle collapsed" data-toggle="collapse"
+                                                            data-parent="#accordion-4" href={{"#"+category3.id}} onclick="return false;">
+                                                        {{category3.displayMenuName}}
+                                                        </a>
+                                                        <a ng-if="category3.children.length > 0" class="triangle-down accordion-toggle collapsed"
+                                                            data-toggle="collapse" data-parent="#accordion-4" href={{"#"+category3.id}}
+                                                            onclick="return false;"></a>
+                                                        <div ng-if="category3.children.length > 0" id="{{category3.id}}"
+                                                            class="col-md-12 whiteBg by_editor_SubCategories panel-collapse collapse">
+                                                            <div ng-repeat="category4 in category3.children"
+                                                                ng-if="category4.module===0" class="panel-body col-md-12">
+                                                                <input type="checkbox"
+                                                                    ng-click="selectTag($event, category4)"
+                                                                    value={{category4.id}}
+                                                                    ng-checked="selectedMenuList[category4.id] != undefined">
+                                                                <span>{{category4.displayMenuName}}</span>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -197,26 +166,19 @@
                     </div>
                 </td>
             </tr>
-
             <tr>
                 <td colspan="2" style="text-align: right;">
-                    <a ng-click="editdiscuss()" class="btn btn-primary">Save Changes</a></td>
+                    <a ng-click="editdiscuss()" class="btn btn-primary">Save Changes</a>
+                </td>
             </tr>
-
         </table>
-
-
         <div class="control-group" ng-hide="1">
             <label class="control-label" for="text"><strong>Text</strong></label>
-
             <div class="controls">
-				<textarea id="texta" name="texta" rows="0" columns="0"
-                          ng-model="currentDiscuss.text">{{currentDiscuss.text}}</textarea>
-
+                <textarea id="texta" name="texta" rows="0" columns="0"
+                    ng-model="currentDiscuss.text">{{currentDiscuss.text}}</textarea>
             </div>
         </div>
-
-
         <script type="text/javascript">
             var isLoaded = false;
             function uploadImage(input) {
@@ -247,14 +209,14 @@
                         });
                         isLoaded = true;
                     }
-
+            
                     $('#UploadImage12').submit();
-
+            
                     //input.form.submit();
                 }
             }
-
-
+            
+            
             function previewImage(input) {
                 var input = input || document.querySelector("input#sp");
                 if ((input.files && input.files[0]) || input.value) {
@@ -263,11 +225,11 @@
                         $('.myLabel').css('background-image',
                                 'url(' + e.target.result + ')')
                     }
-
+            
                     reader.readAsDataURL(input.files[0] || input.value);
                 }
             }
-
+            
             BYAdmin.addEditor({"editorTextArea": "edittext"});
             $('#edit_text').click(function () {
                 editor_content = $('#texta').val();
