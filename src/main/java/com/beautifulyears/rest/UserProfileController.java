@@ -260,10 +260,11 @@ public class UserProfileController {
 //				if (null != currentUser
 //						&& SessionController.checkCurrentSessionFor(req,
 //								"SUBMIT_PROFILE")) {
-					if (userProfile.getUserId().equals(currentUser.getId())) {
+//					if (userProfile.getUserId().equals(currentUser.getId())) {
 						profile = userProfileRepository.findByUserId(userId);
 
 						if (profile != null) {
+							profile.setUserTypes(userProfile.getUserTypes());
 							userProfile.getBasicProfileInfo()
 									.setShortDescription(
 											getShortDescription(userProfile));
@@ -317,9 +318,9 @@ public class UserProfileController {
 //					} else {
 //						throw new BYException(BYErrorCodes.USER_NOT_AUTHORIZED);
 //					}
-				} else {
-					throw new BYException(BYErrorCodes.USER_LOGIN_REQUIRED);
-				}
+//				} else {
+//					throw new BYException(BYErrorCodes.USER_LOGIN_REQUIRED);
+//				}
 			}
 
 			else {
