@@ -15,6 +15,10 @@ BY.config.regConfig.formConfig = {
 
 }
 
+BY.config.regConfig.seniorLiving = {
+    'id': '55bcadaee4b08970a736784c'
+}
+
 BY.config.regConfig.userTypeConfig = {
     '-1': {
         'type': '-1',

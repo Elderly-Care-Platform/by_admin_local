@@ -1,0 +1,24 @@
+<div class="row indvspacing" ng-controller="regHousingCtrl">
+	<div class="col-md-2" >
+		<!-- profile types with housing -->
+            <div class="by_profileDetailed_menu reg-menu-1 by_profileDetailed_menuActive" ng-if="housingFacilityTabs.length == 0">
+                <a href="#/userDetailProfile/{{userId}}">Housing main</a>
+            </div>
+
+
+            <div class="by_profileDetailed_menu  reg-menu-1 housingTab{{$index+1}}" ng-if="housingFacilityTabs.length > 0"
+                ng-repeat="facilityTab in housingFacilityTabs track by $index" ng-class="{'by_profileDetailed_menuActive':facilityIdx===$index}">
+                <a href="#/housing/{{userId}}/{{$index}}">{{facilityTab}}</a>
+            </div>   
+            <!-- profile types with housing -->
+	</div>
+    <form class="third-register-page grayRegisterBgLight col-md-10" name="housingForm" novalidate
+          style="background:transparent;">
+        <div class="col-md-12 whiteBg register-page padding20 borderShadow margin-bottom-20 indvBorderRadius"
+             style="padding-bottom:0px; border-bottom:0px;">
+            <div class="addBasicInfo">Housing Info</div>
+            <div ng-include="views.corporateFormView"></div>
+            <div ng-include="views.facilityFormView"></div>
+        </div>
+    </form>
+</div>

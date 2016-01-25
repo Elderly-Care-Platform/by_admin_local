@@ -1,7 +1,7 @@
 <div class="container-fluid margin-top-20" ng-controller="UserProfileInfoCtrl">
 	
-	<div ng-if="profile.userTypes[0] == 0 || profile.userTypes[0] == 1 || profile.userTypes[0] == 2" ng-include="'views/userDetails/UserProfilesIndividual.html'" ></div>
-	<div ng-if="profile.userTypes[0] == 7" ng-include="'views/userDetails/UserProfilesProfessional.html'" ></div>
-	<div ng-if="profile.userTypes[0] == 3" ng-include="'views/userDetails/UserProfilesHousing.html'"></div>
-	<div ng-if="profile.userTypes[0] == 4" ng-include="'views/userDetails/UserProfilesInstitution.html'"></div>
+	<div ng-if="profile.userTypes[0] == 0 || profile.userTypes[0] == 1 || profile.userTypes[0] == 2" ng-include="'views/userDetails/individual/UserProfilesIndividual.html'" ></div>
+	<div ng-if="profile.userTypes[0] == 7" ng-include="'views/userDetails/professional/UserProfilesProfessional.html'" ></div>
+	<div ng-if="profile.userTypes[0] == 3" ng-include="'views/userDetails/housing/UserProfilesHousing.html'"></div>
+	<div ng-if="profile.userTypes[0] == 4" ng-include="'views/userDetails/institution/UserProfilesInstitution.html'"></div>
 </div>
