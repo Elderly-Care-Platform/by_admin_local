@@ -32,8 +32,7 @@
 		<div class="col-md-12 margin-bottom-20  register-page">
 			<div class="col-md-5 no-padding">Country</div>
 			<div class="col-md-7 no-padding register-page">
-				<input type="text" class="username-textbox textbox"
-					ng-model="basicProfileInfo.primaryUserAddress.country" />
+				<input type="text" class="username-textbox textbox" ng-model="basicProfileInfo.primaryUserAddress.country" />
 			</div>
 		</div>
 
@@ -41,19 +40,16 @@
 			<div class="col-md-5 no-padding">Zip</div>
 			<div class="col-md-7 no-padding register-page">
 				<input type="text" class="username-textbox textbox"
-					ng-model="basicProfileInfo.primaryUserAddress.zip"
-					style="width: 50%;" /> <input type="button"
-					class="btn btn-success pull-right register-btn" value="Get address"
-					style="padding: 4px 12px;"
-					ng-click="getLocationByPincode($event, address)">
+					ng-model="basicProfileInfo.primaryUserAddress.zip" style="width: 50%;" />
+				<input type="button" class="btn btn-success pull-right register-btn" value="Get address"
+					style="padding: 4px 12px;" ng-click="getLocationByPincode($event, address)">
 			</div>
 		</div>
 
 		<div class="col-md-12 margin-bottom-20  register-page">
 			<div class="col-md-5 no-padding">City</div>
 			<div class="col-md-7 no-padding register-page">
-				<input type="text" class="username-textbox textbox"
-					ng-model="basicProfileInfo.primaryUserAddress.city" />
+				<input type="text" class="username-textbox textbox" ng-model="basicProfileInfo.primaryUserAddress.city" />
 			</div>
 		</div>
 
@@ -62,7 +58,7 @@
 			<div class="col-md-7 no-padding register-page">
 				<input type="text"
 					ng-model="basicProfileInfo.primaryUserAddress.locality"
-					class="name-textbox textbox" 
+					class="name-textbox textbox " 
 					placeholder="Locality" />
 			</div>
 		</div>
@@ -79,10 +75,10 @@
 			<div class="col-md-5 no-padding ">Phone number</div>
 			<div class="col-md-7  no-padding register-page">
 				<input type="text" class="username-textbox textbox"
-					name="primaryTel" ng-model="basicProfileInfo.primaryPhoneNo"
+					name="corporateTel" ng-model="basicProfileInfo.primaryPhoneNo"
 					placeholder="Telephone number" ng-pattern="/^[+\d-]*\d[\d-]$/"
-					maxlength="17" minlength="10"> <span
-					ng-show="(individualForm.primaryTel.$invalid || individualForm.primaryTel.$error.pattern) && submitted"
+					maxlength="17" minlength="10">
+				<span ng-show="(institutionForm.corporateTel.$invalid || institutionForm.corporateTel.$error.pattern) && submitted"
 					class="errorRed">Not a valid number!</span>
 			</div>
 		</div>
@@ -92,11 +88,11 @@
 			<div class="col-md-5  no-padding">Additional Phone Number</div>
 			<div class="col-md-7  no-padding register-page">
 				<input type="text" class="username-textbox textbox"
-					name="{{'tel'+$index}}"
+					name="{{'corporateTel'+$index}}"
 					ng-model="basicProfileInfo.secondaryPhoneNos[$index]"
 					placeholder="Telephone number" ng-pattern="/^[+\d-]*\d[\d-]$/"
-					maxlength="17" minlength="10" /> <span
-					ng-show="(individualForm.{{'tel'+$index}}.$invalid || individualForm.{{'tel'+$index}}.$error.pattern) && submitted"
+					maxlength="17" minlength="10" />
+				<span ng-show="(institutionForm.{{'corporateTel'+$index}}.$invalid || institutionForm.{{'corporateTel'+$index}}.$error.pattern) && submitted"
 					class="errorRed">Not a valid number!</span>
 			</div>
 		</div>
@@ -105,7 +101,7 @@
 			style="margin-top: -10px;">
 			<div class="col-md-5  no-padding"></div>
 			<div class="col-md-7  no-padding register-page">
-				<a class="add-phone" ng-click="addPhoneNumber()">+ add another
+				<a class="add-phone" ng-click="addPhoneNumber(basicProfileInfo.secondaryPhoneNos)">+ add another
 					phone number</a>
 			</div>
 		</div>
@@ -114,9 +110,9 @@
 			<div class="col-md-5  no-padding">Email ID</div>
 			<div class="col-md-7  no-padding register-page">
 				<input type="email" class="username-textbox textbox"
-					name="primaryEmail" ng-model="basicProfileInfo.primaryEmail"
-					placeholder="Email" /> <span
-					ng-show="individualForm.primaryEmail.$error.email && submitted"
+					name="corporateEmail" ng-model="basicProfileInfo.primaryEmail"
+					placeholder="Email" />
+				<span ng-show="institutionForm.corporateEmail.$error.email && submitted"
 					class="errorRed"> Not valid Email! </span>
 			</div>
 		</div>
@@ -126,10 +122,10 @@
 			<div class="col-md-5  no-padding">Additional Email ID</div>
 			<div class="col-md-7  no-padding register-page">
 				<input type="email" class="username-textbox textbox"
-					name="{{'email'+$index}}"
+					name="{{'corporateEmail'+$index}}"
 					ng-model="basicProfileInfo.secondaryEmails[$index]"
 					placeholder="Email" /> <span
-					ng-show="individualForm.{{'email'+$index}}.$error.email && submitted"
+					ng-show="institutionForm.{{'corporateEmail'+$index}}.$error.email && submitted"
 					class="errorRed">Not valid Email!</span>
 			</div>
 		</div>
@@ -138,7 +134,7 @@
 			style="margin-top: -10px;">
 			<div class="col-md-5  no-padding"></div>
 			<div class="col-md-7  no-padding register-page">
-				<a class="add-email" ng-click="addEmail()">+ add another email
+				<a class="add-email" ng-click="addEmail(basicProfileInfo.secondaryEmails)">+ add another email
 					id</a>
 			</div>
 		</div>

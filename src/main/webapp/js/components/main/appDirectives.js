@@ -1,5 +1,17 @@
 adminControllers.directive('autoComplete', function ($timeout) {
-       
+        //return function(scope, iElement, iAttrs) {
+        //    iElement.autocomplete({
+        //        source: scope[iAttrs.options],
+        //        select: function(event, item) {
+        //            $timeout(function() {
+        //                iElement.trigger(event, item);
+        //                item.item.selected = true;
+        //                scope.selectServiceType(item.item);
+        //            }, 0);
+        //        }
+        //    });
+        //};
+
         return {
             scope: {
                 options: '=?',
@@ -19,9 +31,9 @@ adminControllers.directive('autoComplete', function ($timeout) {
                             scope.onSelectCallback(item.item, scope.obj, oldVal);
                         }, 0);
                     },
-                    change: function(event, item){
+                    change: function (event, item) {
                         console.log(item);
-                        if(scope.onChangeCallback){
+                        if (scope.onChangeCallback) {
                             scope.onChangeCallback(item.item, scope.obj, oldVal);
                         }
                     }
@@ -29,7 +41,6 @@ adminControllers.directive('autoComplete', function ($timeout) {
             }
         };
     });
-
 adminControllers.directive('formatAddress', function () {
         return {
             scope: {
@@ -113,7 +124,7 @@ adminControllers.directive('validateUserName', function(){
         };
     });
     
-adminControllers.directive('loadImage', function($q, $http, $timeout) {
+adminControllers.directive('loadImage', function ($q, $http, $timeout) {
         'use strict'
 
         var URL = window.URL || window.webkitURL;
@@ -126,26 +137,27 @@ adminControllers.directive('loadImage', function($q, $http, $timeout) {
             restrict: 'A',
             scope: {
                 loadImage: '=',
-                imgArray:'=?'
+                imgArray: '=?',
+                callback: '=?'
             },
             link: function postLink(scope, element, attrs, ctrl) {
-                if(attrs.multiple){
+                if (attrs.multiple) {
                     scope.loadImage = scope.$parent.galleryImages || [];
                 }
 
                 element.bind('change', function (evt) {
-                    if(attrs.multiple){
+                    if (attrs.multiple) {
                         scope.loadImage = scope.$parent.galleryImages || [];
-                    } else{
+                    } else {
                         scope.loadImage = [];
                     }
 
                     var currentLength = scope.loadImage.length;
                     var files = evt.target.files;
-                    for(var i = 0; i < files.length; i++) {
-                        (function(val,idx){
-                            scope.$apply(function() {
-                                scope.loadImage.push({thumbnailImage:"", loading:true});
+                    for (var i = 0; i < files.length; i++) {
+                        (function (val, idx) {
+                            scope.$apply(function () {
+                                scope.loadImage.push({thumbnailImage: "", loading: true});
                             });
                             var formData = new FormData();
                             formData.append('image', files[val], files[val].name);
@@ -155,11 +167,15 @@ adminControllers.directive('loadImage', function($q, $http, $timeout) {
                                 transformRequest: angular.identity,
                                 headers: {'Content-Type': undefined}
                             }).success(function (result) {
-                                scope.loadImage.splice(idx+val, 1, result);
+                                scope.loadImage.splice(idx + val, 1, result);
+                                if (scope.callback) {
+                                    scope.callback(result);
+                                }
+
                             }).error(function (result) {
                                 console.log("Upload profile image failed");
                             });
-                        })(i,currentLength);
+                        })(i, currentLength);
                     }
                 });
             }
@@ -288,4 +304,3 @@ adminControllers.directive('formValidation', function() {
         }
     };
 });
-
