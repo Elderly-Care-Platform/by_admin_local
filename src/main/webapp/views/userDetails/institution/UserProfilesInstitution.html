@@ -1,0 +1,25 @@
+<div class="row indvspacing" ng-controller="regInstCtrl">
+	<div class="col-md-2">
+		<!-- main service -->
+    <div class="by_profileDetailed_menu reg-menu-1 by_profileDetailed_menuActive" ng-if="serviceBranchTabs.length===0">
+        <a href="#/userDetailProfile/{{userId}}">Main Branch</a>
+    </div>
+
+    <!-- service branches -->
+    <div class="by_profileDetailed_menu  reg-menu-1 serviceTab{{$index+1}}"
+         ng-repeat="serviceTab in serviceBranchTabs track by $index"
+         ng-class="{'by_profileDetailed_menuActive':branchIdx===$index}">
+        <a href="#/institution/{{userId}}/{{$index}}">{{serviceTab}}</a>
+    </div>
+    <!-- profile types with institution -->
+	</div>
+    <form name="institutionForm" class="third-register-page grayRegisterBgLight col-md-10" novalidate
+          style="background:transparent;">
+
+         <div ng-include="views.formView"></div>
+        
+
+    </form>
+
+</div>
+

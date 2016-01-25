@@ -31,34 +31,6 @@ adminControllers
 				}, editorInitCallback);
 
 
-				$scope.addressCallback = function(response) {
-					$('#addressLocality').blur();
-					$scope.address.city = "";
-					$scope.address.locality = response.name;
-					$scope.address.country = "";
-					$scope.address.zip = "";
-
-					for (var i = 0; i < response.address_components.length; i++) {
-						if (response.address_components[i].types.length > 0) {
-							if (response.address_components[i].types[0] == "locality") {
-								$scope.address.city += response.address_components[i].long_name;
-							} else if (response.address_components[i].types[0].indexOf("administrative_area_level_3") != -1) {
-								$scope.address.city = response.address_components[i].long_name;
-							} else if (response.address_components[i].types[0] == "country") {
-								//this is the object you are looking for
-								$scope.address.country = response.address_components[i].long_name;
-							} else if (response.address_components[i].types[0] == "postal_code") {
-								//this is the object you are looking for
-								$scope.address.zip = response.address_components[i].long_name;
-							} else if (response.address_components[i].types.indexOf("sublocality") != -1 && response.address_components[i].types.indexOf("political") != -1) {
-								$scope.address.locality = response.address_components[i].long_name;
-							}
-						}
-
-					}
-					$scope.address.streetAddress = response.formatted_address;
-				}
-
 
 				//Create specialities options array for Jquery Ui autocomplete
 				$scope.showSpecialityOptions = function(parentCategory) {

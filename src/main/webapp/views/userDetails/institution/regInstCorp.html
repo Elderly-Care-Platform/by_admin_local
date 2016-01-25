@@ -1,0 +1,144 @@
+<div class="row margin-bottom-20 darkBgwithText ">
+	This section applies only if you have multiple branches
+</div>
+
+<div class="row margin-bottom-40 marginLeftMinus5 register-page">
+	<div class="col-md-12  margin-bottom-10 margin-top-20 ">
+		<div class="col-md-12 no-padding fontSizeIndi  list-head dp-block">
+			Corporate Info
+		</div>
+
+		<div class="col-md-12 no-padding bg-gray-h1">
+			<div class="bg-green-h2" style="width: 156px;"></div>
+		</div>
+	</div>
+	<div class="col-md-12 margin-top-20 margin-bottom-20  register-page">
+		<div class="col-md-5 no-padding">Name of your institution</div>
+		<div class="col-md-7 no-padding register-page">
+			<input type="text" ng-model="basicProfileInfo.firstName" class="name-textbox textbox" />
+		</div>
+	</div>
+
+
+	<div class="col-md-12 margin-top-10 margin-bottom-20">
+		<input ng-click="showAddressButton()" type="button" value="+ Add Address"
+			class="nextButton by_btn_submit no-padding showAddressButton"
+			style="float: left; width: 200px; margin-left: 0px;" />
+		<div class="clearfix"></div>
+	</div>
+
+	<div  class="showAddress" >
+
+		<div class="col-md-12 margin-bottom-20  register-page">
+			<div class="col-md-5 no-padding">Country</div>
+			<div class="col-md-7 no-padding register-page">
+				<input type="text" class="username-textbox textbox" ng-model="basicProfileInfo.primaryUserAddress.country" />
+			</div>
+		</div>
+
+		<div class="col-md-12 margin-bottom-20  register-page">
+			<div class="col-md-5 no-padding">Zip</div>
+			<div class="col-md-7 no-padding register-page">
+				<input type="text" class="username-textbox textbox"
+					ng-model="basicProfileInfo.primaryUserAddress.zip" style="width: 50%;" />
+				<input type="button" class="btn btn-success pull-right register-btn" value="Get address"
+					style="padding: 4px 12px;" ng-click="getLocationByPincode($event, address)">
+			</div>
+		</div>
+
+		<div class="col-md-12 margin-bottom-20  register-page">
+			<div class="col-md-5 no-padding">City</div>
+			<div class="col-md-7 no-padding register-page">
+				<input type="text" class="username-textbox textbox" ng-model="basicProfileInfo.primaryUserAddress.city" />
+			</div>
+		</div>
+
+		<div class="col-md-12  margin-bottom-20  register-page">
+			<div class="col-md-5 no-padding">Locality</div>
+			<div class="col-md-7 no-padding register-page">
+				<input type="text"
+					ng-model="basicProfileInfo.primaryUserAddress.locality"
+					class="name-textbox textbox " 
+					placeholder="Locality" />
+			</div>
+		</div>
+
+		<div class="col-md-12 margin-bottom-20  register-page">
+			<div class="col-md-5 no-padding">Address detail</div>
+			<div class="col-md-7 no-padding register-page">
+				<textarea class="textbox " rows="3"
+					ng-model="basicProfileInfo.primaryUserAddress.streetAddress"></textarea>
+			</div>
+		</div>
+
+		<div class="col-md-12 margin-bottom-20  register-page">
+			<div class="col-md-5 no-padding ">Phone number</div>
+			<div class="col-md-7  no-padding register-page">
+				<input type="text" class="username-textbox textbox"
+					name="corporateTel" ng-model="basicProfileInfo.primaryPhoneNo"
+					placeholder="Telephone number" ng-pattern="/^[+\d-]*\d[\d-]$/"
+					maxlength="17" minlength="10">
+				<span ng-show="(institutionForm.corporateTel.$invalid || institutionForm.corporateTel.$error.pattern) && submitted"
+					class="errorRed">Not a valid number!</span>
+			</div>
+		</div>
+
+		<div class="col-md-12 margin-bottom-20  register-page"
+			ng-repeat="number in basicProfileInfo.secondaryPhoneNos track by $index">
+			<div class="col-md-5  no-padding">Additional Phone Number</div>
+			<div class="col-md-7  no-padding register-page">
+				<input type="text" class="username-textbox textbox"
+					name="{{'corporateTel'+$index}}"
+					ng-model="basicProfileInfo.secondaryPhoneNos[$index]"
+					placeholder="Telephone number" ng-pattern="/^[+\d-]*\d[\d-]$/"
+					maxlength="17" minlength="10" />
+				<span ng-show="(institutionForm.{{'corporateTel'+$index}}.$invalid || institutionForm.{{'corporateTel'+$index}}.$error.pattern) && submitted"
+					class="errorRed">Not a valid number!</span>
+			</div>
+		</div>
+
+		<div class="col-md-12 add-phone margin-bottom-20  register-page"
+			style="margin-top: -10px;">
+			<div class="col-md-5  no-padding"></div>
+			<div class="col-md-7  no-padding register-page">
+				<a class="add-phone" ng-click="addPhoneNumber(basicProfileInfo.secondaryPhoneNos)">+ add another
+					phone number</a>
+			</div>
+		</div>
+
+		<div class="col-md-12 margin-bottom-20  register-page">
+			<div class="col-md-5  no-padding">Email ID</div>
+			<div class="col-md-7  no-padding register-page">
+				<input type="email" class="username-textbox textbox"
+					name="corporateEmail" ng-model="basicProfileInfo.primaryEmail"
+					placeholder="Email" />
+				<span ng-show="institutionForm.corporateEmail.$error.email && submitted"
+					class="errorRed"> Not valid Email! </span>
+			</div>
+		</div>
+
+		<div class="col-md-12 margin-bottom-20 register-page"
+			ng-repeat="email in basicProfileInfo.secondaryEmails track by $index">
+			<div class="col-md-5  no-padding">Additional Email ID</div>
+			<div class="col-md-7  no-padding register-page">
+				<input type="email" class="username-textbox textbox"
+					name="{{'corporateEmail'+$index}}"
+					ng-model="basicProfileInfo.secondaryEmails[$index]"
+					placeholder="Email" /> <span
+					ng-show="institutionForm.{{'corporateEmail'+$index}}.$error.email && submitted"
+					class="errorRed">Not valid Email!</span>
+			</div>
+		</div>
+
+		<div class="col-md-12 add-email margin-bottom-20  register-page"
+			style="margin-top: -10px;">
+			<div class="col-md-5  no-padding"></div>
+			<div class="col-md-7  no-padding register-page">
+				<a class="add-email" ng-click="addEmail(basicProfileInfo.secondaryEmails)">+ add another email
+					id</a>
+			</div>
+		</div>
+
+	</div>
+</div>
+

@@ -58,6 +58,8 @@ byAdminApp.config(['$routeProvider',
 
       .when('/userDetailType/:userId', {templateUrl: 'views/userDetails/UserTypes.html', controller: 'UserDetailController'})
       .when('/userDetailProfile/:userId', {templateUrl: 'views/userDetails/UserProfilesDetail.html', controller: 'UserDetailController'})
+      .when('/housing/:userId/:facilityIndex', {templateUrl: 'views/userDetails/UserProfilesDetail.html', controller: 'UserDetailController'})
+      .when('/institution/:userId/:branchIndex', {templateUrl: 'views/userDetails/UserProfilesDetail.html', controller: 'UserDetailController'})
       
       ;
     //?????$routeProvider.otherwise({redirectTo: '/users/login'});

@@ -1,0 +1,18 @@
+<div class="row indvspacing" ng-controller="regHousingController">
+    <form class="third-register-page grayRegisterBgLight" name="individualForm" novalidate
+          style="background:transparent;">
+        <div class="col-md-12 whiteBg register-page padding20 borderShadow margin-bottom-20 indvBorderRadius"
+             style="padding-bottom:15px;">
+            <div class="addBasicInfo">Housing Info</div>
+            <div ng-include="'view/userDetails/regHousingFacility.html?versionTimeStamp=%PROJECT_VERSION%'"></div>
+        </div>
+
+        <div class="col-md-12 margin-top-0 margin-bottom-20">
+            <input type="button" value="Done" class="nextButton by_btn_submit divRight"
+                   ng-click="postUserProfile(individualForm)"/>
+            <input type="button" value="+ Add Another Facility" ng-click="addingFacilty()"
+                   class="nextButton by_btn_submit" style="float:left; width:200px;"/>
+            <div class="clearfix"></div>
+        </div>
+    </form>
+</div>
