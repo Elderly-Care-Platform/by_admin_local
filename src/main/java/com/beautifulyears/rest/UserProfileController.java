@@ -34,6 +34,7 @@ import com.beautifulyears.domain.UserProfile;
 import com.beautifulyears.exceptions.BYErrorCodes;
 import com.beautifulyears.exceptions.BYException;
 import com.beautifulyears.repository.UserProfileRepository;
+import com.beautifulyears.repository.UserRepository;
 import com.beautifulyears.rest.response.BYGenericResponseHandler;
 import com.beautifulyears.rest.response.PageImpl;
 import com.beautifulyears.rest.response.UserProfileResponse;
@@ -255,6 +256,7 @@ public class UserProfileController {
 		LoggerUtil.logEntry();
 		UserProfile profile = null;
 		User currentUser = Util.getSessionUser(req);
+		User user = mongoTemplate.findById(new ObjectId(userId), User.class);
 		try {
 			if ((userProfile != null) && (userId != null)) {
 //				if (null != currentUser
@@ -304,7 +306,7 @@ public class UserProfileController {
 								profile.setFacilities(HousingController
 										.addFacilities(
 												userProfile.getFacilities(),
-												currentUser));
+												user));
 							}
 
 							userProfileRepository.save(profile);

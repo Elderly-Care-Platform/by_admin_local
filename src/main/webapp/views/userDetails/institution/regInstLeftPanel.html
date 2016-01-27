@@ -1,0 +1,83 @@
+<!--All classes from Unify start-->
+<div class="by_menuDetailed col-md-12" ng-if="$root.windowWidth > 720" style="position:fixed; bottom:0px;"
+     ng-init="leftPanelHeight();">
+
+    <div class="by_profileDetailed_menu  username" style="border:0px;">
+        <a href="#!/users/registration/changeCredential?changeUserName=true">Change Username</a>
+    </div>
+    <div class="by_profileDetailed_menu password" style="border:0px;">
+        <a href="#!/users/registration/changeCredential?changeUserPwd=true">Change Password</a>
+    </div>
+
+    <!-- main service -->
+    <div class="by_profileDetailed_menu reg-menu-1 by_profileDetailed_menuActive" ng-if="serviceBranchTabs.length===0">
+        <a href="#!/users/registrationProfile">{{userTypeConfig.label}}</a>
+    </div>
+
+    <!-- service branches -->
+    <div class="by_profileDetailed_menu  reg-menu-1 serviceTab{{$index+1}}"
+         ng-repeat="serviceTab in serviceBranchTabs track by $index"
+         ng-class="{'by_profileDetailed_menuActive':branchIdx===$index}">
+        <a di-href="#!/users/institutionRegistration/{{$index}}">{{serviceTab}}</a>
+    </div>
+    <!-- profile types with institution -->
+
+    <!-- order history -->
+    <div class="by_profileDetailed_menu orderHistory" ng-if="userTypeConfig && userTypeConfig.showOrderHistory">
+        <a href="#!/users/registrationProfile/orderHistory?showOrderHistory=true">{{userTypeConfig.orderHistoryLabel}}</a>
+    </div>
+    <!-- order history ends -->
+
+    <div class="clearfix" style="height:50px; "></div>
+    <div class="by_profileDetailed_menu viewProfile   margin-bottom-40 " ng-if="branchProfileId">
+        <a ng-href="{{getHrefProfile(profile.serviceBranches[branchIdx], {'profileId':profile.userId, 'branchId':branchProfileId})}}" ng-click="$event.stopPropagation();" >View
+            Profile</a>
+    </div>
+    <div class="by_profileDetailed_menu viewProfile   margin-bottom-40 " ng-if="!branchProfileId">
+        <a ng-href="{{getHrefProfile(profile, {'profileId':profile.userId})}}" ng-click="$event.stopPropagation();">View Profile</a>
+    </div>
+</div>
+<!--All classes from Unify end-->
+<div class="by_mobile_leftPanel_hide" ng-if="$root.windowWidth < 720">
+    <div class="by_mobile_leftPanel" style="padding:0px 15px;">
+
+        <div class="by_profileDetailed_menu  username" style="border:0px;">
+            <a href="#!/users/registration/changeCredential?changeUserName=true">Change Username</a>
+        </div>
+        <div class="by_profileDetailed_menu password" style="border:0px;">
+            <a href="#!/users/registration/changeCredential?changeUserPwd=true">Change Password</a>
+        </div>
+
+
+        <!-- main service -->
+        <div class="by_profileDetailed_menu reg-menu-1 by_profileDetailed_menuActive" ng-if="serviceBranchTabs.length===0">
+            <a href="#!/users/registrationProfile">{{userTypeConfig.label}}</a>
+        </div>
+
+        <!-- service branches -->
+        <div class="by_profileDetailed_menu  reg-menu-1 serviceTab{{$index+1}}"
+             ng-repeat="serviceTab in serviceBranchTabs track by $index"
+             ng-class="{'by_profileDetailed_menuActive':branchIdx===$index}">
+            <a di-href="#!/users/institutionRegistration/{{$index}}">{{serviceTab}}</a>
+        </div>
+        <!-- profile types with institution -->
+
+
+        <!-- order history -->
+        <div class="by_profileDetailed_menu orderHistory" ng-if="userTypeConfig && userTypeConfig.showOrderHistory">
+            <a href="#!/users/registrationProfile/orderHistory?showOrderHistory=true">{{userTypeConfig.orderHistoryLabel}}</a>
+        </div>
+
+        <!-- order history ends -->
+        <div class="clearfix" style="height:50px; background:#fff;"></div>
+        <div class="by_profileDetailed_menu viewProfile margin-bottom-40 " ng-if="branchProfileId">
+            <a ng-href="{{getHrefProfile(profile.serviceBranches[branchIdx], {'profileId':profile.userId, 'branchId':branchProfileId})}}" ng-click="$event.stopPropagation();">View
+                Profile</a>
+        </div>
+        <div class="by_profileDetailed_menu viewProfile margin-bottom-40 " ng-if="!branchProfileId">
+            <a ng-href="{{getHrefProfile(profile, {'profileId':profile.userId})}}" ng-click="$event.stopPropagation();">View Profile</a>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+    <div class="by_mobile_leftPanel_image" ng-init="subMenuTabMobileShow();"></div>
+</div>
