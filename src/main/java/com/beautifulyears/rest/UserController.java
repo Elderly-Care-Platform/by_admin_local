@@ -209,6 +209,7 @@ public class UserController {
 			newUser.setUserName(user.getUserName());
 			newUser.setUserIdType(user.getUserIdType());
 			newUser.setUserRegType(user.getUserRegType());
+			newUser.setUserTags(user.getUserTags());
 
 			newUser.setActive(user.isActive());
 			if (user.getUserIdType() == BYConstants.REGISTRATION_TYPE_EMAIL
