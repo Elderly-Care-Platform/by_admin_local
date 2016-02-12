@@ -1,8 +1,8 @@
 
 
 
-adminControllers.controller('AdminUserCreateController', ['$scope', '$routeParams', '$location', 'AdminUser',
-  function($scope, $routeParams, $location, AdminUser) {
+adminControllers.controller('AdminUserCreateController', ['$scope', '$routeParams', '$location', 'AdminUser', 'MenuTag',
+  function($scope, $routeParams, $location, AdminUser, MenuTag) {
 	  	if(localStorage.getItem("ADMIN_USER_ROLE") == 'WRITER' || localStorage.getItem("ADMIN_USER_ROLE") == 'USER' || localStorage.getItem("ADMIN_USER_ROLE") == '' || localStorage.getItem("ADMIN_USER_ROLE") == 'EDITOR')
 	  			 {
 	  				 return;
@@ -30,8 +30,25 @@ adminControllers.controller('AdminUserCreateController', ['$scope', '$routeParam
  					 return;
  		        }
 	 		});
+
+	 		MenuTag.get(function(res) {
+				$scope.existingTags = res.data;
+			}, function(errorResponse) {
+				if (errorResponse.data && errorResponse.data.error && errorResponse.data.error.errorCode === 3002) {
+					$location.path('/users/login');
+					return;
+				}
+				alert("error fetching tags");
+			});
+
+			$scope.allTags = [ "" ];
 	 		
-	 		
+	 		$scope.addTag = function() {
+				$scope.allTags.push("");
+			}
+			$scope.removeTag = function(idx) {
+				$scope.allTags.splice(idx, 1);
+			}
 	 		
 	 		$scope.edituser = function () {
 	 			if($scope.userPassword != "" ){
@@ -45,7 +62,13 @@ adminControllers.controller('AdminUserCreateController', ['$scope', '$routeParam
 	 					$scope.user.password = $scope.userPassword;
 	 				}
 	 			}
-	 			
+	 			$scope.arrayTags = [];
+	 			for(var i = 0; i < $scope.allTags.length; i++){
+	 				if($scope.allTags[i] && $scope.allTags[i].id){
+	 					$scope.arrayTags.push($scope.allTags[i].id);
+	 				}
+	 			}
+	 			$scope.user.userTags =  $scope.arrayTags;
 	 			AdminUser.update($scope.user,function(res){
 		 			toastr.success("Edited User");
 	 				$location.path('/users/all');
