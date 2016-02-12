@@ -39,7 +39,7 @@ public class MenuController {
 	@RequestMapping(method = { RequestMethod.GET }, produces = { "application/json" }, value = { "/tag" })
 	@ResponseBody
 	public Object getTags(
-			@RequestParam(value = "type", required = true) Integer type) {
+			@RequestParam(value = "type", required = false) Integer type) {
 		List<Tag> menus = new ArrayList<Tag>();
 		Query q = new Query();
 		if (null == type) {
