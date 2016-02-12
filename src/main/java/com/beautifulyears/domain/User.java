@@ -43,7 +43,19 @@ public class User implements Serializable {
 	private Integer userIdType;
 	private Integer userRegType;
 	private String phoneNumber;
+	private List<String> userTags = new ArrayList<String>();
+	
 	private List<Integer> permissions = new ArrayList<Integer>();
+	
+	
+
+	public List<String> getUserTags() {
+		return userTags;
+	}
+
+	public void setUserTags(List<String> userTags) {
+		this.userTags = userTags;
+	}
 
 	public Integer getUserRegType() {
 		return userRegType;
@@ -106,7 +118,7 @@ public class User implements Serializable {
 			String phoneNumber, String verificationCode,
 			Date verificationCodeExpiry, String socialSignOnId,
 			String socialSignOnPlatform, String passwordCode,
-			Date passwordCodeExpiry, String userRoleId, String isActive) {
+			Date passwordCodeExpiry, String userRoleId, String isActive,List<String> userTags) {
 		super();
 		this.userName = userName;
 		this.password = password;
@@ -123,6 +135,7 @@ public class User implements Serializable {
 		this.userRoleId = userRoleId;
 		this.isActive = isActive;
 		this.permissions = UserRolePermissions.getUserPermsForRole(userRoleId);
+		this.userTags = userTags;
 	}
 
 	public Date getCreatedAt() {

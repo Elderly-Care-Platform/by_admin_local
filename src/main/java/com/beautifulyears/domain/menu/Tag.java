@@ -17,12 +17,12 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Tag {
 
-	public final static int TAG_TYPE_SYSTEM = 0;
+	public final static int TAG_TYPE_MENU = 0;
 	public final static int TAG_TYPE_USER = 1;
 
 	@Id
 	private String id;
-	private int type = TAG_TYPE_SYSTEM;
+	private int type = TAG_TYPE_MENU;
 	@Indexed(unique = true)
 	private String name;
 	private String description;
