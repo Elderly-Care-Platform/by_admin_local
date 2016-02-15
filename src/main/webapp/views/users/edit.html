@@ -74,7 +74,7 @@
 
     <!-- tags -->
     <div class="form-group" ng-repeat="newTag in allTags track by $index">
-      <label><strong>Select Tag</strong></label>
+      <label><strong>Select Tag </strong></label>
       <input type="text" ng-model="allTags[$index]"
           typeahead="tag as tag.name for tag in existingTags | filter:{name: $viewValue} | limitTo:20"
           class="form-control"><a ng-click="removeTag($index)">REMOVE</a>
