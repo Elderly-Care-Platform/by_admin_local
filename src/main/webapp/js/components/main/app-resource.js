@@ -230,6 +230,18 @@ adminServices.factory('MenuTag', function($resource) {
 	})
 });
 
+adminServices.factory('UserTag', function($resource) {
+	return $resource('/byadmin/api/v1/menu/tag?type=1', {}, {
+		'get' : {
+			method : 'GET',
+			isArray : false
+		},
+		'save' : {
+			method : 'POST'
+		}
+	})
+});
+
 adminServices.factory('Menu', function($resource) {
 	return $resource('/byadmin/api/v1/menu', {}, {
 		'save' : {

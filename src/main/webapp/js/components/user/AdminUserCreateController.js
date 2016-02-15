@@ -1,8 +1,8 @@
 
 
 
-adminControllers.controller('AdminUserCreateController', ['$scope', '$routeParams', '$location', 'AdminUser', 'MenuTag',
-  function($scope, $routeParams, $location, AdminUser, MenuTag) {
+adminControllers.controller('AdminUserCreateController', ['$scope', '$routeParams', '$location', 'AdminUser', 'UserTag',
+  function($scope, $routeParams, $location, AdminUser, UserTag) {
 	  	if(localStorage.getItem("ADMIN_USER_ROLE") == 'WRITER' || localStorage.getItem("ADMIN_USER_ROLE") == 'USER' || localStorage.getItem("ADMIN_USER_ROLE") == '' || localStorage.getItem("ADMIN_USER_ROLE") == 'EDITOR')
 	  			 {
 	  				 return;
@@ -31,7 +31,7 @@ adminControllers.controller('AdminUserCreateController', ['$scope', '$routeParam
  		        }
 	 		});
 
-	 		MenuTag.get(function(res) {
+	 		UserTag.get(function(res) {
 				$scope.existingTags = res.data;
 			}, function(errorResponse) {
 				if (errorResponse.data && errorResponse.data.error && errorResponse.data.error.errorCode === 3002) {
