@@ -1,8 +1,8 @@
 
 
 
-adminControllers.controller('AdminUserCreateController', ['$scope', '$routeParams', '$location', 'AdminUser',
-  function($scope, $routeParams, $location, AdminUser) {
+adminControllers.controller('AdminUserCreateController', ['$scope', '$routeParams', '$location', 'AdminUser', 'UserTag',
+  function($scope, $routeParams, $location, AdminUser, UserTag) {
 	  	if(localStorage.getItem("ADMIN_USER_ROLE") == 'WRITER' || localStorage.getItem("ADMIN_USER_ROLE") == 'USER' || localStorage.getItem("ADMIN_USER_ROLE") == '' || localStorage.getItem("ADMIN_USER_ROLE") == 'EDITOR')
 	  			 {
 	  				 return;
@@ -13,9 +13,41 @@ adminControllers.controller('AdminUserCreateController', ['$scope', '$routeParam
      var userId = $routeParams.userId;
      	if(userId != null )
 	 	{
+	 		UserTag.get(function(res) {
+				$scope.existingTags = res.data;
+			}, function(errorResponse) {
+				if (errorResponse.data && errorResponse.data.error && errorResponse.data.error.errorCode === 3002) {
+					$location.path('/users/login');
+					return;
+				}
+				alert("error fetching tags");
+			});
+
 	 		AdminUser.get({userId: userId},function(res){
 	 			$scope.user = res.data;
 	 			$scope.userPassword = "";
+	 			$scope.allTags =[];
+	 			 /*for (var i = 0; i < $scope.user.userTags.length; i++) {
+		            if ($scope.user.userTags[i] === $scope.existingTags) {
+		                
+		                $scope.existingTags[i].push($scope.allTags);
+		            }
+		        };*/
+
+		       Object.keys($scope.user.userTags).forEach(function(key){
+		       	if($scope.user.userTags[key]){
+		       		for ( var i = 0; i < $scope.existingTags.length; i++){
+		       			if($scope.user.userTags[key] == $scope.existingTags[i].id){
+		       				$scope.allTags.push($scope.existingTags[i]);
+		       			}
+		       		}
+		       		
+		       	}
+				});
+
+		       $scope.allTags.push("");
+
+
 	 			if($scope.user.regType ==null || $scope.user.regType == undefined){
 	 				$scope.user.regType = 0;
 	 			}
@@ -30,9 +62,18 @@ adminControllers.controller('AdminUserCreateController', ['$scope', '$routeParam
  					 return;
  		        }
 	 		});
+
 	 		
+
+			$scope.allTags = [ "" ];
 	 		
-	 		
+	 		$scope.addTag = function() {
+				$scope.allTags.push("");
+			}
+			$scope.removeTag = function(idx) {
+				$scope.allTags.splice(idx, 1);
+			}
+
 	 		$scope.edituser = function () {
 	 			if($scope.userPassword != "" ){
 	 				if($scope.user.userRegType != 0){
@@ -45,7 +86,13 @@ adminControllers.controller('AdminUserCreateController', ['$scope', '$routeParam
 	 					$scope.user.password = $scope.userPassword;
 	 				}
 	 			}
-	 			
+	 			$scope.existingTags = [];
+	 			for(var i = 0; i < $scope.allTags.length; i++){
+	 				if($scope.allTags[i] && $scope.allTags[i].id){
+	 					$scope.existingTags.push($scope.allTags[i].id);
+	 				}
+	 			}
+	 			$scope.user.userTags =  $scope.existingTags;
 	 			AdminUser.update($scope.user,function(res){
 		 			toastr.success("Edited User");
 	 				$location.path('/users/all');

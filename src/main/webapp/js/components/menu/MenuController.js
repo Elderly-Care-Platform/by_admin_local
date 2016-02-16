@@ -31,11 +31,13 @@ adminControllers.controller('TagCreateController', [
 			$scope.newTag = {};
 			$scope.newTag.name = "";
 			$scope.newTag.description = "";
+			$scope.newTag.type = 0;
 
 			$scope.addTag = function() {
 				var tagResource = new MenuTag();
 				tagResource.name = $scope.newTag.name;
 				tagResource.description = $scope.newTag.description;
+				tagResource.type = $scope.newTag.type;
 				tagResource.$save(function() {
 					location.href = "#/menu";
 				}, function(errorResponse) {

@@ -41,6 +41,7 @@ public class userSearchController {
 	public Object getUsers(@RequestParam(required = false) String userId,
 			@RequestParam(required = false) String email,
 			@RequestParam(required = false) String userName,
+			@RequestParam(required = false) List<String> userTags,
 			HttpServletRequest request) throws Exception {
 		User user = Util.getSessionUser(request);
 		Criteria mainCriteria = new Criteria();
@@ -52,16 +53,27 @@ public class userSearchController {
 				orCriterias.add(Criteria.where("id").is(userId));
 			}
 			if (!Util.isEmpty(email) && email.length() >= 3) {
-				orCriterias.add(Criteria.where("email").regex(Pattern.compile(email, Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE)));
+				orCriterias.add(Criteria.where("email").regex(
+						Pattern.compile(email, Pattern.CASE_INSENSITIVE
+								| Pattern.UNICODE_CASE)));
 			}
 			if (!Util.isEmpty(userName) && userName.length() >= 3) {
-				orCriterias.add(Criteria.where("userName").regex(Pattern.compile(userName, Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE)));
+				orCriterias.add(Criteria.where("userName").regex(
+						Pattern.compile(userName, Pattern.CASE_INSENSITIVE
+								| Pattern.UNICODE_CASE)));
 			}
-			if(orCriterias.size() > 0){
+			if (null != userTags && userTags.size() > 0) {
+				List<ObjectId> tagIds = new ArrayList<ObjectId>();
+				for (String tagId : userTags) {
+					tagIds.add(new ObjectId(tagId));
+				}
+				orCriterias.add(Criteria.where("userTags.$id").in(tagIds));
+			}
+			if (orCriterias.size() > 0) {
 				q.addCriteria(mainCriteria.orOperator(orCriterias
 						.toArray(new Criteria[orCriterias.size()])));
 			}
-			
+
 			q.fields().include("id");
 			users = mongoTemplate.find(q, User.class);
 			Set<ObjectId> userIds = new HashSet<ObjectId>();
@@ -70,11 +82,12 @@ public class userSearchController {
 			}
 			System.out.println(userIds);
 			q = new Query();
-			q.addCriteria(Criteria.where("id").in(userIds.toArray(new Object[userIds.size()])));
+			q.addCriteria(Criteria.where("id").in(
+					userIds.toArray(new Object[userIds.size()])));
 			users = mongoTemplate.find(q, User.class);
-			
+
 		}
-		
+
 		return users;
 	}
 

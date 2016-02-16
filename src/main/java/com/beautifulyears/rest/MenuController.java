@@ -38,16 +38,25 @@ public class MenuController {
 
 	@RequestMapping(method = { RequestMethod.GET }, produces = { "application/json" }, value = { "/tag" })
 	@ResponseBody
-	public Object getTags() {
-		List<Tag> menus = this.mongoTemplate.findAll(Tag.class);
+	public Object getTags(
+			@RequestParam(value = "type", required = false) Integer type) {
+		List<Tag> menus = new ArrayList<Tag>();
+		Query q = new Query();
+		if (null == type) {
+			menus = this.mongoTemplate.findAll(Tag.class);
+		} else {
+			q.addCriteria(Criteria.where("type").is(type));
+			menus = this.mongoTemplate.find(q, Tag.class);
+		}
+
 		return BYGenericResponseHandler.getResponse(menus);
 	}
 
 	@RequestMapping(method = { RequestMethod.POST }, consumes = { "application/json" }, value = { "/tag" })
 	@ResponseBody
-	public Object addTag(@RequestBody Tag tag,HttpServletResponse res) {
+	public Object addTag(@RequestBody Tag tag, HttpServletResponse res) {
 		Tag oldTag = null;
-		try{
+		try {
 			if (null != tag.getId()) {
 				Query q = new Query();
 				q.addCriteria(Criteria.where("id").is(tag.getId()));
@@ -61,15 +70,14 @@ public class MenuController {
 			oldTag.setDescription(tag.getDescription());
 			mongoTemplate.save(oldTag);
 			return BYGenericResponseHandler.getResponse(oldTag);
-		}catch(DuplicateKeyException e){
+		} catch (DuplicateKeyException e) {
 			res.setStatus(404);
 			return new Exception("tag name already exists!");
-		}
-		catch(Exception e){
+		} catch (Exception e) {
 			res.setStatus(404);
 			return new Exception("internal server error");
 		}
-		
+
 	}
 
 	@RequestMapping(method = { RequestMethod.DELETE }, value = { "" })
@@ -89,7 +97,7 @@ public class MenuController {
 			MenuHandler handler = new MenuHandler(mongoTemplate);
 			handler.setParams(oldmenu);
 			new Thread(handler).start();
-			
+
 			Query q = new Query();
 			q.addCriteria(Criteria.where("id").is(oldmenu.getParentMenuId()));
 			Menu parentMenu = mongoTemplate.findOne(q, Menu.class);
@@ -110,7 +118,7 @@ public class MenuController {
 				Query q = new Query();
 				q.addCriteria(Criteria.where("id").is(menu.getId()));
 				oldmenu = mongoTemplate.findOne(q, Menu.class);
-				
+
 			}
 			if (oldmenu == null) {
 				oldmenu = new Menu();
