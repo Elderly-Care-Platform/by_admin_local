@@ -63,11 +63,11 @@ public class userSearchController {
 								| Pattern.UNICODE_CASE)));
 			}
 			if (null != userTags && userTags.size() > 0) {
-				List<ObjectId> tagIds = new ArrayList<ObjectId>();
-				for (String tagId : userTags) {
-					tagIds.add(new ObjectId(tagId));
-				}
-				orCriterias.add(Criteria.where("userTags.$id").in(tagIds));
+//				List<ObjectId> tagIds = new ArrayList<ObjectId>();
+//				for (String tagId : userTags) {
+//					tagIds.add(new ObjectId(tagId));
+//				}
+				orCriterias.add(Criteria.where("userTags").in(userTags));
 			}
 			if (orCriterias.size() > 0) {
 				q.addCriteria(mainCriteria.orOperator(orCriterias
