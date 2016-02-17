@@ -16,6 +16,18 @@
 				<td>UserName (contains, atleast 3 characters):</td>
 				<td><input type="text" ng-model="filters.userName"></td>
 			</tr>
+
+			<tr ng-repeat="newTag in allTags track by $index">
+				<td>Select Tag</td>
+				<td><input type="text" ng-model="allTags[$index]"
+          			typeahead="tag as tag.name for tag in existingTags | filter:{name: $viewValue} | limitTo:20"></td>
+			</tr>
+
+			<tr>
+				<td></td>
+				<td><a ng-click="addTag()">Add more tags</a></td>
+			</tr>
+
 			<tr>
 				<td></td>
 				<td>
@@ -28,6 +40,7 @@
 <img alt="loading" src="../../../byadmin/img/loading.gif"
 		ng-if="status == 'loading'">
 		<table ng-if="searchResults != null && searchResults.length > 0" class="table table-bordered margin-top-20">
+			<div ng-if="searchResults.length > 0" style="float:right; margin-bottom:10px; font-size:20px;"><b>{{searchResults.length}}</b> results found</div>
 			<thead>
 				<tr>
 					<th>ID</th>
