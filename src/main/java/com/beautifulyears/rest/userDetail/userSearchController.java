@@ -67,7 +67,7 @@ public class userSearchController {
 //				for (String tagId : userTags) {
 //					tagIds.add(new ObjectId(tagId));
 //				}
-				orCriterias.add(Criteria.where("userTags").in(userTags));
+				orCriterias.add(Criteria.where("userTags").all(userTags));
 			}
 			if (orCriterias.size() > 0) {
 				q.addCriteria(mainCriteria.orOperator(orCriterias
