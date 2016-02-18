@@ -310,7 +310,7 @@
 		        success : function(response) {
 		        },
 		        complete : function(response) {
-					var img = "<img src = 'uploaded_files/" +  response.responseText.substring(response.responseText.lastIndexOf('/')+1) + "' />";
+					var img = "<img src = '" +  response.responseText + "' />";
 					tinyMCE.activeEditor.execCommand("mceInsertContent", true, img);
 		        },
 		        error : function() {
