@@ -50,6 +50,17 @@ public class DiscussReply {
 	
 	private boolean verified;
 
+	@Transient
+	private boolean isEditableByUser = false;
+
+	public boolean isEditableByUser() {
+		return isEditableByUser;
+	}
+
+	public void setEditableByUser(boolean isEditableByUser) {
+		this.isEditableByUser = isEditableByUser;
+	}
+
 	public boolean isVerified() {
 		return verified;
 	}
