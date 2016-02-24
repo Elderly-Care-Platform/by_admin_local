@@ -90,7 +90,7 @@ public class UploadFile extends HttpServlet {
 						origPath = (new S3FileUploader(s3MediaBucketName,
 								CDNConstants.IMAGE_CDN_ORIG_FOLDER + "/"
 										+ fname + "." + extension, newFile))
-								.uploadFile(false);
+								.uploadFile(true);
 
 						if (null != request.getParameter("transcoding")
 								&& true == Boolean.valueOf(request
@@ -248,8 +248,8 @@ public class UploadFile extends HttpServlet {
 			// + height + "." + extension);
 		} else {
 			BufferedImage thumbnail = Scalr.resize(image,
-					Scalr.Method.ULTRA_QUALITY, Scalr.Mode.FIT_TO_WIDTH, width,
-					height, Scalr.OP_ANTIALIAS);
+					Scalr.Method.ULTRA_QUALITY, Scalr.Mode.FIT_TO_WIDTH, imageWidth,
+					imageHeight, Scalr.OP_ANTIALIAS);
 			// File f = new File(uploadDir + File.separator + fname + "_" +
 			// width
 			// + "_" + height + "." + extension);
