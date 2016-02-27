@@ -48,7 +48,7 @@ public class S3FileUploader implements Runnable {
 				this.run();
 			}
 			
-			path = CDNConstants.S3_HOST + bucketName + "/" + keyName;
+			path = System.getProperty("cdnPath") + "/" + keyName;
 		} catch (AmazonServiceException ase) {
 			System.out.println("Caught an AmazonServiceException, which "
 					+ "means your request made it "
