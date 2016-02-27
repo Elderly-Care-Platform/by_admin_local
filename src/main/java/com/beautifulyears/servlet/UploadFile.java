@@ -91,7 +91,7 @@ public class UploadFile extends HttpServlet {
 						origPath = (new S3FileUploader(s3MediaBucketName,
 								CDNConstants.IMAGE_CDN_ORIG_FOLDER + "/"
 										+ fname + "." + extension, newFile))
-								.uploadFile(true);
+								.uploadFile(false);
 
 						if (null != request.getParameter("transcoding")
 								&& true == Boolean.valueOf(request
