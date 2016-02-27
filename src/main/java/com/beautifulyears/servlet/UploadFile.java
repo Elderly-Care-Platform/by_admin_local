@@ -45,6 +45,9 @@ public class UploadFile extends HttpServlet {
 				+ getServletContext().getContextPath());
 		System.out.println(getServletContext().getInitParameter(
 				"imageUploadPath"));
+		if (null != getServletContext().getInitParameter("cdnPath")) {
+			System.setProperty("cdnPath",getServletContext().getInitParameter("cdnPath"));
+		}
 		if (null != getServletContext().getInitParameter("imageUploadPath")) {
 			uploadDir = getServletContext().getInitParameter("imageUploadPath");
 		}
@@ -82,24 +85,18 @@ public class UploadFile extends HttpServlet {
 						String name = new File(item.getName()).getName();
 						String extension = name
 								.substring(name.lastIndexOf(".") + 1);
-						// File newFile = new File(uploadDir + File.separator
-						// + fname + "." + extension);
 						File newFile = File.createTempFile("orig", ".jpg");
 
 						item.write(newFile);
 						origPath = (new S3FileUploader(s3MediaBucketName,
 								CDNConstants.IMAGE_CDN_ORIG_FOLDER + "/"
 										+ fname + "." + extension, newFile))
-								.uploadFile(true);
+								.uploadFile(false);
 
 						if (null != request.getParameter("transcoding")
 								&& true == Boolean.valueOf(request
 										.getParameter("transcoding"))) {
 							if (isAnimatedGif(newFile)) {
-								// File titleImage = new File(uploadDir
-								// + File.separator + fname + "_"
-								// + TITLE_IMG_WIDTH + "_"
-								// + TITLE_IMG_HEIGHT + "." + extension);
 								File titleImage = File.createTempFile("title",
 										".jpg");
 								titlePath = (new S3FileUploader(
@@ -110,11 +107,6 @@ public class UploadFile extends HttpServlet {
 								Files.copy(newFile.toPath(),
 										titleImage.toPath());
 
-								// File thumbnail = new File(uploadDir
-								// + File.separator + fname + "_"
-								// + THUMBNAIL_IMG_WIDTH + "_"
-								// + THUMBNAIL_IMG_HEIGHT + "."
-								// + extension);
 								File thumbnail = File.createTempFile("thumb",
 										".jpg");
 								thumbnailPath = (new S3FileUploader(
@@ -233,26 +225,15 @@ public class UploadFile extends HttpServlet {
 			BufferedImage thumbnail = Scalr.resize(image,
 					Scalr.Method.ULTRA_QUALITY, Scalr.Mode.FIT_TO_WIDTH,
 					newWidth, newHeight, Scalr.OP_ANTIALIAS);
-			// File f = new File(uploadDir + File.separator + fname + "_" +
-			// width
-			// + "_" + height + "." + extension);
 			File f = File.createTempFile(fname, ".jpg");
 			ImageIO.write(thumbnail, extension, f);
 			path = (new S3FileUploader(s3MediaBucketName, fname + "_" + width
 					+ "_" + height + "." + extension, f)).uploadFile(async);
 
-			// Thumbnails
-			// .of(newFile)
-			// .size(newWidth, newHeight)
-			// .toFile(uploadDir + File.separator + fname + "_" + width + "_"
-			// + height + "." + extension);
 		} else {
 			BufferedImage thumbnail = Scalr.resize(image,
 					Scalr.Method.ULTRA_QUALITY, Scalr.Mode.FIT_TO_WIDTH, imageWidth,
 					imageHeight, Scalr.OP_ANTIALIAS);
-			// File f = new File(uploadDir + File.separator + fname + "_" +
-			// width
-			// + "_" + height + "." + extension);
 			File f = File.createTempFile(fname, ".jpg");
 			ImageIO.write(thumbnail, extension, f);
 			path = (new S3FileUploader(s3MediaBucketName, fname + "_" + width
@@ -262,112 +243,5 @@ public class UploadFile extends HttpServlet {
 
 	}
 
-	// private static BufferedImage resizeImage(File originalImage, int
-	// maxWidth,
-	// int maxHeight) throws IOException {
-	// BufferedImage image = ImageIO.read(originalImage);
-	// int imageWidth = image.getWidth(null);
-	// int imageHeight = image.getHeight(null);
-	// int newHeight = 0;
-	// int newWidth = 0;
-	//
-	// double aspectRatio = (double) imageWidth / (double) imageHeight;
-	// if (imageWidth > maxWidth && imageHeight > maxHeight) {
-	// // both height and width are bigger
-	// if ((imageWidth - maxWidth) > (imageHeight - maxHeight)) {
-	// newWidth = maxWidth;
-	// newHeight = (int) (maxHeight / aspectRatio);
-	// } else {
-	// newHeight = maxHeight;
-	// newWidth = (int) (maxHeight * aspectRatio);
-	// }
-	// } else if (imageWidth > maxWidth) {
-	// // only width is bigger
-	// newWidth = maxWidth;
-	// newHeight = (int) (maxHeight / aspectRatio);
-	// } else if (imageHeight > maxHeight) {
-	// // only height is bigger
-	// newHeight = maxHeight;
-	// newWidth = (int) (maxWidth * aspectRatio);
-	// } else {
-	// // both are smaller then max
-	// newHeight = 0;
-	// newWidth = 0;
-	// }
-	//
-	// BufferedImage resizedImage = image;
-	// // if (newHeight != 0 && newWidth != 0) {
-	// // resizedImage = new BufferedImage(newWidth, newHeight,
-	// // BufferedImage.TYPE_INT_RGB);
-	// // Graphics2D g = resizedImage.createGraphics();
-	// // image = blurImage(image);
-	// // g.drawImage(image, 0, 0, newWidth, newHeight, null);
-	// //
-	// // g.dispose();
-	// // }
-	//
-	// boolean higherQuality = true;
-	//
-	// int w, h;
-	// if (higherQuality) {
-	// // Use multi-step technique: start with original size, then
-	// // scale down in multiple passes with drawImage()
-	// // until the target size is reached
-	// w = image.getWidth();
-	// h = image.getHeight();
-	// } else {
-	// // Use one-step technique: scale directly from original
-	// // size to target size with a single drawImage() call
-	// w = newWidth;
-	// h = newHeight;
-	// }
-	//
-	// do {
-	// if (w > newWidth) {
-	// w /= 2;
-	// if (w < newWidth) {
-	// w = newWidth;
-	// }
-	// }
-	//
-	// if (h > newHeight) {
-	// h /= 2;
-	// if (h < newHeight) {
-	// h = newHeight;
-	// }
-	// }
-	//
-	// BufferedImage tmp = new BufferedImage(w, h,
-	// BufferedImage.TYPE_INT_RGB);
-	// Graphics2D g2 = tmp.createGraphics();
-	// g2.drawImage(resizedImage, 0, 0, w, h, null);
-	// g2.dispose();
-	//
-	// resizedImage = tmp;
-	// } while (w != newWidth || h != newHeight);
-	//
-	// return resizedImage;
-	// }
-	//
-	// public static BufferedImage blurImage(BufferedImage image) {
-	// float ninth = 1.0f / 9.0f;
-	// float[] blurKernel = { ninth, ninth, ninth, ninth, ninth, ninth, ninth,
-	// ninth, ninth };
-	//
-	// Map<Key, Object> map = new HashMap<Key, Object>();
-	//
-	// map.put(RenderingHints.KEY_INTERPOLATION,
-	// RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-	//
-	// map.put(RenderingHints.KEY_RENDERING,
-	// RenderingHints.VALUE_RENDER_QUALITY);
-	// map.put(RenderingHints.KEY_ANTIALIASING,
-	// RenderingHints.VALUE_ANTIALIAS_ON);
-	//
-	// RenderingHints hints = new RenderingHints(map);
-	// BufferedImageOp op = new ConvolveOp(new Kernel(3, 3, blurKernel),
-	// ConvolveOp.EDGE_NO_OP, hints);
-	// return op.filter(image, null);
-	// }
 
 }
