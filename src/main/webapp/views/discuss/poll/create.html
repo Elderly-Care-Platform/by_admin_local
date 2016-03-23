@@ -1,0 +1,271 @@
+<div class="container-fluid">
+	<div id="wrapper" class="row-fluid">
+		<h3 class='menu'>Create Poll</h3>
+		<div class="alert alert-error" ng-show="error">{{errorMessage}}</div>
+
+		<table style="width: 900px;">
+			<tr >
+				<td><label class="control-label" for="title"><strong>Title</strong></label>
+				</td>
+				<td><input type="text" ng-model="currentDiscuss.title"
+					id="currentDiscuss.title" required /></td>
+			</tr>
+			<tr >
+				<td><label class="control-label" for="title"><strong>Title
+							Photo</strong></label></td>
+				<td>
+					<form id="UploadImage12" action="UploadFile" method="post"
+						enctype="multipart/form-data">
+						<label class="myLabel"> <input name="sp" id="sp"
+							type="file" required onchange="javascript:uploadImage(this)" />
+							<span>Please upload<br> your main <br>photo
+								(optional)
+						</span>
+						</label>
+					</form> <input type="text" id="articleTitleImage"
+					ng-model="newArticlePhotoFilename" value='' style="display: none" />
+				</td>
+			</tr>
+			<tr>
+				<td><label class="control-label" for="title"><strong>Withdraw</strong></label>
+				</td>
+				<td><input type="checkbox" ng-model="currentDiscuss.status"
+					name="status" ng-checked="currentDiscuss.status" id="status"
+					style="vertical-align: top;"></td>
+			</tr>
+			<tr>
+				<td><label class="control-label" for="title"><strong>Featured</strong></label>
+				</td>
+				<td><input type="checkbox" ng-model="currentDiscuss.featured"
+					name="featured" ng-checked="currentDiscuss.featured" id="featured"
+					style="vertical-align: top;"></td>
+			</tr>
+			<tr >
+				<td><label class="control-label" for="title"><strong>Announcement</strong></label>
+				</td>
+				<td><input type="checkbox" ng-model="currentDiscuss.promotion"
+					name="promotion" ng-checked="currentDiscuss.promotion" id="promotion"
+					style="vertical-align: top;"></td>
+			</tr>
+			<tr><td colspan="2" height="20"></td></tr>
+			<tr>
+                <td><label class="control-label" for="title"><strong>Modified Date</strong></label>
+                </td>
+                <td>
+                    year <input ng-model="modifiedDate.y" style="max-width: 40px;">
+                    month <input ng-model="modifiedDate.m"  style="max-width: 40px;">
+                    day <input ng-model="modifiedDate.d"  style="max-width: 40px;">&nbsp;&nbsp;&nbsp;</br></br>
+                    hour <input ng-model="modifiedDate.h"  style="max-width: 40px;">
+                    min. <input ng-model="modifiedDate.mi"  style="max-width: 40px;">
+                    sec. <input ng-model="modifiedDate.s"  style="max-width: 40px;">
+                    ms <input ng-model="modifiedDate.ms"  style="max-width: 40px;"></br></br>
+                    <input type="button" value="Copy Created Time" ng-click="copyDate('createAt')">
+                    <input type="button" value="Copy Current Time" ng-click="copyDate('now')">
+                </td>
+            </tr>
+			<tr><td colspan="2" height="20"></td></tr>
+			<tr  ng-repeat="option in allOptions track by $index">
+				<td><label class="control-label" for="text"><strong>Option {{$index + 1}}</strong></label></td>
+				<td> <input type="text" ng-model="allOptions[$index]"          class="form-control"></td>
+			</tr>
+			<tr>
+				<td></td><td>
+					<a ng-click="addOption()">Add option</a>
+				</td>
+			</tr>
+			<tr><td colspan="2" height="20"></td></tr>
+			<!--<tr>
+				<td colspan="2">
+					<div class="col-md-12 no-padding margin-bottom-35">
+						<div class="panel-group acc-v1" id="accordion-1">
+							<div class="panel panel-default by_accordian"
+								ng-repeat="category in $root.discussCategoryMap">
+								<div class="panel-heading">
+									<h4 class="panel-title by_editor_ParentCategories"
+										ng-if="category.children.length <= 0">
+										<label ng-if="category.parentMenuId">
+											{{$root.menuCategoryMap[category.parentMenuId].displayMenuName
+											+ " >> " + category.displayMenuName}} <input type="checkbox"
+											ng-click="selectTag($event, category)"
+											value="{{category.id}}"
+											ng-checked="{{selectedMenuId[category.id] != undefined}}">
+										</label> <label ng-if="!category.parentMenuId">
+											{{category.displayMenuName}} <input type="checkbox"
+											ng-click="selectTag($event, category)"
+											value="{{category.id}}"
+											ng-checked="{{selectedMenuId[category.id] != undefined}}">
+										</label>
+									</h4>
+									<h4 class="panel-title by_editor_ParentCategories"
+										ng-if="category.children.length > 0">
+										<a ng-if="!category.parentMenuId"
+											class="accordion-toggle collapsed" data-toggle="collapse"
+											data-parent="#accordion-1" href={{"#"+category.id}} onclick="return false;">
+											{{category.displayMenuName}} </a> <a
+											ng-if="category.parentMenuId"
+											class="accordion-toggle collapsed" data-toggle="collapse"
+											data-parent="#accordion-1" href={{
+											"#"+category.id}} onclick="return false;">
+											{{$root.menuCategoryMap[category.parentMenuId].displayMenuName
+											+ " >> " + category.displayMenuName}} </a> <a
+											class="triangle-down accordion-toggle collapsed"
+											data-toggle="collapse" data-parent="#accordion-1" href={{
+											"#"+category.id}} onclick="return false;"></a>
+									</h4>
+								</div>
+								<div id={{category.id}}
+									class="col-md-12 whiteBg by_editor_SubCategories panel-collapse collapse">
+									<div class="panel-body col-md-6"
+										ng-repeat="subCategory in category.children"
+										ng-if="subCategory.module===0">
+										<input type="checkbox"
+											ng-click="selectTag($event, subCategory)"
+											value={{subCategory.id}}
+											ng-checked="{{selectedMenuId[subCategory.id] != undefined}}"> <span>{{subCategory.displayMenuName}}</span>
+									</div>
+								</div>
+								<div style="clear: both"></div>
+							</div>
+						</div>
+					</div>
+				</td>
+			</tr>-->
+			<tr>
+                <td colspan="2">
+                    <div class="col-md-12 no-padding margin-bottom-35">
+                        <div class="panel-group acc-v1" id="accordion-1">
+                            <div class="panel panel-default by_accordian" ng-repeat="category in $root.mainMenu">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title by_editor_ParentCategories" ng-if="category.children.length <= 0">
+                                        <label>
+                                        {{category.displayMenuName}}
+                                        <input type="checkbox" ng-click="selectTag($event, category)"
+                                            value="{{category.id}}" ng-checked="selectedMenuList[category.id] != undefined">
+                                        </label>
+                                    </h4>
+                                    <h4 class="panel-title by_editor_ParentCategories" ng-if="category.children.length > 0">
+                                        <input type="checkbox" ng-click="selectTag($event, category)"
+                                            value="{{category.id}}" ng-checked="selectedMenuList[category.id] != undefined">
+                                        <a class="accordion-toggle collapsed" data-toggle="collapse"
+                                            data-parent="#accordion-1" href={{"#"+category.id}} onclick="return false;">
+                                        {{category.displayMenuName}}
+                                        </a>
+                                        <a ng-if="category.children.length > 0" class="triangle-down accordion-toggle collapsed"
+                                            data-toggle="collapse" data-parent="#accordion-1" href={{"#"+category.id}}
+                                            onclick="return false;"></a>
+                                    </h4>
+                                </div>
+                                <div id="{{category.id}}" class="col-md-12 whiteBg by_editor_SubCategories panel-collapse collapse" id="accordion-2">
+                                    <div ng-repeat="category1 in category.children" ng-if="category1.module===0" class="panel-body col-md-12">
+                                        <input type="checkbox" ng-click="selectTag($event, category1)"
+                                            value="{{category1.id}}" ng-checked="selectedMenuList[category1.id] != undefined">
+                                        <a class="accordion-toggle collapsed" data-toggle="collapse"
+                                            data-parent="#accordion-2" href={{"#"+category1.id}} onclick="return false;">
+                                        {{category1.displayMenuName}}
+                                        </a>
+                                        <a ng-if="category1.children.length > 0" class="triangle-down accordion-toggle collapsed"
+                                            data-toggle="collapse" data-parent="#accordion-2" href={{"#"+category1.id}}
+                                            onclick="return false;"></a>
+                                        <div id="{{category1.id}}" ng-if="category1.children.length > 0"
+                                            class="col-md-12 whiteBg by_editor_SubCategories panel-collapse collapse" id="accordion-3">
+                                            <div ng-repeat="category2 in category1.children" ng-if="category2.module===0" class="panel-body col-md-12" >
+                                                <input type="checkbox" ng-click="selectTag($event, category2)"
+                                                    value="{{category2.id}}" ng-checked="selectedMenuList[category2.id] != undefined">
+                                                <a class="accordion-toggle collapsed" data-toggle="collapse"
+                                                    data-parent="#accordion-3" href={{"#"+category2.id}} onclick="return false;">
+                                                {{category2.displayMenuName}}
+                                                </a>
+                                                <a ng-if="category2.children.length > 0" class="triangle-down accordion-toggle collapsed"
+                                                    data-toggle="collapse" data-parent="#accordion-3" href={{"#"+category2.id}}
+                                                    onclick="return false;"></a>
+                                                <div ng-if="category2.children.length > 0" id="{{category2.id}}"
+                                                    class="col-md-12 whiteBg by_editor_SubCategories panel-collapse collapse" id="accordion-4">
+                                                    <div ng-repeat="category3 in category2.children"
+                                                        ng-if="category3.module===0" class="panel-body col-md-12">
+                                                        <input type="checkbox"
+                                                            ng-click="selectTag($event, category3)"
+                                                            value={{category3.id}}
+                                                            ng-checked="selectedMenuList[category3.id] != undefined"> 
+                                                        <a class="accordion-toggle collapsed" data-toggle="collapse"
+                                                            data-parent="#accordion-4" href={{"#"+category3.id}} onclick="return false;">
+                                                        {{category3.displayMenuName}}
+                                                        </a>
+                                                        <a ng-if="category3.children.length > 0" class="triangle-down accordion-toggle collapsed"
+                                                            data-toggle="collapse" data-parent="#accordion-4" href={{"#"+category3.id}}
+                                                            onclick="return false;"></a>
+                                                        <div ng-if="category3.children.length > 0" id="{{category3.id}}"
+                                                            class="col-md-12 whiteBg by_editor_SubCategories panel-collapse collapse">
+                                                            <div ng-repeat="category4 in category3.children"
+                                                                ng-if="category4.module===0" class="panel-body col-md-12">
+                                                                <input type="checkbox"
+                                                                    ng-click="selectTag($event, category4)"
+                                                                    value={{category4.id}}
+                                                                    ng-checked="selectedMenuList[category4.id] != undefined">
+                                                                <span>{{category4.displayMenuName}}</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="clear: both"></div>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+			<tr>
+				<td colspan="2" style="text-align: right;">
+					<button type="submit" class="btn btn-primary" ng-click="register()">Submit</button>
+				</td>
+			</tr>
+		</table>
+
+
+		<script type="text/javascript">
+			$("#UploadImage12").bind('submit', function(e) {
+				var postData = new FormData(jQuery('#UploadImage12')[0]);
+				$.ajax({
+					url : 'UploadFile?transcoding=true',
+					type : "POST",
+					enctype : "multipart/form-data",
+					data : postData,
+					//  contentType: "application/json",
+					cache : false,
+					contentType : false,
+					processData : false,
+					success : function(data, textStatus, jqXHR) {
+						$("#articleTitleImage").val(JSON.stringify(data));
+						$("#articleTitleImage").trigger('input');
+					},
+					error : function(jqXHR, textStatus, errorThrown) {
+						console.log(textStatus);
+						alert("Image upload failed");
+					}
+				});
+				e.preventDefault();
+			});
+
+			function uploadImage(input) {
+				if (input.files && input.files[0]) {
+					var reader = new FileReader();
+					reader.onload = function(e) {
+						$('.myLabel').css('background-image',
+								'url(' + e.target.result + ')')
+					}
+
+					reader.readAsDataURL(input.files[0]);
+					$('#UploadImage12').submit();
+
+					//input.form.submit();
+				}
+			}
+
+			BYAdmin.addEditor({
+				"editorTextArea" : "text"
+			});
+		</script>
+	</div>
+</div>

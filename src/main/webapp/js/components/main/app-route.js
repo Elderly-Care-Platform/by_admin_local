@@ -60,6 +60,9 @@ byAdminApp.config(['$routeProvider',
       .when('/userDetailProfile/:userId', {templateUrl: 'views/userDetails/UserProfilesDetail.html', controller: 'UserDetailController'})
       .when('/housing/:userId/:facilityIndex', {templateUrl: 'views/userDetails/UserProfilesDetail.html', controller: 'UserDetailController'})
       .when('/institution/:userId/:branchIndex', {templateUrl: 'views/userDetails/UserProfilesDetail.html', controller: 'UserDetailController'})
+
+
+      .when('/discuss/poll/create', {templateUrl: 'views/discuss/poll/create.html', controller: 'AdminPollCreateController'})
       
       ;
     //?????$routeProvider.otherwise({redirectTo: '/users/login'});
