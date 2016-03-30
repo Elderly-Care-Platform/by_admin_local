@@ -246,7 +246,7 @@ public class AdminDiscussController {
 					discuss.getDiscussType().equals("P") ? discuss
 							.getArticlePhotoFilename() : null,
 					discuss.isFeatured(), discuss.isPromotion(),
-					discuss.getContentType(), discuss.getLinkInfo(), profile);
+					discuss.getContentType(), discuss.getLinkInfo(), profile,discuss.getPolledBy(), discuss.getPollOptions());
 		} catch (Exception e) {
 			throw new Exception();
 		}

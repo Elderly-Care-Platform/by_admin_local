@@ -23,21 +23,21 @@ public class Discuss {
 
 	@Id
 	private String id;
-	@TextIndexed(weight=1)
+	@TextIndexed(weight = 1)
 	private String title;
 
 	private Map<String, String> articlePhotoFilename;
 
 	private String userId;
-	@TextIndexed(weight=2)
+	@TextIndexed(weight = 2)
 	private String username;
 
 	private String discussType; // Q, P and A (Question, Post and Article)
-	@TextIndexed(weight=3)
+	@TextIndexed(weight = 3)
 	private String text;
 
 	private int status; // published, unpublished
-	
+
 	@DBRef
 	private UserProfile userProfile;
 
@@ -68,7 +68,11 @@ public class Discuss {
 
 	private int contentType;
 
-	@TextIndexed(weight=4)
+	private List<String> pollOptions = new ArrayList<String>();
+
+	private List<String> polledBy = new ArrayList<String>();
+
+	@TextIndexed(weight = 4)
 	private LinkInfo linkInfo;
 
 	public Discuss() {
@@ -79,7 +83,9 @@ public class Discuss {
 			List<String> topicId, String title, String text, int status,
 			int aggrReplyCount, List<Tag> systemTags, Long sharedCount,
 			List<String> userTags, Map<String, String> articlePhotoFilename,
-			Boolean isFeatured,Boolean isPromotion, int contentType, LinkInfo linkInfo,UserProfile profile) {
+			Boolean isFeatured, Boolean isPromotion, int contentType,
+			LinkInfo linkInfo, UserProfile profile, List<String> polledBy,
+			List<String> pollOptions) {
 		super();
 		this.userId = userId;
 		this.username = username;
@@ -103,9 +109,25 @@ public class Discuss {
 		this.contentType = contentType;
 		this.linkInfo = linkInfo;
 		this.userProfile = profile;
+		this.polledBy = polledBy;
+		this.pollOptions = pollOptions;
 	}
-	
-	
+
+	public List<String> getPollOptions() {
+		return pollOptions;
+	}
+
+	public void setPollOptions(List<String> pollOptions) {
+		this.pollOptions = pollOptions;
+	}
+
+	public List<String> getPolledBy() {
+		return polledBy;
+	}
+
+	public void setPolledBy(List<String> polledBy) {
+		this.polledBy = polledBy;
+	}
 
 	public UserProfile getUserProfile() {
 		return userProfile;
