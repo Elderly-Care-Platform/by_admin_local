@@ -217,7 +217,7 @@ public class AdminDiscussController {
 
 			String discussType = discuss.getDiscussType();
 			String title = "";
-			if (discussType.equalsIgnoreCase("P")) {
+			if (discussType.equalsIgnoreCase("P") || discussType.equalsIgnoreCase("POLL")) {
 				title = discuss.getTitle();
 			}
 			String text = discuss.getText();

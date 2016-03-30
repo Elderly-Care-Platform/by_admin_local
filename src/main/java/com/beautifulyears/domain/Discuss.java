@@ -93,10 +93,12 @@ public class Discuss {
 		this.title = title;
 		this.topicId = topicId;
 		this.text = text;
-		org.jsoup.nodes.Document doc = Jsoup.parse(this.text);
-		String domText = doc.text();
-		if (domText.length() > DiscussConstants.DISCUSS_TRUNCATION_LENGTH) {
-			this.setShortSynopsis(Util.truncateText(domText));
+		if(!Util.isEmpty(this.text)){
+			org.jsoup.nodes.Document doc = Jsoup.parse(this.text);
+			String domText = doc.text();
+			if (domText.length() > DiscussConstants.DISCUSS_TRUNCATION_LENGTH) {
+				this.setShortSynopsis(Util.truncateText(domText));
+			}
 		}
 		this.status = status;
 		this.aggrReplyCount = aggrReplyCount;
