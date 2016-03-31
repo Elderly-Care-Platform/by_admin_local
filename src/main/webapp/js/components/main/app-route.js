@@ -18,6 +18,7 @@ byAdminApp.config(['$routeProvider',
     .when('/discuss/P', {templateUrl: 'views/discuss/list.html', controller: 'AdminListPostController'})
     .when('/discuss/F', {templateUrl: 'views/discuss/feedbackList.html', controller: 'AdminListFeedbackController'})
       .when('/discuss/Q', {templateUrl: 'views/discuss/list.html', controller: 'AdminListQuestionController'})
+      .when('/discuss/POLL', {templateUrl: 'views/discuss/poll/list.html', controller: 'AdminListPollController'})
       .when('/discuss/Announcements', {templateUrl: 'views/discuss/announcementsList.html', controller: 'AdminListAnnouncementController'})
       .when('/discuss/new/P', {templateUrl: 'views/discuss/create.html', controller: 'AdminDiscussCreateController'})
 	  .when('/discuss/new/Q', {templateUrl: 'views/discuss/create.html', controller: 'AdminDiscussCreateController'})
@@ -64,6 +65,7 @@ byAdminApp.config(['$routeProvider',
 
       .when('/discuss/poll/create', {templateUrl: 'views/discuss/poll/create.html', controller: 'AdminPollCreateController'})
       .when('/discuss/poll/showedit/:discussId', {templateUrl: 'views/discuss/poll/edit.html', controller: 'AdminPollCreateController'})
+
       
       ;
     //?????$routeProvider.otherwise({redirectTo: '/users/login'});
