@@ -63,6 +63,7 @@ byAdminApp.config(['$routeProvider',
 
 
       .when('/discuss/poll/create', {templateUrl: 'views/discuss/poll/create.html', controller: 'AdminPollCreateController'})
+      .when('/discuss/poll/showedit/:discussId', {templateUrl: 'views/discuss/poll/edit.html', controller: 'AdminPollCreateController'})
       
       ;
     //?????$routeProvider.otherwise({redirectTo: '/users/login'});

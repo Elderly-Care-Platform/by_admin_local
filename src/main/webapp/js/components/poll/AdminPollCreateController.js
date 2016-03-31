@@ -118,6 +118,7 @@ adminControllers.controller('AdminPollCreateController', ['$scope', '$http', '$r
         if (discussId != null) {
             AdminDiscuss.get({discussId: discussId}, function (res) {
                 $scope.currentDiscuss = res.data;
+                $scope.allOptions = $scope.currentDiscuss.pollOptions;
                 $scope.modifiedDate = getDateObject(res.data.lastModifiedAt);
                 $scope.currentDiscuss.newArticlePhotoFilename = "";
                 $scope.currentDiscuss.newArticlePhotoFilename = JSON.stringify($scope.currentDiscuss.articlePhotoFilename);
@@ -205,8 +206,7 @@ adminControllers.controller('AdminPollCreateController', ['$scope', '$http', '$r
 
                 AdminDiscuss.update($scope.currentDiscuss, function () {
                         toastr.success('Created successfully');
-                        var location = $scope.currentDiscuss.discussType;
-                        $location.path('/discuss/' + location);
+                        $location.path('/discuss/P');
                     },
                     function (errorResponse) {
                         if (errorResponse.data && errorResponse.data.error && errorResponse.data.error.errorCode === 3002) {

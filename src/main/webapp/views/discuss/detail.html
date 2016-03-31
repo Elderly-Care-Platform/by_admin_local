@@ -1,10 +1,20 @@
 
-<h5> by {{discuss.username}} <small class="muted">{{discuss.createdAt | date:'medium'}}</small><a
+<h5> by {{discuss.username}} <small class="muted">{{discuss.createdAt | date:'medium'}}</small><a ng-if="discuss.discussType != 'POLL'"
 				href="#/discuss/showedit/{{discuss.id}}"><img
+					src="../../../byadmin/img/edit.png" alt="edit" height="26"
+					width="26"></a>
+					<a ng-if="discuss.discussType == 'POLL'"
+				href="#/discuss/poll/showedit/{{discuss.id}}"><img
 					src="../../../byadmin/img/edit.png" alt="edit" height="26"
 					width="26"></a></h5>
 <h5> userId: {{discuss.userId}}<a href="#/userDetails/{{discuss.userId}}"><img src="../../../byadmin/img/goto.png" alt="edit" height="26" width="26"></a></h5>
 <h4>{{discuss.title}}</h4>
+<div style="float:left; width:100px;" ng-if="discuss.pollOptions.length > 0"><h4>Options:</h4> </div>
+<ul style="float:left; width:calc(100% - 141px); margin-top:8px;" ng-if="discuss.pollOptions.length > 0">
+	<li ng-repeat="option in discuss.pollOptions">
+		{{option}}
+	</li>
+</ul>
 <div>
 <img alt="title image" class="articleTitleImage" src="{{discuss.articlePhotoFilename.original}}" ng-if="discuss.discussType == 'A'">
 <div ng-include="'views/discuss/common/ShareLinkEditor.html'" ng-if="discuss.linkInfo" ng-init="linkInfo=discuss.linkInfo"></div>
