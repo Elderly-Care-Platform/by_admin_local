@@ -89,6 +89,8 @@ public class AdminDiscussController {
 			newDiscuss.setContentType(discuss.getContentType());
 			newDiscuss.setLinkInfo(discuss.getLinkInfo());
 			newDiscuss.setUserProfile(discuss.getUserProfile());
+			newDiscuss.setPolledBy(discuss.getPolledBy());
+			newDiscuss.setPollOptions(discuss.getPollOptions());
 			org.jsoup.nodes.Document doc = Jsoup.parse(discuss.getText());
 			String domText = doc.text();
 			if (domText.length() > DiscussConstants.DISCUSS_TRUNCATION_LENGTH) {
