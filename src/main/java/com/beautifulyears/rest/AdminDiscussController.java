@@ -59,7 +59,7 @@ public class AdminDiscussController {
 		logHandler = new DiscussActivityLogHandler(mongoTemplate);
 	}
 
-	@RequestMapping(value = "/{discussId}",consumes = { "application/json" })
+	@RequestMapping(value = "/{discussId}", consumes = { "application/json" })
 	@ResponseBody
 	public Object submitDiscuss(@RequestBody Discuss discuss,
 			HttpServletRequest request) throws Exception {
@@ -84,18 +84,21 @@ public class AdminDiscussController {
 			newDiscuss.setArticlePhotoFilename(discuss
 					.getArticlePhotoFilename());
 			newDiscuss.setSystemTags(discuss.getSystemTags());
-			newDiscuss.setLastModifiedAt(discuss.getLastModifiedAt());	
+			newDiscuss.setLastModifiedAt(discuss.getLastModifiedAt());
 			newDiscuss.setText(discuss.getText());
 			newDiscuss.setContentType(discuss.getContentType());
 			newDiscuss.setLinkInfo(discuss.getLinkInfo());
 			newDiscuss.setUserProfile(discuss.getUserProfile());
 			newDiscuss.setPolledBy(discuss.getPolledBy());
 			newDiscuss.setPollOptions(discuss.getPollOptions());
-			org.jsoup.nodes.Document doc = Jsoup.parse(discuss.getText());
-			String domText = doc.text();
-			if (domText.length() > DiscussConstants.DISCUSS_TRUNCATION_LENGTH) {
-				newDiscuss.setShortSynopsis(Util.truncateText(domText));
+			if (!Util.isEmpty(discuss.getText())) {
+				org.jsoup.nodes.Document doc = Jsoup.parse(discuss.getText());
+				String domText = doc.text();
+				if (domText.length() > DiscussConstants.DISCUSS_TRUNCATION_LENGTH) {
+					newDiscuss.setShortSynopsis(Util.truncateText(domText));
+				}
 			}
+
 			newDiscuss.setTopicId(discuss.getTopicId());
 			newDiscuss = discussRepository.save(newDiscuss);
 			logHandler.addLog(newDiscuss,
@@ -219,7 +222,8 @@ public class AdminDiscussController {
 
 			String discussType = discuss.getDiscussType();
 			String title = "";
-			if (discussType.equalsIgnoreCase("P") || discussType.equalsIgnoreCase("POLL")) {
+			if (discussType.equalsIgnoreCase("P")
+					|| discussType.equalsIgnoreCase("POLL")) {
 				title = discuss.getTitle();
 			}
 			String text = discuss.getText();
@@ -248,7 +252,8 @@ public class AdminDiscussController {
 					discuss.getDiscussType().equals("P") ? discuss
 							.getArticlePhotoFilename() : null,
 					discuss.isFeatured(), discuss.isPromotion(),
-					discuss.getContentType(), discuss.getLinkInfo(), profile,discuss.getPolledBy(), discuss.getPollOptions());
+					discuss.getContentType(), discuss.getLinkInfo(), profile,
+					discuss.getPolledBy(), discuss.getPollOptions());
 		} catch (Exception e) {
 			throw new Exception();
 		}
