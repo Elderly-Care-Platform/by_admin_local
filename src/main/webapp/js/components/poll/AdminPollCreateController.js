@@ -154,6 +154,15 @@ adminControllers.controller('AdminPollCreateController', ['$scope', '$http', '$r
 
                 //putting the userId to discuss being created
 
+                $scope.pollOptions = [];
+                for(var i = 0; i < $scope.allOptions.length; i++){
+                    if($scope.allOptions[i] != ''){
+                        $scope.pollOptions.push($scope.allOptions[i]);
+                    }
+                }
+
+                $scope.currentDiscuss.pollOptions = $scope.pollOptions;
+
                 AdminDiscuss.update($scope.currentDiscuss, function () {
                         toastr.success('Edited successfully');
                         var location = $scope.currentDiscuss.discussType;
@@ -182,9 +191,19 @@ adminControllers.controller('AdminPollCreateController', ['$scope', '$http', '$r
         else {
             $scope.currentDiscuss = new AdminDiscuss();
             $scope.currentDiscuss.discussType = 'POLL';
-            $scope.currentDiscuss.pollOptions = $scope.allOptions;
+            //$scope.currentDiscuss.pollOptions = $scope.allOptions;
+
 
             $scope.register = function () {
+
+                $scope.pollOptions = [];
+                for(var i = 0; i < $scope.allOptions.length; i++){
+                    if($scope.allOptions[i] != ''){
+                        $scope.pollOptions.push($scope.allOptions[i]);
+                    }
+                }
+
+                $scope.currentDiscuss.pollOptions = $scope.pollOptions;
 
                 //putting the userId to discuss being created
                 $scope.currentDiscuss.userId = localStorage.getItem("ADMIN_USER_ID");
@@ -206,7 +225,7 @@ adminControllers.controller('AdminPollCreateController', ['$scope', '$http', '$r
 
                 AdminDiscuss.update($scope.currentDiscuss, function () {
                         toastr.success('Created successfully');
-                        $location.path('/discuss/P');
+                        $location.path('/discuss/POLL');
                     },
                     function (errorResponse) {
                         if (errorResponse.data && errorResponse.data.error && errorResponse.data.error.errorCode === 3002) {
@@ -233,8 +252,28 @@ adminControllers.controller('AdminPollCreateController', ['$scope', '$http', '$r
     }]);
 
 
-adminControllers.controller('AdminPollPostController', ['$scope', '$rootScope', '$location', 'AdminPostDiscuss',
-    function ($scope, $rootScope, $location, AdminPostDiscuss) {
-      
+adminControllers.controller('AdminListPollController', ['$scope', '$rootScope', '$location', 'AdminPollDiscuss',
+    function ($scope, $rootScope, $location, AdminPollDiscuss) {
+        if (localStorage.getItem("AdminSessionId") == '') {
+            $location.path('/users/login');
+            return;
+        }
+        if (localStorage.getItem("ADMIN_USER_ROLE") == 'WRITER' || localStorage.getItem("ADMIN_USER_ROLE") == 'USER' || localStorage.getItem("ADMIN_USER_ROLE") == '') {
+            $location.path('/users/login');
+            return;
+        }
+        AdminPollDiscuss.query({}, function (res) {
+            $scope.discuss = res.data;
+            $scope.discuss.discussType = 'POLL';
+            $rootScope.bc_discussType = 'POLL';
+        }, function (errorResponse) {
+            if (errorResponse.data && errorResponse.data.error && errorResponse.data.error.errorCode === 3002) {
+                $location.path('/users/login');
+                return;
+            }
+        });
+
+        $location.path('/discuss/POLL');
     }]);
+
 

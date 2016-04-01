@@ -3,8 +3,8 @@
         	var this_url = window.location.href;
         	var dis_type = this_url.substring(this_url.lastIndexOf('/')+1).trim();
             //var url = 'http://52.74.82.29:80/byadmin/api/v1/discuss/list/' + dis_type;
-            //var url = '/byadmin/api/v1/discuss/list/POLL';
-            var url = '/byadmin/api/v1/discuss/list/' + dis_type;
+            var url = '/byadmin/api/v1/discuss/list/POLL';
+            //var url = '/byadmin/api/v1/discuss/list/' + dis_type;
 
             // prepare the data
             var source = '';
@@ -156,7 +156,7 @@
                     }
 			});
 
-			if(dis_type == 'P')
+			if(dis_type == 'POLL')
 			{
 				$("#jqxgrid").jqxGrid(
 				{
@@ -221,7 +221,7 @@
 
     </script>
 <div style="clear:both; height:10px;"></div>
-<h2>{{discuss.discussType == 'Q' && 'Questions' || discuss.discussType == 'A' && 'Articles' || 'Posts' || discuss.discussType == 'POLL' && 'POLL'}} </h2>
+<h2>Polls </h2>
 <div style="clear:both; height:10px;"></div>
 <div style="float:right; width:250px;">
 	<select class="selectChange">

@@ -114,6 +114,16 @@ var discussByFilterPost_admin = adminServices.factory('AdminPostDiscuss',
 			})
 		});
 
+var discussByFilterPoll_admin = adminServices.factory('AdminPollDiscuss',
+		function($resource) {
+			return $resource('/byadmin/api/v1/discuss/list/POLL', {}, {
+				query : {
+					method : 'GET',
+					isArray: false
+				}
+			})
+		});
+
 var discussByFilterFeedback_admin = adminServices.factory(
 		'AdminFeedbackDiscuss', function($resource) {
 			return $resource('/byadmin/api/v1/discuss/list/F', {}, {
