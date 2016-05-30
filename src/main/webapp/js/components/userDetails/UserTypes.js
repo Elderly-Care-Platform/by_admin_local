@@ -19,6 +19,8 @@ adminControllers
 					showUserTypes();
 				}
 
+				$scope.featured = false ;
+
 				function showUserTypes() {
 					if (!$scope.profileData) {
 						
@@ -27,6 +29,7 @@ adminControllers
 							$scope.state = "loaded";
 							if($scope.userProfileInfo){
 								$scope.userType = $scope.userProfileInfo.userTypes;
+								$scope.featured = $scope.userProfileInfo.featured;
 							} else{
 								$scope.userType = [];
 							}							
@@ -79,7 +82,7 @@ adminControllers
 				$scope.selectedUserType = {};
 				$scope.clearUserType = false;
 
-				$scope.featured = false ;
+				
 
 				$scope.selectUserType = function(element) {
 					var userArray = element.type.key;
