@@ -48,6 +48,9 @@ adminControllers
 					resetOnFocusOut: false
 				};
 
+				$scope.featured = false ;
+				$scope.withdrawn = false ;
+
 				var editorInitCallback = function() {
 					if (tinymce.get("registrationDescription") && $scope.basicProfileInfo && $scope.basicProfileInfo.description) {
 						tinymce.get("registrationDescription").setContent($scope.basicProfileInfo.description);
@@ -100,6 +103,13 @@ adminControllers
 						if ($scope.profile.userTypes.indexOf(0) > -1) {
 							$scope.emotional_challenges = $scope.regConfig.emotional_challenges2;
 						}
+					}
+
+					$scope.featured = $scope.profile.featured;
+					if($scope.profile.status == 0){
+						$scope.withdrawn = false;
+					}else{
+						$scope.withdrawn = true;
 					}
 
 
@@ -421,6 +431,13 @@ adminControllers
 							}
 						});
 
+						$scope.profile.featured = $scope.featured;
+						if($scope.withdrawn == true){
+							$scope.profile.status = 1;
+						} else{
+							$scope.profile.status = 0;
+						}
+						
 						var userProfile = new UserProfile();
 						angular.extend(userProfile, $scope.profile);
 						userProfile.$update({
