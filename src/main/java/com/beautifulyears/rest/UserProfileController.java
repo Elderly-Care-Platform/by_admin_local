@@ -308,7 +308,7 @@ public class UserProfileController {
 												userProfile.getFacilities(),
 												user));
 							}
-
+							profile.setFeatured(userProfile.isFeatured());
 							userProfileRepository.save(profile);
 							logger.info("User Profile update with details: "
 									+ profile.toString());
