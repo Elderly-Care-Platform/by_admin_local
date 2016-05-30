@@ -79,6 +79,8 @@ adminControllers
 				$scope.selectedUserType = {};
 				$scope.clearUserType = false;
 
+				$scope.featured = false ;
+
 				$scope.selectUserType = function(element) {
 					var userArray = element.type.key;
 					if (element.type.selected) {
@@ -166,6 +168,7 @@ adminControllers
 				$scope.submit = function() {
 					
 					if ($scope.userType.length > 0 && $scope.userProfileInfo.userTypes.length > 0) {
+						$scope.userProfileInfo.featured = $scope.featured;
 						$scope.userProfileInfo.userTypes = $scope.userType;
 						UserProfile.update({
 							"userId": $scope.userId
@@ -177,6 +180,7 @@ adminControllers
 						});
 					}
 					if ($scope.userType.length > 0 && $scope.userProfileInfo.userTypes.length == 0) {
+						$scope.userProfileInfo.featured = $scope.featured;
 						$scope.userProfileInfo.userTypes = $scope.userType;
 						$scope.userProfileInfo.userId = $scope.userId;
 						UserProfile.post({
