@@ -309,6 +309,7 @@ public class UserProfileController {
 												user));
 							}
 							profile.setFeatured(userProfile.isFeatured());
+							profile.setStatus(userProfile.getStatus());
 							userProfileRepository.save(profile);
 							logger.info("User Profile update with details: "
 									+ profile.toString());
