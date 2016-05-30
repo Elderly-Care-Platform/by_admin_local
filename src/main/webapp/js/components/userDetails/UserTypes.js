@@ -20,6 +20,7 @@ adminControllers
 				}
 
 				$scope.featured = false ;
+				$scope.withdrawn = false ;
 
 				function showUserTypes() {
 					if (!$scope.profileData) {
@@ -30,9 +31,16 @@ adminControllers
 							if($scope.userProfileInfo){
 								$scope.userType = $scope.userProfileInfo.userTypes;
 								$scope.featured = $scope.userProfileInfo.featured;
+								if($scope.userProfileInfo.status == 0){
+									$scope.withdrawn = false;
+								}else{
+									$scope.withdrawn = true;
+								}
+								 
 							} else{
 								$scope.userType = [];
 							}							
+								
 							
 						}, function(err) {
 							$scope.state = "error";
@@ -173,6 +181,11 @@ adminControllers
 					if ($scope.userType.length > 0 && $scope.userProfileInfo.userTypes.length > 0) {
 						$scope.userProfileInfo.featured = $scope.featured;
 						$scope.userProfileInfo.userTypes = $scope.userType;
+						if($scope.withdrawn == true){
+							$scope.userProfileInfo.status = 1;
+						} else{
+							$scope.userProfileInfo.status = 0;
+						}
 						UserProfile.update({
 							"userId": $scope.userId
 						}, $scope.userProfileInfo, function(res) {
@@ -186,6 +199,11 @@ adminControllers
 						$scope.userProfileInfo.featured = $scope.featured;
 						$scope.userProfileInfo.userTypes = $scope.userType;
 						$scope.userProfileInfo.userId = $scope.userId;
+						if($scope.withdrawn == true){
+							$scope.userProfileInfo.status = 1;
+						} else{
+							$scope.userProfileInfo.status = 0;
+						}
 						UserProfile.post({
 							"userId": $scope.userId
 						}, $scope.userProfileInfo, function(res) {
