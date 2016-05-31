@@ -17,6 +17,12 @@ adminControllers
                 $scope.facility = $scope.$parent.facility;
                 $scope.selectedMenuList = {};
 
+                if($scope.facility.status == true){
+                    $scope.facility.status = 1;
+                } else{
+                    $scope.facility.status = 0;
+                }
+
                 
 
                 var editorInitCallback = function() {
