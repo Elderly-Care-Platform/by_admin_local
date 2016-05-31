@@ -17,6 +17,10 @@ adminControllers
                 $scope.facility = $scope.$parent.facility;
                 $scope.selectedMenuList = {};
 
+                
+
+                
+
                 var editorInitCallback = function() {
                     if (tinymce.get("facilityDescription") && $scope.facility && $scope.facility.description) {
                         tinymce.get("facilityDescription").setContent($scope.facility.description);
@@ -179,6 +183,13 @@ adminControllers
                         } else {
                             $scope.websiteError = true;
                         }
+                    }
+
+                    
+                    if($scope.facility.status == true){
+                        $scope.facility.status = 1;
+                    } else{
+                        $scope.facility.status = 0;
                     }
 
                     if ($scope.facility.systemTags.length === 0) {

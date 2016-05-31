@@ -51,6 +51,9 @@ adminControllers
 				$scope.addBranch = false;
 				$scope.branchIndex = 0;
 				$scope.views = {};
+				$scope.branch = {};
+				$scope.branch.featured = false;
+				$scope.branch.status = 0;
 				$scope.options = {
 					country: "in",
 					resetOnFocusOut: false
@@ -124,7 +127,14 @@ adminControllers
 
 					$scope.branchBasicInfo = $scope.selectedBranch.basicProfileInfo;
 					$scope.branchServiceInfo = $scope.selectedBranch.serviceProviderInfo;
+					$scope.branch.featured = $scope.selectedBranch.featured;
+					if($scope.selectedBranch.status == 0){
+						$scope.branch.status = false;
+					} else{
+						$scope.branch.status = true;
+					}
 					$scope.branchAddress = $scope.branchBasicInfo.primaryUserAddress;
+
 
 					if ($scope.branchAddress && $scope.branchAddress.country === null) {
 						$scope.branchAddress.country = "India";
@@ -330,6 +340,10 @@ adminControllers
 						$scope.branchBasicInfo.photoGalleryURLs = mainBranch.basicProfileInfo.photoGalleryURLs;
 					}
 
+
+
+
+
 				}
 
 
@@ -386,6 +400,14 @@ adminControllers
 							$scope.websiteError = true;
 						}
 					}
+
+					$scope.selectedBranch.featured = $scope.branch.featured;
+
+					if($scope.branch.status == true){
+                        $scope.selectedBranch.status = 1;
+                    } else{
+                        $scope.selectedBranch.status = 0;
+                    }
 
 					if (isValidForm.$invalid || $scope.minCategoryError || $scope.websiteError) {
 						window.scrollTo(0, 0);

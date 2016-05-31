@@ -243,6 +243,9 @@ public class HousingController {
 	
 	private static void updateHousing(HousingFacility oldHousing,
 			HousingFacility newHousing) {
+		
+		oldHousing.setStatus(newHousing.getStatus());
+		oldHousing.setFeatured(newHousing.isFeatured());
 		oldHousing.setDescription(newHousing.getDescription());
 		oldHousing.setName(newHousing.getName());
 		oldHousing.setPhotoGalleryURLs(newHousing.getPhotoGalleryURLs());

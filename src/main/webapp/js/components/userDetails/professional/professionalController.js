@@ -30,6 +30,9 @@ adminControllers
 					"editorTextArea": "registrationDescription"
 				}, editorInitCallback);
 
+				$scope.featured = false ;
+				$scope.withdrawn = false ;
+
 
 
 				//Create specialities options array for Jquery Ui autocomplete
@@ -108,6 +111,12 @@ adminControllers
 
 					if ($scope.address && $scope.address.country === null) {
 						$scope.address.country = "India";
+					}
+					$scope.featured = $scope.profile.featured;
+					if($scope.profile.status == 0){
+						$scope.withdrawn = false;
+					}else{
+						$scope.withdrawn = true;
 					}
 					editorInitCallback();
 					for (var i = 0; i < $scope.serviceProviderInfo.services.length; i++) {
@@ -308,6 +317,13 @@ adminControllers
 								return value;
 							}
 						});
+
+						$scope.profile.featured = $scope.featured;
+						if($scope.withdrawn == true){
+							$scope.profile.status = 1;
+						} else{
+							$scope.profile.status = 0;
+						}
 
 						var userProfile = new UserProfile();
 						angular.extend(userProfile, $scope.profile);

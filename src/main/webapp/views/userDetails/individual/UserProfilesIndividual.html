@@ -1,6 +1,17 @@
 <div class="row indvspacing" ng-controller="regIndividualCtrl">
     <form class="third-register-page grayRegisterBgLight" name="individualForm" novalidate style="background:transparent;" ng-init="initIndvRegData()">
         <div class="col-md-12 whiteBg register-page padding20 borderShadow margin-bottom-20 indvBorderRadius" style="padding-bottom:15px;">
+            <div class="by_userTypeHead">
+                Featured 
+                <label style="display:inline;"> <input type="checkbox"
+                    class="checkBoxOne"  ng-model="featured" />
+                </label>
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                Withdrawn 
+                <label style="display:inline;"><input type="checkbox"
+                    class="checkBoxOne"  ng-model="withdrawn" />
+                </label>
+            </div><br/>
             <div class="addBasicInfo">Basic Info</div>
             <div class="row margin-bottom-20  register-page">
                 <div class="col-md-5">

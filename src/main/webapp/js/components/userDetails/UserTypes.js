@@ -19,6 +19,7 @@ adminControllers
 					showUserTypes();
 				}
 
+
 				function showUserTypes() {
 					if (!$scope.profileData) {
 						
@@ -26,10 +27,12 @@ adminControllers
 							$scope.userProfileInfo = res.data;
 							$scope.state = "loaded";
 							if($scope.userProfileInfo){
-								$scope.userType = $scope.userProfileInfo.userTypes;
+								$scope.userType = $scope.userProfileInfo.userTypes;						
+								 
 							} else{
 								$scope.userType = [];
 							}							
+								
 							
 						}, function(err) {
 							$scope.state = "error";
@@ -78,6 +81,8 @@ adminControllers
 
 				$scope.selectedUserType = {};
 				$scope.clearUserType = false;
+
+				
 
 				$scope.selectUserType = function(element) {
 					var userArray = element.type.key;
@@ -179,6 +184,7 @@ adminControllers
 					if ($scope.userType.length > 0 && $scope.userProfileInfo.userTypes.length == 0) {
 						$scope.userProfileInfo.userTypes = $scope.userType;
 						$scope.userProfileInfo.userId = $scope.userId;
+						
 						UserProfile.post({
 							"userId": $scope.userId
 						}, $scope.userProfileInfo, function(res) {

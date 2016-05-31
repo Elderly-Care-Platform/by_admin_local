@@ -163,6 +163,7 @@ BY.config.regConfig.housingConfig = {
 BY.config.regConfig.housingFacility = {
     'id': "",
     'userId': "",
+    'featured':false,
     'name': "",
     'systemTags': [],
     'tier': "",
@@ -245,6 +246,7 @@ BY.config.regConfig.institutionBranch = {
     "facilities": [],
     "reviewedByUser": false,
     "featured": false,
-    "ratedByUser": false
+    "ratedByUser": false,
+    "status": 0
 
 };

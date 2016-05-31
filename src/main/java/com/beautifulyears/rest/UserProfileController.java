@@ -308,7 +308,8 @@ public class UserProfileController {
 												userProfile.getFacilities(),
 												user));
 							}
-
+							profile.setFeatured(userProfile.isFeatured());
+							profile.setStatus(userProfile.getStatus());
 							userProfileRepository.save(profile);
 							logger.info("User Profile update with details: "
 									+ profile.toString());
@@ -356,6 +357,8 @@ public class UserProfileController {
 				newBranch.setSystemTags(branch.getSystemTags());
 				newBranch.setTags(branch.getTags());
 				newBranch.setUserTags(branch.getUserTags());
+				newBranch.setStatus(branch.getStatus());
+				newBranch.setFeatured(branch.isFeatured());
 				ArrayList<Integer> list = new ArrayList<Integer>();
 				list.add(UserTypes.INSTITUTION_BRANCH);
 				newBranch.setUserTypes(list);

@@ -87,6 +87,8 @@ adminControllers
                         }
                     }
 
+
+
                     if ($scope.basicProfileInfo.primaryUserAddress && $scope.basicProfileInfo.primaryUserAddress.country === null) {
                         $scope.basicProfileInfo.primaryUserAddress.country = "India";
                     }
@@ -103,10 +105,22 @@ adminControllers
                             $scope.facility = $scope.profile.facilities[$scope.facilityIndex - 1];
                         } else {
                             $scope.facility = $scope.profile.facilities[$scope.facilityIndex];
+                            $scope.facility.featured = $scope.facility.featured;
+                            if($scope.facility.status == 0){
+                                $scope.facility.status = false;
+                            } else{
+                                $scope.facility.status = true;
+                            }
                         }
 
                     } else {
                         $scope.facility = $scope.profile.facilities[0];
+                        $scope.facility.featured = $scope.facility.featured;
+                        if($scope.facility.status == 0){
+                            $scope.facility.status = false;
+                        } else{
+                            $scope.facility.status = true;
+                        }
                     }
 
                     if ($scope.facilityIndex == 0) {
