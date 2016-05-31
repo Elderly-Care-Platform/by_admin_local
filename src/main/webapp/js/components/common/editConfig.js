@@ -246,6 +246,7 @@ BY.config.regConfig.institutionBranch = {
     "facilities": [],
     "reviewedByUser": false,
     "featured": false,
-    "ratedByUser": false
+    "ratedByUser": false,
+    "status": 0
 
 };

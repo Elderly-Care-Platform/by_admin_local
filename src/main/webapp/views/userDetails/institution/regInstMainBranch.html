@@ -4,6 +4,18 @@
 
     <!--Main branch detail-->
     <div class="addBasicInfo"> Branch Information</div>
+
+    <div class="by_userTypeHead">
+        Featured 
+        <label style="display:inline;"> <input type="checkbox"
+            class="checkBoxOne"  ng-model="branch.featured" />
+        </label>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        Withdrawn 
+        <label style="display:inline;"> <input type="checkbox"
+            class="checkBoxOne"  ng-model="branch.status" />
+        </label>
+    </div><br/>
     <div class="row margin-bottom-20 marginRightMinus5 register-page">
         <div class="col-md-5 required">
             Branch name
