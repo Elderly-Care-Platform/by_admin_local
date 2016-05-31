@@ -1,4 +1,17 @@
 <div ng-controller="regHousingAddCtrl">
+
+    <div class="by_userTypeHead">
+        Featured 
+        <label style="display:inline;">{{type.value}} <input type="checkbox"
+            class="checkBoxOne"  ng-model="facility.featured" />
+        </label>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        Withdrawn 
+        <label style="display:inline;">{{type.value}} <input type="checkbox"
+            class="checkBoxOne"  ng-model="facility.status" />
+        </label>
+    </div><br/>
+            
     <div class="row no-padding margin-bottom-20 marginleft0">
         <div class="col-md-12 no-padding fontSizeIndi  list-head dp-block">
             Facility Info
@@ -8,6 +21,8 @@
             <div class="bg-green-h2" style="width: 156px;"></div>
         </div>
     </div>
+
+
 
     <div class="row margin-bottom-20  register-page">
         <div class="col-md-5 required">

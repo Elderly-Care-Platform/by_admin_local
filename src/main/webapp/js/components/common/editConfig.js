@@ -163,6 +163,7 @@ BY.config.regConfig.housingConfig = {
 BY.config.regConfig.housingFacility = {
     'id': "",
     'userId': "",
+    'featured':false,
     'name': "",
     'systemTags': [],
     'tier': "",
